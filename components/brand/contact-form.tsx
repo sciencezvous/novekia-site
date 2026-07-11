@@ -89,8 +89,8 @@ export function ContactForm({ className }: ContactFormProps) {
   }
 
   const fieldClassName = 'flex flex-col gap-2'
-  const controlClassName = 'h-10 rounded-md bg-background/40'
-  const selectClassName = 'h-10 w-full rounded-md border border-input bg-background/40 px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20'
+  const controlClassName = 'h-11 rounded-md bg-background/40'
+  const selectClassName = 'h-11 w-full rounded-md border border-input bg-background/40 px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20'
 
   return (
     <form onSubmit={handleSubmit} className={cn('flex flex-col gap-5', className)} noValidate>
@@ -144,7 +144,7 @@ export function ContactForm({ className }: ContactFormProps) {
 
       <div className="flex flex-col gap-2">
         <div className="flex items-start gap-3">
-          <input id="contact-consent" name="consent" type="checkbox" className="mt-0.5 size-4 shrink-0 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-invalid={Boolean(errors.consent)} aria-describedby={errors.consent ? 'contact-consent-error' : undefined} />
+          <input id="contact-consent" name="consent" type="checkbox" className="mt-0.5 size-5 shrink-0 rounded border-2 border-muted-foreground/40 bg-background/60 accent-primary transition-colors checked:border-primary checked:bg-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-invalid={Boolean(errors.consent)} aria-describedby={errors.consent ? 'contact-consent-error' : undefined} />
           <Label htmlFor="contact-consent" className="text-sm font-normal leading-relaxed text-muted-foreground">
             J’accepte que les informations transmises soient utilisées par Novekia afin de répondre à ma demande.
           </Label>

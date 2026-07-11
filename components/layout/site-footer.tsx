@@ -19,7 +19,14 @@ export function SiteFooter() {
             <dl className="mt-2 flex flex-col gap-1 font-mono text-xs text-muted-foreground">
               <div className="flex gap-2">
                 <dt className="sr-only">Email</dt>
-                <dd>{siteConfig.contact.email}</dd>
+                <dd>
+                  <a
+                    href={`mailto:${siteConfig.contact.email}`}
+                    className="rounded-sm underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    {siteConfig.contact.email}
+                  </a>
+                </dd>
               </div>
             </dl>
           </div>

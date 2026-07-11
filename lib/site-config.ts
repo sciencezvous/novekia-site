@@ -18,7 +18,7 @@ export type NavItem = {
 export const mainNavigation: NavItem[] = [
   {
     label: 'Solutions',
-    href: '/solutions',
+    href: '#expertises',
     children: [
       {
         label: 'Infrastructures IA',
@@ -37,10 +37,10 @@ export const mainNavigation: NavItem[] = [
       },
     ],
   },
-  { label: 'Services', href: '/services' },
-  { label: 'À propos', href: '/a-propos' },
-  { label: 'Ressources', href: '/ressources' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Services', href: '#expertises' },
+  { label: 'À propos', href: '#positionnement' },
+  { label: 'Ressources', href: '#research' },
+  { label: 'Contact', href: '#contact' },
 ]
 
 export const footerNavigation: { title: string; links: { label: string; href: string }[] }[] = [
@@ -57,7 +57,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     title: 'Studio',
     links: [
       { label: 'À propos', href: '/a-propos' },
-      { label: 'Méthode', href: '/methode' },
+      { label: 'Méthode', href: '#methode' },
       { label: 'R&D', href: '#research' },
       { label: 'Souveraineté', href: '/souverainete' },
     ],

@@ -16,8 +16,15 @@ export function MobileNavigation() {
     if (!open) return
     const previous = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', handleEscape)
+    
     return () => {
       document.body.style.overflow = previous
+      document.removeEventListener('keydown', handleEscape)
     }
   }, [open])
 
@@ -29,6 +36,7 @@ export function MobileNavigation() {
         aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
+        className="size-11"
       >
         {open ? <X /> : <Menu />}
       </Button>
@@ -72,7 +80,7 @@ export function MobileNavigation() {
             ))}
           </ul>
           <PrimaryButton
-            href="/contact?type=audit"
+            href="#contact"
             className="mt-6 w-full"
             onClick={() => setOpen(false)}
           >
