@@ -21,14 +21,6 @@ export function SiteFooter() {
                 <dt className="sr-only">Email</dt>
                 <dd>{siteConfig.contact.email}</dd>
               </div>
-              <div className="flex gap-2">
-                <dt className="sr-only">Téléphone</dt>
-                <dd>{siteConfig.contact.phone}</dd>
-              </div>
-              <div className="flex gap-2">
-                <dt className="sr-only">Adresse</dt>
-                <dd>{siteConfig.contact.address}</dd>
-              </div>
             </dl>
           </div>
 
@@ -57,7 +49,7 @@ export function SiteFooter() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 font-mono text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {siteConfig.name} — {siteConfig.tagline}
+            © 2026 Novekia — Andy Legrand, Entrepreneur individuel.
           </p>
           <p className="tracking-[0.18em] uppercase">
             Future Tech • Intelligence • Confiance
