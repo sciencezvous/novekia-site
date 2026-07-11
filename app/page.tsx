@@ -6,7 +6,8 @@ import { ExpertisesSection } from '@/components/home/expertises-section'
 import { MethodeSection } from '@/components/home/methode-section'
 import { SouveraineteSection } from '@/components/home/souverainete-section'
 import { TechnologiesSection } from '@/components/home/technologies-section'
-import { SectionPlaceholder } from '@/components/home/section-placeholder'
+import { ResearchSection } from '@/components/home/research-section'
+import { ContactSection } from '@/components/home/contact-section'
 import { JsonLd, organizationJsonLd } from '@/components/brand/json-ld'
 
 export default function HomePage() {
@@ -33,25 +34,11 @@ export default function HomePage() {
         {/* 05 — Technologies */}
         <TechnologiesSection />
 
-        {/* R&D */}
-        <SectionPlaceholder
-          id="rd"
-          index="06"
-          eyebrow="Recherche & Développement"
-          tone="muted"
-          title="De la recherche appliquée aux produits."
-          description="Un effort continu de R&D pour repousser les limites techniques."
-        />
+        {/* 06 — Recherche & Développement */}
+        <ResearchSection />
 
-        {/* Contact */}
-        <SectionPlaceholder
-          id="contact"
-          index="07"
-          eyebrow="Contact"
-          tone="dark"
-          title="Discutons de votre problématique technique."
-          description="Décrivez votre contexte : nous revenons vers vous avec une première lecture d'ingénierie."
-        />
+        {/* 07 — Contact */}
+        <ContactSection />
       </main>
       <SiteFooter />
     </>

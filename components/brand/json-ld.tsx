@@ -26,12 +26,4 @@ export const organizationJsonLd: Record<string, unknown> = {
   description: siteConfig.description,
   url: siteConfig.url,
   email: siteConfig.contact.email,
-  telephone: siteConfig.contact.phone,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: '41 rue du Trêve',
-    postalCode: '01480',
-    addressLocality: 'Villeneuve',
-    addressCountry: 'FR',
-  },
 }

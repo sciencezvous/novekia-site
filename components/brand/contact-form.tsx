@@ -11,70 +11,157 @@ type ContactFormProps = {
   className?: string
 }
 
-/**
- * Formulaire de contact. À cette étape des fondations, la soumission est
- * volontairement inerte (aucun backend branché) — prêt à être connecté ensuite.
- */
+type FieldName = 'name' | 'email' | 'need' | 'message' | 'consent'
+type FormErrors = Partial<Record<FieldName, string>>
+
+const needOptions = [
+  'Logiciel sur mesure',
+  'Intelligence artificielle locale',
+  'Station ou serveur IA',
+  'Infrastructure de calcul',
+  'Application web',
+  'SEO et GEO',
+  'Audit technique',
+  'Autre',
+]
+
+const budgetOptions = [
+  'Non défini',
+  'Moins de 5 000 €',
+  'De 5 000 € à 15 000 €',
+  'De 15 000 € à 50 000 €',
+  'Plus de 50 000 €',
+]
+
+function validateContactForm(formData: FormData): FormErrors {
+  const errors: FormErrors = {}
+  const name = String(formData.get('name') ?? '').trim()
+  const email = String(formData.get('email') ?? '').trim()
+  const need = String(formData.get('need') ?? '')
+  const message = String(formData.get('message') ?? '').trim()
+
+  if (!name) errors.name = 'Indiquez votre nom et prénom.'
+  if (!email) {
+    errors.email = 'Indiquez votre adresse e-mail professionnelle.'
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errors.email = 'Saisissez une adresse e-mail valide.'
+  }
+  if (!need) errors.need = 'Sélectionnez un type de besoin.'
+  if (!message) errors.message = 'Décrivez votre projet et son contexte.'
+  if (formData.get('consent') !== 'on') {
+    errors.consent = 'Votre consentement est nécessaire pour traiter la demande.'
+  }
+
+  return errors
+}
+
+function submitContactRequest() {
+  return { status: 'backend-unavailable' as const }
+}
+
+function FieldError({ id, message }: { id: string; message?: string }) {
+  return message ? (
+    <p id={id} className="text-sm text-destructive" role="alert">
+      {message}
+    </p>
+  ) : null
+}
+
 export function ContactForm({ className }: ContactFormProps) {
-  const [submitted, setSubmitted] = useState(false)
+  const [errors, setErrors] = useState<FormErrors>({})
+  const [submissionAttempted, setSubmissionAttempted] = useState(false)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    // Placeholder : le traitement réel sera branché à une étape ultérieure.
-    setSubmitted(true)
+    const nextErrors = validateContactForm(new FormData(event.currentTarget))
+    setErrors(nextErrors)
+
+    if (Object.keys(nextErrors).length > 0) {
+      setSubmissionAttempted(false)
+      const firstInvalidName = Object.keys(nextErrors)[0] as FieldName
+      const firstInvalidField = event.currentTarget.elements.namedItem(firstInvalidName)
+      if (firstInvalidField instanceof HTMLElement) firstInvalidField.focus()
+      return
+    }
+
+    const result = submitContactRequest()
+    setSubmissionAttempted(result.status === 'backend-unavailable')
   }
 
+  const fieldClassName = 'flex flex-col gap-2'
+  const controlClassName = 'h-10 rounded-md bg-background/40'
+  const selectClassName = 'h-10 w-full rounded-md border border-input bg-background/40 px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20'
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={cn('flex flex-col gap-5', className)}
-      noValidate
-    >
+    <form onSubmit={handleSubmit} className={cn('flex flex-col gap-5', className)} noValidate>
       <div className="grid gap-5 sm:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="contact-name">Nom</Label>
-          <Input id="contact-name" name="name" autoComplete="name" required />
+        <div className={fieldClassName}>
+          <Label htmlFor="contact-name">Nom et prénom <span aria-hidden="true">*</span></Label>
+          <Input id="contact-name" name="name" autoComplete="name" className={controlClassName} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'contact-name-error' : undefined} />
+          <FieldError id="contact-name-error" message={errors.name} />
         </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="contact-company">Organisation</Label>
-          <Input
-            id="contact-company"
-            name="company"
-            autoComplete="organization"
-          />
+        <div className={fieldClassName}>
+          <Label htmlFor="contact-company">Entreprise</Label>
+          <Input id="contact-company" name="company" autoComplete="organization" className={controlClassName} />
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="contact-email">Email professionnel</Label>
-        <Input
-          id="contact-email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-        />
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className={fieldClassName}>
+          <Label htmlFor="contact-email">Adresse e-mail professionnelle <span aria-hidden="true">*</span></Label>
+          <Input id="contact-email" name="email" type="email" autoComplete="email" className={controlClassName} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'contact-email-error' : undefined} />
+          <FieldError id="contact-email-error" message={errors.email} />
+        </div>
+        <div className={fieldClassName}>
+          <Label htmlFor="contact-phone">Téléphone — facultatif</Label>
+          <Input id="contact-phone" name="phone" type="tel" autoComplete="tel" className={controlClassName} />
+        </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="contact-message">Votre besoin</Label>
-        <Textarea
-          id="contact-message"
-          name="message"
-          rows={5}
-          placeholder="Décrivez votre projet, votre contexte technique ou votre problématique."
-          required
-        />
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className={fieldClassName}>
+          <Label htmlFor="contact-need">Type de besoin <span aria-hidden="true">*</span></Label>
+          <select id="contact-need" name="need" defaultValue="" className={selectClassName} aria-invalid={Boolean(errors.need)} aria-describedby={errors.need ? 'contact-need-error' : undefined}>
+            <option value="" disabled>Sélectionnez un besoin</option>
+            {needOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+          </select>
+          <FieldError id="contact-need-error" message={errors.need} />
+        </div>
+        <div className={fieldClassName}>
+          <Label htmlFor="contact-budget">Budget indicatif</Label>
+          <select id="contact-budget" name="budget" defaultValue="Non défini" className={selectClassName}>
+            {budgetOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+          </select>
+          <p className="text-xs leading-relaxed text-muted-foreground">Fourchette indicative pour qualifier le contexte, sans valeur de tarif officiel.</p>
+        </div>
       </div>
-      <div className="flex flex-col gap-3">
-        <PrimaryButton type="submit" withArrow>
-          Envoyer la demande
-        </PrimaryButton>
-        {submitted ? (
-          <p
-            role="status"
-            className="font-mono text-xs text-muted-foreground"
-          >
-            Merci — votre demande a bien été enregistrée. Nous reviendrons vers
-            vous rapidement.
+
+      <div className={fieldClassName}>
+        <Label htmlFor="contact-message">Description du projet <span aria-hidden="true">*</span></Label>
+        <Textarea id="contact-message" name="message" rows={7} className="min-h-40 resize-y rounded-md bg-background/40" placeholder="Décrivez votre besoin, votre environnement actuel, vos principales contraintes et le résultat attendu." aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? 'contact-message-error' : undefined} />
+        <FieldError id="contact-message-error" message={errors.message} />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="flex items-start gap-3">
+          <input id="contact-consent" name="consent" type="checkbox" className="mt-0.5 size-4 shrink-0 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-invalid={Boolean(errors.consent)} aria-describedby={errors.consent ? 'contact-consent-error' : undefined} />
+          <Label htmlFor="contact-consent" className="text-sm font-normal leading-relaxed text-muted-foreground">
+            J’accepte que les informations transmises soient utilisées par Novekia afin de répondre à ma demande.
+          </Label>
+        </div>
+        <FieldError id="contact-consent-error" message={errors.consent} />
+      </div>
+
+      <div className="flex flex-col items-start gap-3">
+        <PrimaryButton type="submit" withArrow>Envoyer ma demande</PrimaryButton>
+        <p className="text-sm text-muted-foreground">
+          Vous pouvez également écrire directement à{' '}
+          <a href="mailto:contact@novekia.fr" className="text-primary underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">contact@novekia.fr</a>
+        </p>
+        {submissionAttempted ? (
+          <p role="status" className="border-l-2 border-primary/60 bg-card/70 px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+            Le formulaire en ligne sera prochainement activé. Vous pouvez nous contacter dès maintenant à{' '}
+            <a href="mailto:contact@novekia.fr" className="text-primary underline underline-offset-4">contact@novekia.fr</a>.
           </p>
         ) : null}
       </div>

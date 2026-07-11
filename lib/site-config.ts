@@ -6,8 +6,6 @@ export const siteConfig = {
   url: 'https://www.novekia.fr',
   contact: {
     email: 'contact@novekia.fr',
-    phone: '07 67 84 27 57',
-    address: '41 rue du Trêve, 01480 Villeneuve',
   },
 } as const
 
@@ -60,7 +58,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     links: [
       { label: 'À propos', href: '/a-propos' },
       { label: 'Méthode', href: '/methode' },
-      { label: 'R&D', href: '/recherche' },
+      { label: 'R&D', href: '#research' },
       { label: 'Souveraineté', href: '/souverainete' },
     ],
   },
@@ -69,8 +67,8 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     links: [
       { label: 'Documentation', href: '/ressources' },
       { label: 'Études de cas', href: '/ressources/etudes-de-cas' },
-      { label: 'Contact', href: '/contact' },
-      { label: 'Demander un audit', href: '/contact?type=audit' },
+      { label: 'Contact', href: '#contact' },
+      { label: 'Demander un audit', href: '#contact' },
     ],
   },
 ]
