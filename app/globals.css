@@ -166,6 +166,15 @@
   }
 }
 
+/* Animations du diagramme d'infrastructure */
+@keyframes dash {
+  to { stroke-dashoffset: -28; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-3px); }
+}
+
 @layer utilities {
   /* Motif de lignes techniques discret (à utiliser avec parcimonie) */
   .technical-grid-pattern {

@@ -2,6 +2,7 @@ import { Section } from '@/components/layout/section'
 import { TechnicalLabel } from '@/components/brand/technical-label'
 import { PrimaryButton } from '@/components/brand/primary-button'
 import { SecondaryButton } from '@/components/brand/secondary-button'
+import { InfrastructureDiagram } from '@/components/home/infrastructure-diagram'
 
 export function HomeHero() {
   return (
@@ -17,29 +18,40 @@ export function HomeHero() {
         aria-hidden="true"
         className="technical-grid-pattern pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_70%)]"
       />
+
       <div className="relative mx-auto w-full max-w-6xl px-6 md:px-8">
-        <div className="max-w-3xl">
-          <TechnicalLabel index="00">Studio d&apos;ingénierie technologique</TechnicalLabel>
-          <h1
-            id="hero-title"
-            className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl"
-          >
-            Infrastructure locale.{' '}
-            <span className="text-primary">Intelligence souveraine.</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-            Novekia conçoit des infrastructures modulaires, sécurisées et
-            évolutives — IA locale, logiciels métiers et stations de calcul haute
-            performance — pour accélérer vos performances.
-          </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <PrimaryButton href="/solutions" withArrow>
-              Découvrir nos solutions
-            </PrimaryButton>
-            <SecondaryButton href="/contact?type=audit">
-              Demander un audit
-            </SecondaryButton>
+        <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16">
+
+          {/* Colonne gauche — texte */}
+          <div className="flex-1 lg:max-w-[54%]">
+            <TechnicalLabel index="00">Studio d&apos;ingénierie technologique</TechnicalLabel>
+            <h1
+              id="hero-title"
+              className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl"
+            >
+              Infrastructure locale.{' '}
+              <span className="text-primary">Intelligence souveraine.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
+              Novekia conçoit des infrastructures modulaires, sécurisées et
+              évolutives — IA locale, logiciels métiers et stations de calcul haute
+              performance — pour accélérer vos performances.
+            </p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <PrimaryButton href="#expertises" withArrow>
+                Découvrir nos solutions
+              </PrimaryButton>
+              <SecondaryButton href="#contact">
+                Demander un audit
+              </SecondaryButton>
+            </div>
           </div>
+
+          {/* Colonne droite — diagramme */}
+          <div className="w-full max-w-sm flex-shrink-0 lg:max-w-none lg:w-[42%]">
+            <InfrastructureDiagram className="aspect-square w-full" />
+          </div>
+
         </div>
       </div>
     </Section>

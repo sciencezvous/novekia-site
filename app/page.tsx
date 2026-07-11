@@ -1,6 +1,8 @@
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { HomeHero } from '@/components/home/home-hero'
+import { PositionnementSection } from '@/components/home/positionnement-section'
+import { ExpertisesSection } from '@/components/home/expertises-section'
 import { SectionPlaceholder } from '@/components/home/section-placeholder'
 import { JsonLd, organizationJsonLd } from '@/components/brand/json-ld'
 
@@ -10,28 +12,14 @@ export default function HomePage() {
       <JsonLd data={organizationJsonLd} />
       <SiteHeader />
       <main id="contenu">
-        {/* Hero */}
+        {/* 00 — Hero */}
         <HomeHero />
 
-        {/* Positionnement */}
-        <SectionPlaceholder
-          id="positionnement"
-          index="01"
-          eyebrow="Positionnement"
-          tone="light"
-          title="Un studio d'ingénierie, pas une agence."
-          description="Novekia traite des problématiques techniques complexes : ingénierie logicielle, IA locale, infrastructures de calcul et R&D appliquée."
-        />
+        {/* 01 — Positionnement */}
+        <PositionnementSection />
 
-        {/* Expertises */}
-        <SectionPlaceholder
-          id="expertises"
-          index="02"
-          eyebrow="Expertises"
-          tone="muted"
-          title="Nos domaines d'intervention."
-          description="Logiciels métiers, intelligence artificielle souveraine, stations de calcul et serveurs IA."
-        />
+        {/* 02 — Expertises */}
+        <ExpertisesSection />
 
         {/* Méthode */}
         <SectionPlaceholder
