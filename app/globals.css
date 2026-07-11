@@ -1,0 +1,182 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+/* Novekia design tokens */
+
+@custom-variant dark (&:is(.dark *));
+
+/* =========================================================================
+   NOVEKIA — Variables de marque
+   Palette officielle (référence : planche d'identité Novekia)
+   ========================================================================= */
+:root {
+  /* Bleus de marque */
+  --novekia-nuit: #031a47; /* bleu nuit */
+  --novekia-profond: #06265f; /* bleu profond */
+  --novekia-electrique: #006bff; /* bleu électrique */
+  --novekia-lumineux: #23a7ff; /* bleu lumineux */
+  --novekia-clair: #dceeff; /* bleu clair */
+
+  /* Surfaces */
+  --novekia-blanc-froid: #f8fafd; /* blanc froid */
+  --novekia-surface-claire: #eef3f9; /* surface claire */
+
+  /* Texte */
+  --novekia-texte-sombre: #071a3d; /* texte sombre */
+  --novekia-texte-secondaire: #60708c; /* texte secondaire */
+
+  /* Bordures */
+  --novekia-bordure-claire: rgba(7, 26, 61, 0.12);
+  --novekia-bordure-sombre: rgba(255, 255, 255, 0.12);
+}
+
+@theme inline {
+  /* Fontes */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Couleurs de marque exposées aux utilitaires Tailwind */
+  --color-nuit: var(--novekia-nuit);
+  --color-profond: var(--novekia-profond);
+  --color-electrique: var(--novekia-electrique);
+  --color-lumineux: var(--novekia-lumineux);
+  --color-clair: var(--novekia-clair);
+  --color-blanc-froid: var(--novekia-blanc-froid);
+  --color-surface-claire: var(--novekia-surface-claire);
+
+  /* Tokens sémantiques shadcn */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  /* Rayons faibles (4–10px) — angles droits privilégiés */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
+  --radius-3xl: 14px;
+  --radius-4xl: 16px;
+}
+
+:root {
+  color-scheme: light;
+
+  --radius: 6px;
+
+  /* Surfaces claires */
+  --background: var(--novekia-blanc-froid);
+  --foreground: var(--novekia-texte-sombre);
+  --card: #ffffff;
+  --card-foreground: var(--novekia-texte-sombre);
+  --popover: #ffffff;
+  --popover-foreground: var(--novekia-texte-sombre);
+
+  /* Accent principal : bleu électrique */
+  --primary: var(--novekia-electrique);
+  --primary-foreground: #ffffff;
+
+  --secondary: var(--novekia-surface-claire);
+  --secondary-foreground: var(--novekia-texte-sombre);
+  --muted: var(--novekia-surface-claire);
+  --muted-foreground: var(--novekia-texte-secondaire);
+  --accent: var(--novekia-clair);
+  --accent-foreground: var(--novekia-profond);
+
+  --destructive: oklch(0.577 0.245 27.325);
+
+  --border: var(--novekia-bordure-claire);
+  --input: var(--novekia-bordure-claire);
+  --ring: var(--novekia-electrique);
+
+  --chart-1: var(--novekia-electrique);
+  --chart-2: var(--novekia-lumineux);
+  --chart-3: var(--novekia-profond);
+  --chart-4: var(--novekia-nuit);
+  --chart-5: var(--novekia-clair);
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: var(--novekia-texte-sombre);
+  --sidebar-primary: var(--novekia-electrique);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--novekia-surface-claire);
+  --sidebar-accent-foreground: var(--novekia-texte-sombre);
+  --sidebar-border: var(--novekia-bordure-claire);
+  --sidebar-ring: var(--novekia-electrique);
+}
+
+/* Contexte sombre : à appliquer sur les sections bleu nuit immersives
+   via la classe `.section-dark` (voir composant Section). */
+.section-dark {
+  color-scheme: dark;
+  --background: var(--novekia-nuit);
+  --foreground: var(--novekia-blanc-froid);
+  --card: var(--novekia-profond);
+  --card-foreground: var(--novekia-blanc-froid);
+  --popover: var(--novekia-profond);
+  --popover-foreground: var(--novekia-blanc-froid);
+  --primary: var(--novekia-electrique);
+  --primary-foreground: #ffffff;
+  --secondary: var(--novekia-profond);
+  --secondary-foreground: var(--novekia-blanc-froid);
+  --muted: var(--novekia-profond);
+  --muted-foreground: #9fb2cf;
+  --accent: var(--novekia-electrique);
+  --accent-foreground: #ffffff;
+  --border: var(--novekia-bordure-sombre);
+  --input: var(--novekia-bordure-sombre);
+  --ring: var(--novekia-lumineux);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Motif de lignes techniques discret (à utiliser avec parcimonie) */
+  .technical-grid-pattern {
+    background-image:
+      linear-gradient(var(--novekia-bordure-claire) 1px, transparent 1px),
+      linear-gradient(90deg, var(--novekia-bordure-claire) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .section-dark .technical-grid-pattern {
+    background-image:
+      linear-gradient(var(--novekia-bordure-sombre) 1px, transparent 1px),
+      linear-gradient(90deg, var(--novekia-bordure-sombre) 1px, transparent 1px);
+  }
+}
