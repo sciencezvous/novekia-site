@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PrimaryButton } from '@/components/brand/primary-button'
 import { mainNavigation } from '@/lib/site-config'
@@ -13,6 +13,7 @@ const FOCUSABLE_SELECTOR =
 
 export function MobileNavigation() {
   const [open, setOpen] = useState(false)
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
   const triggerRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
 
@@ -57,6 +58,21 @@ export function MobileNavigation() {
 
   function closeMenu() {
     setOpen(false)
+    setExpandedGroups(new Set())
+  }
+
+  function toggleGroup(label: string) {
+    const newExpanded = new Set(expandedGroups)
+    if (newExpanded.has(label)) {
+      newExpanded.delete(label)
+    } else {
+      newExpanded.add(label)
+    }
+    setExpandedGroups(newExpanded)
+  }
+
+  function navigateAndClose() {
+    closeMenu()
   }
 
   return (
@@ -87,34 +103,62 @@ export function MobileNavigation() {
       >
         <nav aria-label="Navigation principale mobile" className="px-5 py-5 sm:px-6">
           <ul className="flex flex-col divide-y divide-border">
-            {mainNavigation.map((item) => (
-              <li key={`${item.label}-${item.href}`} className="py-1">
-                <Link
-                  href={item.href}
-                  onClick={closeMenu}
-                  className="flex min-h-11 items-center rounded-sm py-2 text-base font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  {item.label}
-                </Link>
-                {item.children ? (
-                  <ul className="mb-3 flex flex-col border-l border-border pl-4">
-                    {item.children.map((child) => (
-                      <li key={child.href}>
-                        <Link
-                          href={child.href}
-                          onClick={closeMenu}
-                          className="flex min-h-11 items-center rounded-sm py-2 text-sm text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            {mainNavigation.map((item) => {
+              const hasChildren = Boolean(item.children?.length)
+              const isExpanded = expandedGroups.has(item.label)
+
+              return (
+                <li key={`${item.label}-${item.href}`} className="py-1">
+                  {hasChildren ? (
+                    <>
+                      <button
+                        onClick={() => toggleGroup(item.label)}
+                        aria-expanded={isExpanded}
+                        aria-controls={`submenu-${item.label}`}
+                        className="flex w-full min-h-11 items-center justify-between rounded-sm py-2 text-base font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        {item.label}
+                        <ChevronDown
+                          className={cn(
+                            'size-4 transition-transform duration-200',
+                            isExpanded && 'rotate-180',
+                          )}
+                          aria-hidden="true"
+                        />
+                      </button>
+                      {isExpanded && (
+                        <ul
+                          id={`submenu-${item.label}`}
+                          className="mb-3 flex flex-col border-l border-border pl-4"
                         >
-                          {child.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </li>
-            ))}
+                          {item.children!.map((child) => (
+                            <li key={child.href}>
+                              <Link
+                                href={child.href}
+                                onClick={navigateAndClose}
+                                className="flex min-h-11 items-center rounded-sm py-2 text-sm text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                              >
+                                {child.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={navigateAndClose}
+                      className="flex min-h-11 items-center rounded-sm py-2 text-base font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </li>
+              )
+            })}
           </ul>
-          <PrimaryButton href="#contact" className="mt-5 w-full" onClick={closeMenu}>
+          <PrimaryButton href="#contact" className="mt-5 w-full" onClick={navigateAndClose}>
             Demander un audit
           </PrimaryButton>
         </nav>

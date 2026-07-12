@@ -53,10 +53,10 @@ export function SiteHeader() {
                     </Link>
 
                     {hasChildren && openMenu === item.href ? (
-                      <div className="absolute left-0 top-full w-72 pt-2">
+                      <div className="absolute left-0 top-full w-80 pt-2">
                         <ul className="rounded-md border border-border bg-popover p-2 shadow-lg">
                           {item.children!.map((child) => (
-                            <li key={child.href}>
+                            <li key={`${child.label}-${child.href}`}>
                               <Link
                                 href={child.href}
                                 className="block rounded-sm px-3 py-2 transition-colors hover:bg-secondary"
