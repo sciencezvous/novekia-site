@@ -3,30 +3,35 @@ import { Section } from '@/components/layout/section'
 
 const steps = [
   {
+    id: 'service-cadrage',
     index: '01',
     title: 'Cadrage',
     description:
       'Compréhension du besoin, des utilisateurs, des contraintes techniques, du budget et des objectifs mesurables.',
   },
   {
+    id: 'service-audit',
     index: '02',
     title: 'Audit',
     description:
       'Analyse de l’existant, des risques, des dépendances, des données et de l’infrastructure disponible.',
   },
   {
+    id: 'service-architecture',
     index: '03',
     title: 'Architecture',
     description:
       'Définition de la solution, des composants, des interfaces, des responsabilités et des critères de validation.',
   },
   {
+    id: 'service-prototypage',
     index: '04',
     title: 'Prototypage',
     description:
       'Construction d’une première version testable afin de réduire rapidement les principales incertitudes.',
   },
   {
+    id: 'service-deploiement',
     index: '05',
     title: 'Déploiement',
     description:
@@ -72,6 +77,7 @@ export function MethodeSection() {
         />
         {steps.map((step) => (
           <li
+            id={step.id}
             key={step.index}
             className="group relative grid grid-cols-[2.5rem_1fr] gap-5 pb-10 last:pb-0 md:flex md:flex-col md:gap-5 md:pb-0 md:pr-7 md:last:pr-0"
           >
