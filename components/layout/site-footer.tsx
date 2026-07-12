@@ -8,8 +8,8 @@ export function SiteFooter() {
 
   return (
     <footer className="section-dark border-t border-border bg-background text-foreground">
-      <Container size="wide" className="py-16">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_2fr]">
+      <Container size="wide" className="py-12 sm:py-16">
+        <div className="grid gap-10 lg:grid-cols-[1.4fr_2fr] lg:gap-12">
           <div className="flex flex-col gap-5">
             <Logo href="/" />
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
@@ -39,7 +39,7 @@ export function SiteFooter() {
                 </h2>
                 <ul className="mt-4 flex flex-col gap-2.5">
                   {group.links.map((link) => (
-                    <li key={link.href}>
+                    <li key={`${link.label}-${link.href}`}>
                       <Link
                         href={link.href}
                         className="text-sm text-muted-foreground transition-colors hover:text-foreground"

@@ -66,7 +66,7 @@ export function TechnologiesSection() {
         {technologies.map((technology) => (
           <article
             key={technology.index}
-            className="group flex min-h-64 flex-col bg-background p-6 transition-colors duration-200 hover:bg-secondary/50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-ring"
+            className="group flex min-h-0 flex-col bg-background p-5 transition-colors duration-200 hover:bg-secondary/50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-ring sm:min-h-56 sm:p-6 lg:min-h-64"
           >
             <div className="flex items-start justify-between gap-4">
               <span className="flex size-10 items-center justify-center border border-border text-primary transition-colors group-hover:border-primary/50">

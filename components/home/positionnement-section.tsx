@@ -57,7 +57,7 @@ export function PositionnementSection() {
           <article
             key={pillar.index}
             className={cn(
-              'group flex flex-col gap-4 px-0 py-8 transition-colors duration-200',
+              'group flex flex-col gap-4 px-0 py-6 transition-colors duration-200 sm:py-8',
               'sm:px-8 sm:py-0',
               i === 0 && 'sm:pl-0',
               i === pillars.length - 1 && 'sm:pr-0',

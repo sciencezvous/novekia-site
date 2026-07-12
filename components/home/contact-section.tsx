@@ -40,7 +40,7 @@ export function ContactSection() {
           description="Décrivez votre contexte : nous revenons vers vous avec une première lecture d’ingénierie."
         />
 
-        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="mt-10 grid grid-cols-1 gap-10 sm:mt-12 sm:gap-12 lg:grid-cols-2 lg:gap-16">
           <ContactForm />
 
           <aside className="border-t border-border pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0" aria-labelledby="contact-info-title">

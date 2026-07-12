@@ -143,7 +143,7 @@ export function ContactForm({ className }: ContactFormProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="flex items-start gap-3">
+        <div className="flex min-h-11 items-start gap-3">
           <input id="contact-consent" name="consent" type="checkbox" className="mt-0.5 size-5 shrink-0 rounded border-2 border-muted-foreground/40 bg-background/60 accent-primary transition-colors checked:border-primary checked:bg-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-invalid={Boolean(errors.consent)} aria-describedby={errors.consent ? 'contact-consent-error' : undefined} />
           <Label htmlFor="contact-consent" className="text-sm font-normal leading-relaxed text-muted-foreground">
             J’accepte que les informations transmises soient utilisées par Novekia afin de répondre à ma demande.
@@ -153,7 +153,7 @@ export function ContactForm({ className }: ContactFormProps) {
       </div>
 
       <div className="flex flex-col items-start gap-3">
-        <PrimaryButton type="submit" withArrow>Envoyer ma demande</PrimaryButton>
+        <PrimaryButton type="submit" withArrow className="w-full sm:w-auto">Envoyer ma demande</PrimaryButton>
         <p className="text-sm text-muted-foreground">
           Vous pouvez également écrire directement à{' '}
           <a href="mailto:contact@novekia.fr" className="text-primary underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">contact@novekia.fr</a>

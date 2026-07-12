@@ -11,6 +11,7 @@ type LogoProps = {
   showTagline?: boolean
   href?: string | null
   iconSize?: number
+  taglineClassName?: string
 }
 
 export function Logo({
@@ -19,6 +20,7 @@ export function Logo({
   showTagline = true,
   href = '/',
   iconSize = 40,
+  taglineClassName,
 }: LogoProps) {
   const content = (
     <span className={cn('inline-flex items-center gap-3', className)}>
@@ -36,7 +38,7 @@ export function Logo({
             {siteConfig.name}
           </span>
           {showTagline ? (
-            <span className="mt-1 text-[0.7rem] font-medium tracking-wide text-muted-foreground">
+            <span className={cn('mt-1 text-[0.7rem] font-medium tracking-wide text-muted-foreground', taglineClassName)}>
               {siteConfig.tagline}
             </span>
           ) : null}
