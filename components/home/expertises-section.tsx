@@ -57,9 +57,9 @@ const expertises = [
   },
   {
     id: 'solution-seo-geo',
-    title: 'SEO et GEO',
+    title: 'Création de sites web optimisés SEO & GEO',
     description:
-      'Sites structurés pour les moteurs de recherche et les systèmes de recherche, synthèse et réponse assistés par intelligence artificielle.',
+      'Conception de sites web rapides, performants et structurés pour le référencement naturel, Google AI Overviews et les moteurs de recherche générative.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-5">
         <circle cx="11" cy="11" r="8" />

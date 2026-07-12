@@ -46,9 +46,9 @@ export const mainNavigation: NavItem[] = [
         description: 'Interfaces, API et automatisations.',
       },
       {
-        label: 'SEO et GEO',
+        label: 'Création de sites web optimisés SEO & GEO',
         href: '#solution-seo-geo',
-        description: 'Sites structurés et recherche assistée.',
+        description: 'Sites premium structurés pour Google et les moteurs de réponse IA.',
       },
     ],
   },
@@ -157,7 +157,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
       { label: 'Intelligence locale', href: '#solution-ia-locale' },
       { label: 'Infrastructures & IA', href: '#solution-infrastructures-ia' },
       { label: 'Applications web', href: '#solution-applications-web' },
-      { label: 'SEO et GEO', href: '#solution-seo-geo' },
+      { label: 'Sites optimisés SEO & GEO', href: '#solution-seo-geo' },
     ],
   },
   {
