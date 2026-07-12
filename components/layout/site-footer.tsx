@@ -54,10 +54,32 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 font-mono text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © 2026 Novekia — Andy Legrand, Entrepreneur individuel.
-          </p>
+        <div className="mt-12 flex flex-col gap-4 border-t border-border pt-6 font-mono text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+            <p>
+              © 2026 Novekia — Andy Legrand, Entrepreneur individuel.
+            </p>
+            <nav aria-label="Informations légales">
+              <ul className="flex flex-wrap gap-x-4 gap-y-2">
+                <li>
+                  <Link
+                    href="/mentions-legales"
+                    className="rounded-sm underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    Mentions légales
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/politique-de-confidentialite"
+                    className="rounded-sm underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    Politique de confidentialité
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
           <p className="tracking-[0.18em] uppercase">
             Future Tech • Intelligence • Confiance
           </p>
