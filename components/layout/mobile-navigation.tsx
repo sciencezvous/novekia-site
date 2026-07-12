@@ -89,7 +89,7 @@ export function MobileNavigation() {
         id="mobile-navigation-panel"
         ref={panelRef}
         className={cn(
-          'fixed inset-x-0 top-[4.5rem] bottom-0 z-40 origin-top overflow-y-auto border-b border-border bg-background shadow-lg transition-[transform,opacity] duration-200 motion-reduce:transition-none',
+          'fixed inset-x-0 top-[4.5rem] z-40 max-h-[calc(100dvh-4.5rem)] origin-top overflow-y-auto border-b border-border bg-background shadow-lg transition-[transform,opacity] duration-200 motion-reduce:transition-none',
           open
             ? 'pointer-events-auto translate-y-0 opacity-100'
             : 'pointer-events-none -translate-y-2 opacity-0',
