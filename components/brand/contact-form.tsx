@@ -104,7 +104,6 @@ export function ContactForm({ className }: ContactFormProps) {
   const [status, setStatus] = useState<SubmissionStatus>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
-  const [formRef, setFormRef] = useState<HTMLFormElement | null>(null)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -154,7 +153,7 @@ export function ContactForm({ className }: ContactFormProps) {
   const selectClassName = 'h-11 w-full rounded-md border border-input bg-background/40 px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20'
 
   return (
-    <form ref={setFormRef} onSubmit={handleSubmit} className={cn('flex flex-col gap-5', className)} noValidate>
+    <form onSubmit={handleSubmit} className={cn('flex flex-col gap-5', className)} noValidate>
       <div className="grid gap-5 sm:grid-cols-2">
         <div className={fieldClassName}>
           <Label htmlFor="contact-name">Nom et prénom <span aria-hidden="true">*</span></Label>

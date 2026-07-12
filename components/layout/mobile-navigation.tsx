@@ -22,6 +22,7 @@ export function MobileNavigation() {
 
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    const triggerElement = triggerRef.current
     const panel = panelRef.current
     const focusableElements = panel
       ? Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
@@ -53,7 +54,7 @@ export function MobileNavigation() {
     return () => {
       document.body.style.overflow = previousOverflow
       document.removeEventListener('keydown', handleKeyDown)
-      triggerRef.current?.focus()
+      triggerElement?.focus()
     }
   }, [open])
 

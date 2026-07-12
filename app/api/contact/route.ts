@@ -25,6 +25,8 @@ const ALLOWED_BUDGETS = [
 // Email regex pattern for validation
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+type ContactRequestBody = Record<string, unknown>
+
 // Escapes HTML special characters to prevent XSS
 function escapeHtml(text: string): string {
   const map: Record<string, string> = {
@@ -165,7 +167,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // Parse request body
-    let formData: Record<string, any>
+    let formData: ContactRequestBody
     try {
       const data = await request.json()
       formData = data
@@ -301,7 +303,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Erreur serveur' },
       { status: 502 }

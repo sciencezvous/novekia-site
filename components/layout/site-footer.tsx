@@ -4,8 +4,6 @@ import { Container } from './container'
 import { footerNavigation, siteConfig } from '@/lib/site-config'
 
 export function SiteFooter() {
-  const year = new Date().getFullYear()
-
   return (
     <footer className="section-dark border-t border-border bg-background text-foreground">
       <Container size="wide" className="py-12 sm:py-16">
