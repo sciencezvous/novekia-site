@@ -36,14 +36,9 @@ export const mainNavigation: NavItem[] = [
         description: 'Modèles IA déployés sur site, sans dépendance cloud.',
       },
       {
-        label: 'Stations et serveurs IA',
-        href: '#solution-stations-serveurs',
-        description: 'Configurations GPU sur mesure.',
-      },
-      {
-        label: 'Infrastructures de calcul',
-        href: '#solution-infrastructures-calcul',
-        description: 'Architecture et intégration haute performance.',
+        label: 'Infrastructures de calcul & serveurs IA',
+        href: '#solution-infrastructures-ia',
+        description: 'Conception, intégration et optimisation de stations GPU et serveurs IA.',
       },
       {
         label: 'Applications web et intégrations',
@@ -160,8 +155,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
       { label: 'Vue d\'ensemble', href: '#expertises' },
       { label: 'Logiciels métiers', href: '#solution-logiciels-metiers' },
       { label: 'Intelligence locale', href: '#solution-ia-locale' },
-      { label: 'Stations de calcul', href: '#solution-stations-serveurs' },
-      { label: 'Infrastructures', href: '#solution-infrastructures-calcul' },
+      { label: 'Infrastructures & IA', href: '#solution-infrastructures-ia' },
       { label: 'Applications web', href: '#solution-applications-web' },
       { label: 'SEO et GEO', href: '#solution-seo-geo' },
     ],
