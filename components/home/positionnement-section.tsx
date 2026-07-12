@@ -52,15 +52,16 @@ export function PositionnementSection() {
       />
 
       {/* Trois piliers */}
-      <div className="mt-12 grid grid-cols-1 gap-0 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+      <div className="mt-12 grid grid-cols-1 gap-0 divide-y divide-border sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-3">
         {pillars.map((pillar, i) => (
           <article
             key={pillar.index}
             className={cn(
               'group flex flex-col gap-4 px-0 py-6 transition-colors duration-200 sm:py-8',
-              'sm:px-8 sm:py-0',
-              i === 0 && 'sm:pl-0',
-              i === pillars.length - 1 && 'sm:pr-0',
+              'sm:px-6 sm:py-0 lg:px-8',
+              i === 0 && 'sm:pl-0 lg:pl-0',
+              i === pillars.length - 1 && 'sm:pr-0 lg:pr-0',
+              i === 2 && 'sm:col-start-1 lg:col-start-auto',
               'hover:bg-secondary/60',
             )}
           >
