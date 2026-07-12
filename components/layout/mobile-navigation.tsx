@@ -13,7 +13,7 @@ const FOCUSABLE_SELECTOR =
 
 export function MobileNavigation() {
   const [open, setOpen] = useState(false)
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
+  const [expandedGroup, setExpandedGroup] = useState<string | null>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
 
@@ -31,6 +31,7 @@ export function MobileNavigation() {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         setOpen(false)
+        setExpandedGroup(null)
         return
       }
 
@@ -58,17 +59,11 @@ export function MobileNavigation() {
 
   function closeMenu() {
     setOpen(false)
-    setExpandedGroups(new Set())
+    setExpandedGroup(null)
   }
 
   function toggleGroup(label: string) {
-    const newExpanded = new Set(expandedGroups)
-    if (newExpanded.has(label)) {
-      newExpanded.delete(label)
-    } else {
-      newExpanded.add(label)
-    }
-    setExpandedGroups(newExpanded)
+    setExpandedGroup((current) => (current === label ? null : label))
   }
 
   function navigateAndClose() {
@@ -84,7 +79,7 @@ export function MobileNavigation() {
         aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
         aria-expanded={open}
         aria-controls="mobile-navigation-panel"
-        onClick={() => setOpen((current) => !current)}
+        onClick={() => (open ? closeMenu() : setOpen(true))}
         className="size-11"
       >
         {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
@@ -105,7 +100,7 @@ export function MobileNavigation() {
           <ul className="flex flex-col divide-y divide-border">
             {mainNavigation.map((item) => {
               const hasChildren = Boolean(item.children?.length)
-              const isExpanded = expandedGroups.has(item.label)
+              const isExpanded = expandedGroup === item.label
 
               return (
                 <li key={`${item.label}-${item.href}`} className="py-1">
