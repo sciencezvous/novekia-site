@@ -16,8 +16,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
       <Container size="wide">
-        <div className="flex h-16 items-center justify-between gap-6">
-          <Logo />
+        <div className="flex h-[4.5rem] items-center justify-between gap-4 lg:h-16 lg:gap-6">
+          <Logo taglineClassName="hidden lg:block" />
 
           <nav
             aria-label="Navigation principale"
@@ -29,7 +29,7 @@ export function SiteHeader() {
                 const hasChildren = Boolean(item.children?.length)
                 return (
                   <li
-                    key={item.href}
+                    key={`${item.label}-${item.href}`}
                     className="relative"
                     onMouseEnter={() =>
                       hasChildren ? setOpenMenu(item.href) : setOpenMenu(null)

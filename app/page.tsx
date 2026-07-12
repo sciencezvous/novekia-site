@@ -9,11 +9,13 @@ import { TechnologiesSection } from '@/components/home/technologies-section'
 import { ResearchSection } from '@/components/home/research-section'
 import { ContactSection } from '@/components/home/contact-section'
 import { JsonLd, organizationJsonLd } from '@/components/brand/json-ld'
+import { HashNavigation } from '@/components/layout/hash-navigation'
 
 export default function HomePage() {
   return (
     <>
       <JsonLd data={organizationJsonLd} />
+      <HashNavigation />
       <SiteHeader />
       <main id="contenu">
         {/* 00 — Hero */}

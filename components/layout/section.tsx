@@ -18,9 +18,9 @@ const tones = {
 }
 
 const spacings = {
-  compact: 'py-16 md:py-20',
-  default: 'py-20 md:py-28',
-  loose: 'py-24 md:py-36',
+  compact: 'py-12 sm:py-16 md:py-20',
+  default: 'py-14 sm:py-20 md:py-28',
+  loose: 'py-16 sm:py-24 md:py-36',
 }
 
 export function Section({

@@ -164,11 +164,16 @@
   html {
     scroll-behavior: smooth;
   }
-  section[id] {
-    scroll-margin-top: 5rem;
+  section[id],
+  article[id] {
+    scroll-margin-top: 5.5rem;
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: clip;
+  }
+  :focus-visible {
+    scroll-margin-block: 6rem;
   }
   @media (prefers-reduced-motion: reduce) {
     html {

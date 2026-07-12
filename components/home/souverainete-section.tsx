@@ -78,7 +78,7 @@ export function SouveraineteSection() {
                 <span className="relative flex size-10 items-center justify-center border border-primary/50 bg-background font-mono text-xs text-primary">
                   {layer.index}
                 </span>
-                <div className="border border-border bg-card/65 p-5 transition-colors duration-200 hover:border-primary/50 hover:bg-card">
+                <div className="min-w-0 border border-border bg-card/65 p-4 transition-colors duration-200 hover:border-primary/50 hover:bg-card sm:p-5">
                   <h3 className="text-base font-semibold text-foreground">{layer.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{layer.description}</p>
                 </div>

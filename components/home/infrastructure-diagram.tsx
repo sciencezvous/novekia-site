@@ -137,7 +137,7 @@ export function InfrastructureDiagram({ className }: { className?: string }) {
                 textAnchor={angle === 0 ? 'start' : angle === 180 ? 'end' : 'middle'}
                 dx={angle === 0 ? 14 : angle === 180 ? -14 : 0}
                 fill="#dceeff"
-                fontSize="10"
+                fontSize="11"
                 fontFamily="var(--font-mono, monospace)"
                 letterSpacing="0.1em"
                 opacity="0.75"

@@ -44,7 +44,7 @@ export function ResearchSection() {
         {researchAxes.map((axis) => (
           <article
             key={axis.index}
-            className="group relative flex flex-col bg-secondary p-6 transition-colors duration-200 hover:bg-background md:p-8"
+            className="group relative flex flex-col bg-secondary p-5 transition-colors duration-200 hover:bg-background sm:p-6 md:p-8"
           >
             <div className="flex items-center justify-between gap-4">
               <span className="font-mono text-xs tracking-[0.18em] text-primary">

@@ -96,6 +96,7 @@ export function ExpertisesSection() {
       <div className="mt-12 grid grid-cols-1 gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
         {expertises.map((expertise) => (
           <article
+            id={expertise.id}
             key={expertise.id}
             className={cn(
               'group relative flex flex-col gap-4 bg-background p-6 transition-colors duration-200',
@@ -124,7 +125,7 @@ export function ExpertisesSection() {
                 href={`#${expertise.id}`}
                 className={cn(
                   'inline-flex items-center gap-1.5 font-mono text-xs tracking-[0.1em] text-primary',
-                  'opacity-0 transition-opacity duration-200 group-hover:opacity-100',
+                  'opacity-100 transition-opacity duration-200 lg:opacity-0 lg:group-hover:opacity-100',
                   'focus:opacity-100 focus:outline-none',
                   // couverture de l'ensemble de la carte pour la zone de clic
                   'after:absolute after:inset-0',
