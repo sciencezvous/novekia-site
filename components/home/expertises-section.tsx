@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 const expertises = [
   {
-    id: 'logiciels-metiers',
+    id: 'solution-logiciels-metiers',
     title: 'Logiciels métiers sur mesure',
     description:
       'Applications internes, plateformes professionnelles, automatisations et outils adaptés aux processus de l\'entreprise.',
@@ -18,7 +18,7 @@ const expertises = [
     ),
   },
   {
-    id: 'ia-locale',
+    id: 'solution-ia-locale',
     title: 'Intelligence artificielle locale',
     description:
       'Déploiement de modèles IA sur infrastructure privée, sans transfert systématique des données vers un fournisseur externe.',
@@ -31,7 +31,7 @@ const expertises = [
     ),
   },
   {
-    id: 'stations-serveurs',
+    id: 'solution-stations-serveurs',
     title: 'Stations et serveurs IA',
     description:
       'Conception de configurations GPU sur mesure selon les modèles utilisés, les volumes de données, les performances attendues et le budget.',
@@ -44,7 +44,7 @@ const expertises = [
     ),
   },
   {
-    id: 'infrastructures-calcul',
+    id: 'solution-infrastructures-calcul',
     title: 'Infrastructures de calcul',
     description:
       'Architecture, intégration et optimisation de stations haute performance, serveurs GPU, stockage et réseaux internes.',
@@ -57,7 +57,7 @@ const expertises = [
     ),
   },
   {
-    id: 'applications-web',
+    id: 'solution-applications-web',
     title: 'Applications web et intégrations',
     description:
       'Interfaces professionnelles, API, outils collaboratifs, automatisations et connexions avec les systèmes existants.',
@@ -69,7 +69,7 @@ const expertises = [
     ),
   },
   {
-    id: 'seo-geo',
+    id: 'solution-seo-geo',
     title: 'SEO et GEO',
     description:
       'Sites structurés pour les moteurs de recherche et les systèmes de recherche, synthèse et réponse assistés par intelligence artificielle.',
