@@ -31,28 +31,15 @@ const expertises = [
     ),
   },
   {
-    id: 'solution-stations-serveurs',
-    title: 'Stations et serveurs IA',
+    id: 'solution-infrastructures-ia',
+    title: 'Infrastructures de calcul & serveurs IA',
     description:
-      'Conception de configurations GPU sur mesure selon les modèles utilisés, les volumes de données, les performances attendues et le budget.',
+      'Conception, intégration et optimisation de stations GPU, serveurs IA, stockage et réseaux, dimensionnés selon les modèles utilisés, les volumes de données, les performances attendues, le budget et les contraintes d\'exploitation.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-5">
         <rect x="2" y="4" width="20" height="6" rx="1" />
         <rect x="2" y="14" width="20" height="6" rx="1" />
         <path d="M6 7h.01M6 17h.01M10 7h.01M10 17h.01" />
-      </svg>
-    ),
-  },
-  {
-    id: 'solution-infrastructures-calcul',
-    title: 'Infrastructures de calcul',
-    description:
-      'Architecture, intégration et optimisation de stations haute performance, serveurs GPU, stockage et réseaux internes.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-5">
-        <path d="M5 12H2M22 12h-3M12 5V2M12 22v-3" />
-        <rect x="7" y="7" width="10" height="10" rx="1" />
-        <path d="M9 9h6v6H9z" />
       </svg>
     ),
   },
@@ -70,9 +57,9 @@ const expertises = [
   },
   {
     id: 'solution-seo-geo',
-    title: 'SEO et GEO',
+    title: 'Création de sites web optimisés SEO & GEO',
     description:
-      'Sites structurés pour les moteurs de recherche et les systèmes de recherche, synthèse et réponse assistés par intelligence artificielle.',
+      'Conception de sites web rapides, performants et structurés pour le référencement naturel, Google AI Overviews et les moteurs de recherche générative.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-5">
         <circle cx="11" cy="11" r="8" />
