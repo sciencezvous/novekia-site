@@ -18,12 +18,12 @@ export function FounderVisionSection() {
       <div className="relative grid items-center gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-14">
         <figure className="novekia-surface scan-sweep relative mx-auto w-full max-w-xl overflow-hidden">
           <Image
-            src="/andy-legrand-novekia.png"
+            src="/andy-legrand-novekia-v2.png"
             alt="Andy Legrand, fondateur du studio d’ingénierie Novekia"
-            width={1088}
-            height={1445}
+            width={972}
+            height={1619}
             sizes="(min-width: 1024px) 42vw, (min-width: 640px) 70vw, 100vw"
-            className="aspect-[4/5] w-full object-cover object-top"
+            className="aspect-[4/5] w-full object-cover object-[center_18%]"
           />
           <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#020817] via-[#020817]/80 to-transparent px-6 pb-6 pt-20">
             <p className="text-lg font-semibold text-white">Andy Legrand</p>
