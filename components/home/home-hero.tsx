@@ -1,8 +1,15 @@
+import Image from 'next/image'
 import { Section } from '@/components/layout/section'
 import { TechnicalLabel } from '@/components/brand/technical-label'
 import { PrimaryButton } from '@/components/brand/primary-button'
 import { SecondaryButton } from '@/components/brand/secondary-button'
-import { InfrastructureDiagram } from '@/components/home/infrastructure-diagram'
+
+const signals = [
+  { value: 'LOCAL', label: 'Données sous contrôle' },
+  { value: 'MODULAIRE', label: 'Architecture évolutive' },
+  { value: 'SUR MESURE', label: 'Conçu pour vos usages' },
+  { value: 'MESURABLE', label: 'Du cadrage à la production' },
+]
 
 export function HomeHero() {
   return (
@@ -11,51 +18,72 @@ export function HomeHero() {
       spacing="loose"
       contained={false}
       aria-labelledby="hero-title"
-      className="overflow-hidden"
+      className="min-h-[calc(100svh-4.5rem)] overflow-hidden border-t-0 lg:min-h-[calc(100svh-4rem)]"
     >
-      {/* Motif technique discret en arrière-plan */}
       <div
         aria-hidden="true"
-        className="technical-grid-pattern pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_70%)]"
+        className="technical-grid-pattern pointer-events-none absolute inset-0 opacity-30 [mask-image:linear-gradient(to_bottom,black,transparent_90%)]"
       />
+      <div aria-hidden="true" className="novekia-glow -left-48 top-12" />
 
-      <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-6 md:px-8">
-        <div className="grid grid-cols-1 items-center gap-7 sm:gap-10 lg:grid-cols-[1fr_0.78fr] lg:gap-16">
+      <div className="absolute inset-y-0 right-0 hidden w-[53%] lg:block">
+        <Image
+          src="/hero-infrastructure.jpg"
+          alt="Détail d’une infrastructure de calcul éclairée en bleu"
+          fill
+          priority
+          sizes="53vw"
+          className="object-cover object-center opacity-80 saturate-75"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,#020817_0%,rgba(2,8,23,0.55)_32%,rgba(2,8,23,0.08)_75%),linear-gradient(180deg,rgba(2,8,23,0.1),#020817_100%)]" />
+        <div className="absolute inset-y-0 left-0 w-px bg-primary/40 shadow-[0_0_36px_rgba(8,124,255,0.9)]" />
+      </div>
 
-          {/* Colonne gauche — texte */}
-          <div className="flex-1 lg:max-w-[54%]">
-            <TechnicalLabel index="00">Studio d&apos;ingénierie technologique</TechnicalLabel>
-            <h1
-              id="hero-title"
-              className="mt-5 text-balance text-[clamp(2.25rem,11vw,3.75rem)] font-semibold leading-[1.02] tracking-tight sm:mt-6 md:text-6xl"
-            >
-              Infrastructure locale.{' '}
-              <span className="text-primary">Intelligence souveraine.</span>
-            </h1>
-            <div className="mx-auto mt-4 w-full max-w-[17.5rem] lg:hidden">
-              <InfrastructureDiagram className="aspect-square w-full" />
-            </div>
-            <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
-              Novekia conçoit des infrastructures modulaires, sécurisées et
-              évolutives — IA locale, logiciels métiers et stations de calcul haute
-              performance — pour accélérer vos performances.
-            </p>
-            <div className="mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row [&>*]:w-full sm:[&>*]:w-auto">
-              <PrimaryButton href="#expertises" withArrow>
-                Découvrir nos solutions
-              </PrimaryButton>
-              <SecondaryButton href="#contact">
-                Demander un audit
-              </SecondaryButton>
-            </div>
+      <div className="relative mx-auto flex min-h-[calc(100svh-11rem)] w-full max-w-7xl flex-col justify-center px-5 sm:px-6 md:px-8">
+        <div className="max-w-4xl py-10 lg:max-w-[57%] lg:py-16">
+          <TechnicalLabel index="00">Studio d&apos;ingénierie technologique</TechnicalLabel>
+          <h1
+            id="hero-title"
+            className="mt-6 text-balance text-[clamp(3.3rem,11vw,6.7rem)] font-semibold leading-[0.88] tracking-[-0.065em]"
+          >
+            Infrastructure
+            <br />
+            locale.
+            <br />
+            <span className="bg-gradient-to-r from-[#77c8ff] via-[#319bff] to-[#087cff] bg-clip-text text-transparent">
+              Intelligence
+              <br />
+              souveraine.
+            </span>
+          </h1>
+          <p className="mt-7 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Novekia conçoit en France des systèmes numériques privés et performants :
+            intelligence artificielle locale, logiciels métiers, infrastructures de calcul
+            et architectures web pensées pour durer.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row [&>*]:w-full sm:[&>*]:w-auto">
+            <PrimaryButton href="#expertises" withArrow>
+              Découvrir nos solutions
+            </PrimaryButton>
+            <SecondaryButton href="#contact">Demander un audit</SecondaryButton>
           </div>
-
-          {/* Colonne droite — diagramme */}
-          <div className="hidden w-full max-w-sm flex-shrink-0 lg:block lg:w-full lg:max-w-none">
-            <InfrastructureDiagram className="aspect-square w-full" />
-          </div>
-
         </div>
+
+        <dl className="novekia-surface relative z-10 mt-auto grid grid-cols-2 lg:grid-cols-4">
+          {signals.map((signal) => (
+            <div
+              key={signal.value}
+              className="border-border/80 p-4 even:border-l sm:p-5 lg:border-l lg:first:border-l-0"
+            >
+              <dt className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+                {signal.label}
+              </dt>
+              <dd className="mt-2 text-sm font-semibold tracking-tight text-foreground sm:text-base">
+                {signal.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </Section>
   )

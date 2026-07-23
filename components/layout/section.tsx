@@ -12,8 +12,8 @@ type SectionProps = React.ComponentProps<'section'> & {
 }
 
 const tones = {
-  light: 'bg-background text-foreground',
-  muted: 'bg-secondary text-secondary-foreground',
+  light: 'bg-background/70 text-foreground',
+  muted: 'bg-[color:var(--novekia-surface-sombre)] text-secondary-foreground',
   dark: 'section-dark bg-background text-foreground',
 }
 
@@ -34,7 +34,8 @@ export function Section({
 }: SectionProps) {
   return (
     <section
-      className={cn('relative', tones[tone], spacings[spacing], className)}
+      data-reveal=""
+      className={cn('relative border-t border-border/70', tones[tone], spacings[spacing], className)}
       {...props}
     >
       {contained ? (

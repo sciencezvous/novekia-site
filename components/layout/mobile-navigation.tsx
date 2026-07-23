@@ -130,7 +130,7 @@ export function MobileNavigation() {
                           {item.children!.map((child) => (
                             <li key={child.href}>
                               <Link
-                                href={child.href}
+                                href={child.href.startsWith('#') ? `/${child.href}` : child.href}
                                 onClick={navigateAndClose}
                                 className="flex min-h-11 items-center rounded-sm py-2 text-sm text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
                               >
@@ -143,7 +143,7 @@ export function MobileNavigation() {
                     </>
                   ) : (
                     <Link
-                      href={item.href}
+                      href={item.href.startsWith('#') ? `/${item.href}` : item.href}
                       onClick={navigateAndClose}
                       className="flex min-h-11 items-center rounded-sm py-2 text-base font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
@@ -154,7 +154,7 @@ export function MobileNavigation() {
               )
             })}
           </ul>
-          <PrimaryButton href="#contact" className="mt-5 w-full" onClick={navigateAndClose}>
+          <PrimaryButton href="/#contact" className="mt-5 w-full" onClick={navigateAndClose}>
             Demander un audit
           </PrimaryButton>
         </nav>

@@ -36,7 +36,7 @@ export function SiteHeader() {
                     }
                   >
                     <Link
-                      href={item.href}
+                      href={item.href.startsWith('#') ? `/${item.href}` : item.href}
                       className="inline-flex items-center gap-1 rounded-sm px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                       aria-expanded={hasChildren ? openMenu === item.href : undefined}
                     >
@@ -58,7 +58,7 @@ export function SiteHeader() {
                           {item.children!.map((child) => (
                             <li key={`${child.label}-${child.href}`}>
                               <Link
-                                href={child.href}
+                                href={child.href.startsWith('#') ? `/${child.href}` : child.href}
                                 className="block rounded-sm px-3 py-2 transition-colors hover:bg-secondary"
                               >
                                 <span className="block text-sm font-medium text-popover-foreground">
@@ -82,7 +82,7 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <PrimaryButton href="#contact" className="hidden lg:inline-flex">
+            <PrimaryButton href="/#contact" className="hidden lg:inline-flex">
               Demander un audit
             </PrimaryButton>
             <MobileNavigation />

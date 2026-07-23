@@ -52,6 +52,7 @@ export const mainNavigation: NavItem[] = [
       },
     ],
   },
+  { label: 'Offres', href: '/offres' },
   {
     label: 'Services',
     href: '#methode',
@@ -96,6 +97,11 @@ export const mainNavigation: NavItem[] = [
         label: 'Le studio Novekia',
         href: '#positionnement',
         description: 'Qui nous sommes.',
+      },
+      {
+        label: 'La vision du fondateur',
+        href: '#vision',
+        description: 'Pourquoi Novekia est un studio, pas une agence.',
       },
       {
         label: 'Notre méthode',
@@ -150,6 +156,17 @@ export const mainNavigation: NavItem[] = [
 
 export const footerNavigation: { title: string; links: { label: string; href: string }[] }[] = [
   {
+    title: 'Offres',
+    links: [
+      { label: 'Vue d’ensemble', href: '/offres' },
+      { label: 'Logiciels métiers sur mesure', href: '/offres#solution-logiciels-metiers' },
+      { label: 'Intelligence artificielle locale', href: '/offres#solution-ia-locale' },
+      { label: 'Infrastructures de calcul & serveurs IA', href: '/offres#solution-infrastructures-ia' },
+      { label: 'Applications web et intégrations', href: '/offres#solution-applications-web' },
+      { label: 'Sites optimisés SEO & GEO', href: '/offres#solution-seo-geo' },
+    ],
+  },
+  {
     title: 'Solutions',
     links: [
       { label: 'Vue d\'ensemble', href: '#expertises' },
@@ -164,6 +181,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     title: 'Studio',
     links: [
       { label: 'Le studio', href: '#positionnement' },
+      { label: 'Vision du fondateur', href: '#vision' },
       { label: 'Méthode', href: '#methode' },
       { label: 'Souveraineté', href: '#souverainete' },
       { label: 'R&D', href: '#research' },

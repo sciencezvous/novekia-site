@@ -19,14 +19,14 @@ export function Logo({
   showWordmark = true,
   showTagline = true,
   href = '/',
-  iconSize = 40,
+  iconSize = 48,
   taglineClassName,
 }: LogoProps) {
   const content = (
     <span className={cn('inline-flex items-center gap-3', className)}>
       <Image
         src="/novekia-icon.svg"
-        alt="Novekia"
+        alt=""
         width={iconSize}
         height={iconSize}
         priority

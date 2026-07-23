@@ -31,11 +31,11 @@ export function SectionHeader({
       )}
     >
       {eyebrow ? <TechnicalLabel index={index}>{eyebrow}</TechnicalLabel> : null}
-      <Heading className="max-w-2xl text-balance text-[clamp(1.75rem,8vw,2.25rem)] font-semibold leading-tight tracking-tight md:text-4xl">
+      <Heading className="max-w-4xl text-balance text-[clamp(2.35rem,7vw,5rem)] font-semibold leading-[0.98] tracking-[-0.045em]">
         {title}
       </Heading>
       {description ? (
-        <p className="max-w-2xl text-pretty leading-relaxed text-muted-foreground">
+        <p className="max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
           {description}
         </p>
       ) : null}
