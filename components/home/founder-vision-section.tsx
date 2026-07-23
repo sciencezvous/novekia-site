@@ -18,7 +18,7 @@ export function FounderVisionSection() {
       <div className="relative grid items-center gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-14">
         <figure className="novekia-surface scan-sweep relative mx-auto w-full max-w-xl overflow-hidden">
           <Image
-            src="/andy-legrand-novekia-v2.png"
+            src="/andy-legrand-novekia-v3.png"
             alt="Andy Legrand, fondateur du studio d’ingénierie Novekia"
             width={972}
             height={1619}
