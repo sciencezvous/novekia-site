@@ -25,6 +25,9 @@ export const organizationJsonLd: Record<string, unknown> = {
   logo: `${siteConfig.url}/novekia-icon.svg`,
   image: `${siteConfig.url}/og.png`,
   email: siteConfig.contact.email,
+  founder: {
+    '@id': `${siteConfig.url}/#andy-legrand`,
+  },
   areaServed: {
     '@type': 'Country',
     name: 'France',
@@ -39,6 +42,24 @@ export const organizationJsonLd: Record<string, unknown> = {
     'Applications web',
     'SEO',
     'Generative Engine Optimization',
+  ],
+}
+
+export const founderJsonLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${siteConfig.url}/#andy-legrand`,
+  name: 'Andy Legrand',
+  jobTitle: 'Fondateur',
+  image: `${siteConfig.url}/andy-legrand-novekia.png`,
+  worksFor: {
+    '@id': `${siteConfig.url}/#organization`,
+  },
+  knowsAbout: [
+    'Ingénierie logicielle',
+    'Intelligence artificielle locale',
+    'Infrastructure de calcul',
+    'Architecture de systèmes',
   ],
 }
 

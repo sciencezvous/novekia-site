@@ -75,16 +75,10 @@ export default async function OfferPage({ params }: OfferPageProps) {
                   {offer.intro}
                 </p>
               </div>
-              <dl className="novekia-surface grid gap-px bg-border sm:grid-cols-2">
+              <dl className="novekia-surface">
                 <div className="bg-card/90 p-5">
                   <dt className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                    Budget indicatif
-                  </dt>
-                  <dd className="mt-2 font-semibold">{offer.startingPrice}</dd>
-                </div>
-                <div className="bg-card/90 p-5">
-                  <dt className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                    Durée
+                    Durée indicative
                   </dt>
                   <dd className="mt-2 font-semibold">{offer.duration}</dd>
                 </div>

@@ -12,7 +12,6 @@ export type OfferData = {
   title: string
   summary: string
   intro: string
-  startingPrice: string
   duration: string
   forWhom: string[]
   outcomes: string[]
@@ -33,7 +32,6 @@ export const offers = {
     title: 'Audit Wi-Fi entreprise',
     summary: 'Diagnostiquer la couverture, les interférences et la capacité réelle de votre réseau sans fil.',
     intro: 'Une intervention structurée pour objectiver les zones faibles, comprendre les causes de dégradation et établir un plan d’amélioration exploitable par vos équipes ou votre intégrateur.',
-    startingPrice: 'À partir de 1 200 € HT',
     duration: '2 à 5 jours ouvrés selon le périmètre',
     forWhom: [
       'PME, ETI et sites industriels confrontés à des coupures ou à une couverture irrégulière',
@@ -75,7 +73,6 @@ export const offers = {
     title: 'Interconnexion multi-sites',
     summary: 'Relier vos agences, ateliers et infrastructures avec une architecture lisible, sécurisée et adaptée aux usages.',
     intro: 'Nous cadrons l’architecture d’interconnexion, les flux critiques, les mécanismes de résilience et le plan de migration pour réduire le risque avant toute mise en production.',
-    startingPrice: 'À partir de 2 800 € HT',
     duration: '1 à 3 semaines selon le nombre de sites',
     forWhom: [
       'Organisations réparties sur plusieurs bureaux, agences ou sites de production',
@@ -117,7 +114,6 @@ export const offers = {
     title: 'Atelier architecture IA privée',
     summary: 'Transformer un cas d’usage IA en architecture privée réaliste, dimensionnée et gouvernable.',
     intro: 'Un atelier de décision pour aligner les objectifs métier, les données, les modèles, la sécurité et les contraintes d’exploitation avant d’engager des achats ou un développement.',
-    startingPrice: 'À partir de 1 900 € HT',
     duration: '1 atelier préparé puis restitution sous 5 jours ouvrés',
     forWhom: [
       'Directions métier et IT qui explorent un assistant ou un moteur documentaire privé',
@@ -159,7 +155,6 @@ export const offers = {
     title: 'Déploiement IA on-premise',
     summary: 'Installer et intégrer une chaîne d’inférence IA dans votre environnement, sous le contrôle de vos équipes.',
     intro: 'Nous mettons en place un socle d’exécution privé, documenté et observable, puis accompagnons la validation technique du cas d’usage retenu avant son passage en exploitation.',
-    startingPrice: 'À partir de 6 500 € HT',
     duration: '3 à 8 semaines selon l’intégration',
     forWhom: [
       'Organisations ayant validé un cas d’usage et une architecture cible',

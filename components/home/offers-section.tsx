@@ -8,7 +8,7 @@ export function OffersSection() {
   return (
     <Section id="offres" tone="light" aria-labelledby="offres-title">
       <SectionHeader
-        index="03"
+        index="04"
         eyebrow="Offres"
         title={<span id="offres-title">Des missions concrètes, des livrables clairs.</span>}
         description="Quatre points d’entrée pour sécuriser une décision, concevoir une architecture ou déployer une solution privée."
@@ -39,10 +39,9 @@ export function OffersSection() {
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
               {offer.summary}
             </p>
-            <div className="mt-auto flex flex-wrap gap-x-6 gap-y-2 pt-8 font-mono text-xs text-muted-foreground">
-              <span>{offer.startingPrice}</span>
-              <span>{offer.duration}</span>
-            </div>
+            <p className="mt-auto pt-8 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+              Durée indicative · {offer.duration}
+            </p>
           </Link>
         ))}
       </div>

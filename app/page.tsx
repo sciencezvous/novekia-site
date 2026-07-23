@@ -2,6 +2,7 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { HomeHero } from '@/components/home/home-hero'
 import { PositionnementSection } from '@/components/home/positionnement-section'
+import { FounderVisionSection } from '@/components/home/founder-vision-section'
 import { ExpertisesSection } from '@/components/home/expertises-section'
 import { OffersSection } from '@/components/home/offers-section'
 import { MethodeSection } from '@/components/home/methode-section'
@@ -12,6 +13,7 @@ import { ContactSection } from '@/components/home/contact-section'
 import { FaqSection, homeFaq } from '@/components/home/faq-section'
 import {
   JsonLd,
+  founderJsonLd,
   homePageJsonLd,
   organizationJsonLd,
   websiteJsonLd,
@@ -22,6 +24,7 @@ export default function HomePage() {
   return (
     <>
       <JsonLd data={organizationJsonLd} />
+      <JsonLd data={founderJsonLd} />
       <JsonLd data={websiteJsonLd} />
       <JsonLd data={homePageJsonLd} />
       <JsonLd
@@ -47,28 +50,31 @@ export default function HomePage() {
         {/* 01 — Positionnement */}
         <PositionnementSection />
 
-        {/* 02 — Expertises */}
+        {/* 02 — Vision du fondateur */}
+        <FounderVisionSection />
+
+        {/* 03 — Expertises */}
         <ExpertisesSection />
 
-        {/* 03 — Offres */}
+        {/* 04 — Offres */}
         <OffersSection />
 
-        {/* 04 — Méthode */}
+        {/* 05 — Méthode */}
         <MethodeSection />
 
-        {/* 05 — Souveraineté */}
+        {/* 06 — Souveraineté */}
         <SouveraineteSection />
 
-        {/* 06 — Technologies */}
+        {/* 07 — Technologies */}
         <TechnologiesSection />
 
-        {/* 07 — Recherche & Développement */}
+        {/* 08 — Recherche & Développement */}
         <ResearchSection />
 
-        {/* 08 — Questions fréquentes */}
+        {/* 09 — Questions fréquentes */}
         <FaqSection />
 
-        {/* 09 — Contact */}
+        {/* 10 — Contact */}
         <ContactSection />
       </main>
       <SiteFooter />

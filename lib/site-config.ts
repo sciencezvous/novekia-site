@@ -99,6 +99,11 @@ export const mainNavigation: NavItem[] = [
         description: 'Qui nous sommes.',
       },
       {
+        label: 'La vision du fondateur',
+        href: '#vision',
+        description: 'Pourquoi Novekia est un studio, pas une agence.',
+      },
+      {
         label: 'Notre méthode',
         href: '#methode',
         description: 'Notre démarche d\'ingénierie.',
@@ -175,6 +180,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     title: 'Studio',
     links: [
       { label: 'Le studio', href: '#positionnement' },
+      { label: 'Vision du fondateur', href: '#vision' },
       { label: 'Méthode', href: '#methode' },
       { label: 'Souveraineté', href: '#souverainete' },
       { label: 'R&D', href: '#research' },

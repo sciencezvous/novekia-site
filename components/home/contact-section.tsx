@@ -34,7 +34,7 @@ export function ContactSection() {
       <div aria-hidden="true" className="technical-grid-pattern pointer-events-none absolute inset-0 opacity-20 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
       <div className="relative">
         <SectionHeader
-          index="09"
+          index="10"
           eyebrow="Contact"
           title={<span id="contact-title">Discutons de votre<br />problématique technique.</span>}
           description="Décrivez votre contexte : nous revenons vers vous avec une première lecture d’ingénierie."

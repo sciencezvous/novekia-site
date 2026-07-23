@@ -74,10 +74,9 @@ export default function OffersPage() {
               </div>
               <h2 className="mt-8 text-3xl font-semibold tracking-tight">{offer.title}</h2>
               <p className="mt-4 text-sm leading-7 text-muted-foreground">{offer.summary}</p>
-              <div className="mt-auto flex flex-wrap gap-x-6 gap-y-2 pt-8 font-mono text-xs text-muted-foreground">
-                <span>{offer.startingPrice}</span>
-                <span>{offer.duration}</span>
-              </div>
+              <p className="mt-auto pt-8 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                Durée indicative · {offer.duration}
+              </p>
             </Link>
           ))}
         </section>

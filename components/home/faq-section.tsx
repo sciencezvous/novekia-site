@@ -33,7 +33,7 @@ export function FaqSection() {
   return (
     <Section id="questions" tone="muted" aria-labelledby="questions-title">
       <SectionHeader
-        index="08"
+        index="09"
         eyebrow="Questions fréquentes"
         title={<span id="questions-title">Comprendre avant de décider.</span>}
         description="Des réponses directes sur notre métier, notre approche de l’IA privée et notre travail SEO/GEO."
