@@ -4,7 +4,6 @@ import { HomeHero } from '@/components/home/home-hero'
 import { PositionnementSection } from '@/components/home/positionnement-section'
 import { FounderVisionSection } from '@/components/home/founder-vision-section'
 import { ExpertisesSection } from '@/components/home/expertises-section'
-import { OffersSection } from '@/components/home/offers-section'
 import { MethodeSection } from '@/components/home/methode-section'
 import { SouveraineteSection } from '@/components/home/souverainete-section'
 import { TechnologiesSection } from '@/components/home/technologies-section'
@@ -56,25 +55,22 @@ export default function HomePage() {
         {/* 03 — Expertises */}
         <ExpertisesSection />
 
-        {/* 04 — Offres */}
-        <OffersSection />
-
-        {/* 05 — Méthode */}
+        {/* 04 — Méthode */}
         <MethodeSection />
 
-        {/* 06 — Souveraineté */}
+        {/* 05 — Souveraineté */}
         <SouveraineteSection />
 
-        {/* 07 — Technologies */}
+        {/* 06 — Technologies */}
         <TechnologiesSection />
 
-        {/* 08 — Recherche & Développement */}
+        {/* 07 — Recherche & Développement */}
         <ResearchSection />
 
-        {/* 09 — Questions fréquentes */}
+        {/* 08 — Questions fréquentes */}
         <FaqSection />
 
-        {/* 10 — Contact */}
+        {/* 09 — Contact */}
         <ContactSection />
       </main>
       <SiteFooter />

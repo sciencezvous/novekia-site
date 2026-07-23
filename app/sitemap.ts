@@ -1,5 +1,4 @@
 import type { MetadataRoute } from 'next'
-import { offerList } from '@/lib/offers'
 import { siteConfig } from '@/lib/site-config'
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -17,12 +16,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: route.changeFrequency,
       priority: route.priority,
-    })),
-    ...offerList.map((offer) => ({
-      url: `${siteConfig.url}/offres/${offer.slug}`,
-      lastModified: now,
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
     })),
   ]
 }

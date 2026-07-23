@@ -158,11 +158,12 @@ export const footerNavigation: { title: string; links: { label: string; href: st
   {
     title: 'Offres',
     links: [
-      { label: 'Toutes les offres', href: '/offres' },
-      { label: 'Audit Wi-Fi', href: '/offres/audit-wifi-entreprise' },
-      { label: 'Interconnexion multi-sites', href: '/offres/interconnexion-multi-sites' },
-      { label: 'Architecture IA privée', href: '/offres/atelier-architecture-ia-privee' },
-      { label: 'IA on-premise', href: '/offres/deploiement-ia-on-premise' },
+      { label: 'Vue d’ensemble', href: '/offres' },
+      { label: 'Logiciels métiers sur mesure', href: '/offres#solution-logiciels-metiers' },
+      { label: 'Intelligence artificielle locale', href: '/offres#solution-ia-locale' },
+      { label: 'Infrastructures de calcul & serveurs IA', href: '/offres#solution-infrastructures-ia' },
+      { label: 'Applications web et intégrations', href: '/offres#solution-applications-web' },
+      { label: 'Sites optimisés SEO & GEO', href: '/offres#solution-seo-geo' },
     ],
   },
   {

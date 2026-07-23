@@ -34,7 +34,7 @@ export function ResearchSection() {
       aria-labelledby="research-title"
     >
       <SectionHeader
-        index="08"
+        index="07"
         eyebrow="Recherche & Développement"
         title={<span id="research-title">De la recherche appliquée aux produits.</span>}
         description="Un effort continu de R&D pour repousser les limites techniques."
