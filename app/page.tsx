@@ -2,7 +2,6 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { HomeHero } from '@/components/home/home-hero'
 import { PositionnementSection } from '@/components/home/positionnement-section'
-import { FounderVisionSection } from '@/components/home/founder-vision-section'
 import { ExpertisesSection } from '@/components/home/expertises-section'
 import { MethodeSection } from '@/components/home/methode-section'
 import { SouveraineteSection } from '@/components/home/souverainete-section'
@@ -49,28 +48,25 @@ export default function HomePage() {
         {/* 01 — Positionnement */}
         <PositionnementSection />
 
-        {/* 02 — Vision du fondateur */}
-        <FounderVisionSection />
-
-        {/* 03 — Expertises */}
+        {/* 02 — Expertises */}
         <ExpertisesSection />
 
-        {/* 04 — Méthode */}
+        {/* 03 — Méthode */}
         <MethodeSection />
 
-        {/* 05 — Souveraineté */}
+        {/* 04 — Souveraineté */}
         <SouveraineteSection />
 
-        {/* 06 — Technologies */}
+        {/* 05 — Technologies */}
         <TechnologiesSection />
 
-        {/* 07 — Recherche & Développement */}
+        {/* 06 — Recherche & Développement */}
         <ResearchSection />
 
-        {/* 08 — Questions fréquentes */}
+        {/* 07 — Questions fréquentes */}
         <FaqSection />
 
-        {/* 09 — Contact */}
+        {/* 08 — Contact */}
         <ContactSection />
       </main>
       <SiteFooter />

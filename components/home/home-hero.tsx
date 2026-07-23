@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { Quote } from 'lucide-react'
 import { Section } from '@/components/layout/section'
 import { TechnicalLabel } from '@/components/brand/technical-label'
 import { PrimaryButton } from '@/components/brand/primary-button'
@@ -68,6 +69,51 @@ export function HomeHero() {
             <SecondaryButton href="#contact">Demander un audit</SecondaryButton>
           </div>
         </div>
+
+        <aside
+          id="vision"
+          aria-labelledby="vision-title"
+          className="novekia-surface relative z-10 mb-8 mt-2 w-full overflow-visible border-primary/30 bg-[#030c1c]/90 p-5 shadow-[0_20px_70px_rgba(0,72,180,0.22)] backdrop-blur-xl sm:p-6 lg:absolute lg:bottom-[8.75rem] lg:right-8 lg:mb-0 lg:mt-0 lg:w-[min(36vw,28rem)] xl:right-0"
+        >
+          <span
+            aria-hidden="true"
+            className="absolute -right-2 top-12 hidden size-4 rotate-45 border-r border-t border-primary/30 bg-[#061126] lg:block"
+          />
+          <div className="flex items-center gap-4">
+            <div className="relative size-16 shrink-0 overflow-hidden border border-primary/40 bg-[#071224] shadow-[0_0_30px_rgba(8,124,255,0.25)] sm:size-[4.5rem]">
+              <Image
+                src="/andy-legrand-novekia-v3.png"
+                alt="Andy Legrand, fondateur du studio d’ingénierie Novekia"
+                fill
+                sizes="72px"
+                className="object-cover object-[center_18%]"
+              />
+            </div>
+            <div>
+              <p
+                id="vision-title"
+                className="font-mono text-[0.64rem] uppercase tracking-[0.2em] text-primary"
+              >
+                La vision du studio
+              </p>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                Andy Legrand · Fondateur
+              </p>
+            </div>
+            <Quote
+              aria-hidden="true"
+              className="ml-auto size-7 shrink-0 text-primary/70"
+              strokeWidth={1.4}
+            />
+          </div>
+          <blockquote className="mt-5 border-t border-border/80 pt-5">
+            <p className="text-pretty text-base font-medium leading-relaxed text-foreground sm:text-lg">
+              « Un studio d’ingénierie où l’on comprend, conçoit, prototype et
+              déploie des systèmes solides — au plus près de vos métiers et sous
+              votre contrôle. »
+            </p>
+          </blockquote>
+        </aside>
 
         <dl className="novekia-surface relative z-10 mt-auto grid grid-cols-2 lg:grid-cols-4">
           {signals.map((signal) => (
