@@ -37,7 +37,6 @@ export function HomeHero() {
           className="object-cover object-center opacity-80 saturate-75"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#020817_0%,rgba(2,8,23,0.55)_32%,rgba(2,8,23,0.08)_75%),linear-gradient(180deg,rgba(2,8,23,0.1),#020817_100%)]" />
-        <div className="absolute inset-y-0 left-0 w-px bg-primary/40 shadow-[0_0_36px_rgba(8,124,255,0.9)]" />
       </div>
 
       <div className="relative mx-auto flex min-h-[calc(100svh-11rem)] w-full max-w-7xl flex-col justify-center px-5 sm:px-6 md:px-8">
@@ -73,19 +72,19 @@ export function HomeHero() {
         <aside
           id="vision"
           aria-labelledby="vision-title"
-          className="novekia-surface relative z-10 mb-8 mt-2 w-full overflow-visible border-primary/30 bg-[#030c1c]/90 p-5 shadow-[0_20px_70px_rgba(0,72,180,0.22)] backdrop-blur-xl sm:p-6 lg:absolute lg:bottom-[8.75rem] lg:right-8 lg:mb-0 lg:mt-0 lg:w-[min(36vw,28rem)] xl:right-0"
+          className="novekia-surface relative z-10 mb-8 mt-2 w-full overflow-visible border-primary/30 bg-[#030c1c]/90 p-5 shadow-[0_20px_70px_rgba(0,72,180,0.22)] backdrop-blur-xl sm:p-6 lg:absolute lg:bottom-[18rem] lg:right-8 lg:mb-0 lg:mt-0 lg:w-[min(40vw,34rem)] lg:p-8 xl:right-0"
         >
           <span
             aria-hidden="true"
             className="absolute -right-2 top-12 hidden size-4 rotate-45 border-r border-t border-primary/30 bg-[#061126] lg:block"
           />
           <div className="flex items-center gap-4">
-            <div className="relative size-16 shrink-0 overflow-hidden border border-primary/40 bg-[#071224] shadow-[0_0_30px_rgba(8,124,255,0.25)] sm:size-[4.5rem]">
+            <div className="relative size-16 shrink-0 overflow-hidden border border-primary/40 bg-[#071224] shadow-[0_0_30px_rgba(8,124,255,0.25)] sm:size-[4.5rem] lg:size-20">
               <Image
                 src="/andy-legrand-novekia-v3.png"
                 alt="Andy Legrand, fondateur du studio d’ingénierie Novekia"
                 fill
-                sizes="72px"
+                sizes="(min-width: 1024px) 80px, 72px"
                 className="object-cover object-[center_18%]"
               />
             </div>
@@ -102,12 +101,12 @@ export function HomeHero() {
             </div>
             <Quote
               aria-hidden="true"
-              className="ml-auto size-7 shrink-0 text-primary/70"
+              className="ml-auto size-7 shrink-0 text-primary/70 lg:size-8"
               strokeWidth={1.4}
             />
           </div>
           <blockquote className="mt-5 border-t border-border/80 pt-5">
-            <p className="text-pretty text-base font-medium leading-relaxed text-foreground sm:text-lg">
+            <p className="text-pretty text-base font-medium leading-relaxed text-foreground sm:text-lg lg:text-xl">
               « Un studio d’ingénierie où l’on comprend, conçoit, prototype et
               déploie des systèmes solides — au plus près de vos métiers et sous
               votre contrôle. »
