@@ -59,7 +59,7 @@ export function SouveraineteSection() {
   return (
     <Section id="souverainete" tone="dark" aria-labelledby="souverainete-title">
       <SectionHeader
-        index="04"
+        index="05"
         eyebrow="Souveraineté"
         title={
           <span id="souverainete-title">

@@ -52,6 +52,7 @@ export const mainNavigation: NavItem[] = [
       },
     ],
   },
+  { label: 'Offres', href: '/offres' },
   {
     label: 'Services',
     href: '#methode',
@@ -149,6 +150,16 @@ export const mainNavigation: NavItem[] = [
 ]
 
 export const footerNavigation: { title: string; links: { label: string; href: string }[] }[] = [
+  {
+    title: 'Offres',
+    links: [
+      { label: 'Toutes les offres', href: '/offres' },
+      { label: 'Audit Wi-Fi', href: '/offres/audit-wifi-entreprise' },
+      { label: 'Interconnexion multi-sites', href: '/offres/interconnexion-multi-sites' },
+      { label: 'Architecture IA privée', href: '/offres/atelier-architecture-ia-privee' },
+      { label: 'IA on-premise', href: '/offres/deploiement-ia-on-premise' },
+    ],
+  },
   {
     title: 'Solutions',
     links: [

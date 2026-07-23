@@ -29,7 +29,7 @@ export function SiteFooter() {
             </dl>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-8 xl:grid-cols-4">
             {footerNavigation.map((group) => (
               <div key={group.title}>
                 <h2 className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-foreground">
@@ -39,7 +39,7 @@ export function SiteFooter() {
                   {group.links.map((link) => (
                     <li key={`${link.label}-${link.href}`}>
                       <Link
-                        href={link.href}
+                        href={link.href.startsWith('#') ? `/${link.href}` : link.href}
                         className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                       >
                         {link.label}

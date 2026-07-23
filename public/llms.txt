@@ -1,0 +1,29 @@
+# Novekia
+
+> Studio français d’ingénierie technologique spécialisé dans les systèmes numériques privés, performants et maîtrisables.
+
+## Activités
+
+- Logiciels métiers sur mesure
+- Intelligence artificielle locale, privée et souveraine
+- Stations et serveurs GPU
+- Infrastructures de calcul et réseaux
+- Applications web et intégrations
+- SEO technique et Generative Engine Optimization (GEO)
+
+## Positionnement
+
+Novekia conçoit des solutions adaptées aux contraintes métier, techniques, budgétaires et opérationnelles. L’entreprise privilégie la maîtrise des données, des modèles, des dépendances et de l’infrastructure. L’IA n’est utilisée que lorsqu’elle apporte une valeur vérifiable.
+
+## Offres
+
+- Audit Wi-Fi entreprise : /offres/audit-wifi-entreprise
+- Interconnexion multi-sites : /offres/interconnexion-multi-sites
+- Atelier architecture IA privée : /offres/atelier-architecture-ia-privee
+- Déploiement IA on-premise : /offres/deploiement-ia-on-premise
+
+## Contact
+
+- Site : https://www.novekia.fr
+- Email : contact@novekia.fr
+- Zone d’intervention : France, à distance ou sur site selon le contexte

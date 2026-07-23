@@ -56,7 +56,7 @@ export function TechnologiesSection() {
   return (
     <Section id="technologies" tone="light" aria-labelledby="technologies-title">
       <SectionHeader
-        index="05"
+        index="06"
         eyebrow="Technologies"
         title={<span id="technologies-title">Une pile technologique éprouvée.</span>}
         description="Architectures modulaires, calcul haute performance et sécurité par conception."

@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { siteConfig } from '@/lib/site-config'
+import { ScrollReveal } from '@/components/effects/scroll-reveal'
 import './globals.css'
 
 const geistSans = Geist({
@@ -23,6 +24,9 @@ export const metadata: Metadata = {
     template: `%s — ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  alternates: {
+    canonical: '/',
+  },
   keywords: [
     'ingénierie logicielle',
     'intelligence artificielle locale',
@@ -36,7 +40,19 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
-  generator: 'v0.app',
+  category: 'technology',
+  applicationName: siteConfig.name,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
@@ -44,11 +60,20 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Novekia — infrastructure locale et intelligence souveraine',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
+    images: ['/og.png'],
   },
   icons: {
     icon: [{ url: '/novekia-icon.svg', type: 'image/svg+xml' }],
@@ -56,8 +81,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light',
-  themeColor: '#031a47',
+  colorScheme: 'dark',
+  themeColor: '#020817',
 }
 
 export default function RootLayout({
@@ -71,6 +96,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} bg-background`}
     >
       <body className="font-sans antialiased">
+        <ScrollReveal />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
