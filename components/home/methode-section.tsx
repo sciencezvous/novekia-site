@@ -64,7 +64,7 @@ export function MethodeSection() {
   return (
     <Section id="methode" tone="light" aria-labelledby="methode-title">
       <SectionHeader
-        index="04"
+        index="03"
         eyebrow="Méthode"
         title={<span id="methode-title">Une démarche d&apos;ingénierie rigoureuse.</span>}
         description="De l'audit à la mise en production, une méthode structurée et mesurable."

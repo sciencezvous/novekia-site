@@ -6,7 +6,7 @@ export function ExpertisesSection() {
   return (
     <Section id="expertises" tone="muted" aria-labelledby="expertises-title">
       <SectionHeader
-        index="03"
+        index="02"
         eyebrow="Expertises"
         title={<span id="expertises-title">Nos domaines d&apos;intervention.</span>}
         description="Logiciels métiers, intelligence artificielle souveraine, stations de calcul et serveurs IA."
