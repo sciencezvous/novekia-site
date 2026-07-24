@@ -72,19 +72,19 @@ export function HomeHero() {
         <aside
           id="vision"
           aria-labelledby="vision-title"
-          className="novekia-surface relative z-10 mb-8 mt-2 w-full overflow-visible border-primary/30 bg-[#030c1c]/90 p-5 shadow-[0_20px_70px_rgba(0,72,180,0.22)] backdrop-blur-xl sm:p-6 lg:absolute lg:bottom-[18rem] lg:right-8 lg:mb-0 lg:mt-0 lg:w-[min(40vw,34rem)] lg:p-8 xl:right-0"
+          className="novekia-surface relative z-10 mb-8 mt-2 w-full overflow-visible border-primary/30 bg-[#030c1c]/90 p-6 shadow-[0_20px_70px_rgba(0,72,180,0.22)] backdrop-blur-xl sm:p-8 lg:absolute lg:bottom-[18rem] lg:right-8 lg:mb-0 lg:mt-0 lg:w-[min(46vw,42rem)] lg:p-10 xl:right-0"
         >
           <span
             aria-hidden="true"
             className="absolute -right-2 top-12 hidden size-4 rotate-45 border-r border-t border-primary/30 bg-[#061126] lg:block"
           />
-          <div className="flex items-center gap-4">
-            <div className="relative size-16 shrink-0 overflow-hidden border border-primary/40 bg-[#071224] shadow-[0_0_30px_rgba(8,124,255,0.25)] sm:size-[4.5rem] lg:size-20">
+          <div className="flex items-center gap-5">
+            <div className="relative size-20 shrink-0 overflow-hidden border border-primary/40 bg-[#071224] shadow-[0_0_30px_rgba(8,124,255,0.25)] sm:size-24 lg:size-28">
               <Image
                 src="/andy-legrand-novekia-v3.png"
                 alt="Andy Legrand, fondateur du studio d’ingénierie Novekia"
                 fill
-                sizes="(min-width: 1024px) 80px, 72px"
+                sizes="(min-width: 1024px) 112px, (min-width: 640px) 96px, 80px"
                 className="object-cover object-[center_18%]"
               />
             </div>
@@ -101,12 +101,12 @@ export function HomeHero() {
             </div>
             <Quote
               aria-hidden="true"
-              className="ml-auto size-7 shrink-0 text-primary/70 lg:size-8"
+              className="ml-auto size-8 shrink-0 text-primary/70 lg:size-10"
               strokeWidth={1.4}
             />
           </div>
-          <blockquote className="mt-5 border-t border-border/80 pt-5">
-            <p className="text-pretty text-base font-medium leading-relaxed text-foreground sm:text-lg lg:text-xl">
+          <blockquote className="mt-6 border-t border-border/80 pt-6">
+            <p className="text-pretty text-lg font-medium leading-relaxed text-foreground sm:text-xl lg:text-[1.375rem]">
               « Un studio d’ingénierie où l’on comprend, conçoit, prototype et
               déploie des systèmes solides — au plus près de vos métiers et sous
               votre contrôle. »
