@@ -7,6 +7,8 @@ import { MethodeSection } from '@/components/home/methode-section'
 import { SouveraineteSection } from '@/components/home/souverainete-section'
 import { TechnologiesSection } from '@/components/home/technologies-section'
 import { ResearchSection } from '@/components/home/research-section'
+import { ProofSection } from '@/components/home/proof-section'
+import { TestimonialsSection } from '@/components/home/testimonials-section'
 import { ContactSection } from '@/components/home/contact-section'
 import { FaqSection, homeFaq } from '@/components/home/faq-section'
 import {
@@ -63,10 +65,16 @@ export default function HomePage() {
         {/* 06 — Recherche & Développement */}
         <ResearchSection />
 
-        {/* 07 — Questions fréquentes */}
+        {/* 07 — Preuve technique */}
+        <ProofSection />
+
+        {/* 08 — Témoignages clients */}
+        <TestimonialsSection />
+
+        {/* 09 — Questions fréquentes */}
         <FaqSection />
 
-        {/* 08 — Contact */}
+        {/* 10 — Contact */}
         <ContactSection />
       </main>
       <SiteFooter />

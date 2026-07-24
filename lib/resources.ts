@@ -11,6 +11,18 @@ export type ResourceArticle = {
 
 export const resourceArticles: ResourceArticle[] = [
   {
+    slug: 'demonstrateur-rag-local',
+    eyebrow: 'Preuve technique Novekia',
+    title: 'Démonstrateur RAG local : architecture, dimensionnement et recette',
+    description:
+      'Une preuve de méthode reproductible pour cadrer un assistant documentaire local : hypothèses visibles, calcul mémoire, architecture cible et protocole de recette.',
+    directAnswer:
+      'Pour un scénario de prototype avec un modèle de 8 milliards de paramètres quantifié en 4 bits et quatre sessions simultanées, le calcul documenté aboutit à une enveloppe de planification de 12,7 Gio. Une carte de 24 Gio constitue donc un point de départ plausible pour mesurer le prototype, mais pas une recommandation d’achat avant benchmark sur le corpus, le moteur d’inférence et la charge réels.',
+    readingTime: '8 min',
+    publishedAt: '2026-07-25',
+    modifiedAt: '2026-07-25',
+  },
+  {
     slug: 'ia-locale-vs-api-cloud',
     eyebrow: 'Décision d’architecture',
     title: 'IA locale ou API cloud : coûts, confidentialité et exploitation',

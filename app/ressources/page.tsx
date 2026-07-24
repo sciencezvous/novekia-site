@@ -1,6 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Check, FileCheck2, FlaskConical } from 'lucide-react'
+import {
+  ArrowRight,
+  Check,
+  FileCheck2,
+  FlaskConical,
+  ShieldCheck,
+} from 'lucide-react'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
 import { JsonLd } from '@/components/brand/json-ld'
 import { PrimaryButton } from '@/components/brand/primary-button'
@@ -101,11 +107,69 @@ export default function ResourcesPage() {
         <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="mx-auto max-w-7xl">
             <TechnicalLabel index="02">Guides prioritaires</TechnicalLabel>
-            <div className="mt-8 grid gap-px bg-border lg:grid-cols-3">
+            <div className="mt-8 grid gap-px bg-border md:grid-cols-2">
               {resourceArticles.map((article) => (
                 <div key={article.slug} className="relative">
                   <ResourceCard article={article} />
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
+          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+            <div>
+              <TechnicalLabel index="03">Preuve publiée</TechnicalLabel>
+              <ShieldCheck
+                aria-hidden="true"
+                className="mt-8 size-12 text-primary"
+                strokeWidth={1.4}
+              />
+              <h2 className="mt-5 text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
+                Une conclusion que vous pouvez recalculer.
+              </h2>
+              <p className="mt-5 leading-7 text-muted-foreground">
+                Le démonstrateur RAG expose son scénario, sa formule de mémoire,
+                ses limites et son protocole de recette. Il ne se présente ni
+                comme un projet client ni comme un benchmark matériel.
+              </p>
+              <PrimaryButton
+                href="/ressources/demonstrateur-rag-local"
+                withArrow
+                className="mt-7"
+              >
+                Examiner la démonstration
+              </PrimaryButton>
+            </div>
+
+            <div className="grid gap-px bg-border sm:grid-cols-3">
+              {[
+                {
+                  value: '12,7 Gio',
+                  label: 'enveloppe calculée',
+                  detail: 'Formule et hypothèses visibles.',
+                },
+                {
+                  value: '4 sessions',
+                  label: 'charge de cadrage',
+                  detail: 'À confirmer par mesure réelle.',
+                },
+                {
+                  value: '100 questions',
+                  label: 'jeu de recette proposé',
+                  detail: 'Recherche, fidélité et refus.',
+                },
+              ].map((item) => (
+                <article key={item.label} className="min-h-56 bg-background p-6">
+                  <p className="font-mono text-2xl font-semibold text-primary">
+                    {item.value}
+                  </p>
+                  <h3 className="mt-4 font-semibold">{item.label}</h3>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                    {item.detail}
+                  </p>
+                </article>
               ))}
             </div>
           </div>
@@ -118,7 +182,7 @@ export default function ResourcesPage() {
           />
           <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-center lg:gap-20">
             <div>
-              <TechnicalLabel index="03">Outil de cadrage</TechnicalLabel>
+              <TechnicalLabel index="04">Outil de cadrage</TechnicalLabel>
               <FileCheck2
                 aria-hidden="true"
                 className="mt-8 size-12 text-primary"
@@ -174,7 +238,7 @@ export default function ResourcesPage() {
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
               <div>
-                <TechnicalLabel index="04">Méthode de preuve</TechnicalLabel>
+                <TechnicalLabel index="05">Méthode de preuve</TechnicalLabel>
                 <FlaskConical
                   aria-hidden="true"
                   className="mt-8 size-12 text-primary"

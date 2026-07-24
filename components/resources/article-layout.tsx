@@ -16,6 +16,15 @@ type ArticleLayoutProps = {
   children: ReactNode
 }
 
+function formatArticleDate(date: string) {
+  return new Intl.DateTimeFormat('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(`${date}T00:00:00Z`))
+}
+
 export function ArticleLayout({
   article,
   tableOfContents,
@@ -96,7 +105,7 @@ export function ArticleLayout({
               <span>Par Andy Legrand</span>
               <span className="flex items-center gap-2">
                 <CalendarDays aria-hidden="true" className="size-3.5" />
-                24 juillet 2026
+                {formatArticleDate(article.publishedAt)}
               </span>
               <span className="flex items-center gap-2">
                 <Clock3 aria-hidden="true" className="size-3.5" />
