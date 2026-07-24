@@ -122,32 +122,32 @@ export const mainNavigation: NavItem[] = [
   },
   {
     label: 'Ressources',
-    href: '#research',
+    href: '/ressources',
     children: [
       {
-        label: 'Technologies',
-        href: '#technologies',
-        description: 'Notre stack technologique.',
+        label: 'Centre de ressources',
+        href: '/ressources',
+        description: 'Guides, schémas et outils de décision.',
       },
       {
-        label: 'Expertises',
-        href: '#expertises',
-        description: 'Nos domaines d\'intervention.',
+        label: 'IA locale ou API cloud',
+        href: '/ressources/ia-locale-vs-api-cloud',
+        description: 'Coûts, confidentialité et exploitation.',
       },
       {
-        label: 'Recherche et développement',
-        href: '#research',
-        description: 'Nos innovations.',
+        label: 'RAG local en entreprise',
+        href: '/ressources/rag-local-entreprise',
+        description: 'Architecture et conditions de réussite.',
       },
       {
-        label: 'Contact',
-        href: '#contact',
-        description: 'Nous contacter.',
+        label: 'Choisir un serveur GPU',
+        href: '/ressources/choisir-station-serveur-gpu-ia',
+        description: 'Méthode et calculateur de mémoire.',
       },
       {
-        label: 'Demander un audit',
-        href: '#contact',
-        description: 'Demande d\'audit gratuit.',
+        label: 'Checklist de cadrage IA',
+        href: '/ressources/checklist-cadrage-ia-locale',
+        description: '40 points à vérifier avant le prototype.',
       },
     ],
   },
@@ -190,9 +190,11 @@ export const footerNavigation: { title: string; links: { label: string; href: st
   {
     title: 'Ressources',
     links: [
-      { label: 'Technologies', href: '#technologies' },
-      { label: 'Contact', href: '#contact' },
-      { label: 'Demander un audit', href: '#contact' },
+      { label: 'Tous les guides', href: '/ressources' },
+      { label: 'IA locale ou API cloud', href: '/ressources/ia-locale-vs-api-cloud' },
+      { label: 'RAG local en entreprise', href: '/ressources/rag-local-entreprise' },
+      { label: 'Choisir un serveur GPU', href: '/ressources/choisir-station-serveur-gpu-ia' },
+      { label: 'Checklist de cadrage IA', href: '/ressources/checklist-cadrage-ia-locale' },
     ],
   },
 ]

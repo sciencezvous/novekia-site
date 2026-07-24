@@ -7,6 +7,7 @@
 - Accueil : https://novekia.fr
 - Expertises et solutions : https://novekia.fr/offres
 - À propos du studio : https://novekia.fr/a-propos
+- Centre de ressources : https://novekia.fr/ressources
 
 ## Expertises
 
@@ -15,6 +16,13 @@
 - Infrastructures de calcul et serveurs IA : https://novekia.fr/infrastructures-serveurs-ia
 - Applications web et intégrations métier : https://novekia.fr/applications-web-integrations
 - Création de sites web optimisés SEO et GEO : https://novekia.fr/creation-site-web-seo-geo
+
+## Guides et outils
+
+- IA locale ou API cloud - coûts, confidentialité et exploitation : https://novekia.fr/ressources/ia-locale-vs-api-cloud
+- RAG local en entreprise - architecture et conditions de réussite : https://novekia.fr/ressources/rag-local-entreprise
+- Choisir une station ou un serveur GPU pour l’IA : https://novekia.fr/ressources/choisir-station-serveur-gpu-ia
+- Checklist de cadrage d’un projet d’IA locale : https://novekia.fr/ressources/checklist-cadrage-ia-locale
 
 ## Positionnement
 

@@ -19,6 +19,9 @@ type ServiceLandingPageProps = {
 
 export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
   const url = `${siteConfig.url}/${service.slug}`
+  const hasDecisionGuide = Boolean(service.decisionGuide)
+  const faqIndex = hasDecisionGuide ? '07' : '06'
+  const relatedIndex = hasDecisionGuide ? '08' : '07'
   const relatedServices = servicePages.filter(
     (candidate) => candidate.slug !== service.slug,
   )
@@ -257,10 +260,161 @@ export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
           </div>
         </section>
 
+        {service.decisionGuide ? (
+          <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
+            <div className="mx-auto max-w-7xl">
+              <TechnicalLabel index="06">Guide de décision</TechnicalLabel>
+              <div className="mt-5 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+                <h2 className="max-w-xl text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
+                  Choisir une architecture à partir du risque et de l’usage.
+                </h2>
+                <p className="max-w-3xl leading-relaxed text-muted-foreground">
+                  {service.decisionGuide.introduction}
+                </p>
+              </div>
+
+              <div className="mt-12">
+                <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">
+                  Architectures types
+                </p>
+                <div className="mt-5 grid gap-px bg-border lg:grid-cols-3">
+                  {service.decisionGuide.architectures.map((architecture) => (
+                    <article
+                      key={architecture.title}
+                      className="min-h-56 bg-background p-6 sm:p-8"
+                    >
+                      <h3 className="text-lg font-semibold tracking-tight">
+                        {architecture.title}
+                      </h3>
+                      <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                        {architecture.description}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-16">
+                <div>
+                  <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">
+                    Critères de décision
+                  </p>
+                  <div className="mt-5 divide-y divide-border border-y border-border">
+                    {service.decisionGuide.criteria.map((criterion) => (
+                      <article key={criterion.title} className="py-5">
+                        <h3 className="font-semibold tracking-tight">
+                          {criterion.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                          {criterion.description}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">
+                    Limites à intégrer
+                  </p>
+                  <div className="mt-5 divide-y divide-border border-y border-border">
+                    {service.decisionGuide.limits.map((limit) => (
+                      <article key={limit.title} className="py-5">
+                        <h3 className="font-semibold tracking-tight">
+                          {limit.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                          {limit.description}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="novekia-surface mt-12 p-6 sm:p-8">
+                <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">
+                  Sources de référence
+                </p>
+                <ul className="mt-5 grid gap-4 md:grid-cols-3">
+                  {service.decisionGuide.sources.map((source) => (
+                    <li key={source.href}>
+                      <a
+                        href={source.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="group flex h-full items-end justify-between gap-4 border border-border bg-background/60 p-4 text-sm font-medium leading-relaxed transition-colors hover:border-primary/60 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <span>
+                          <span className="mb-2 block font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground">
+                            {source.publisher}
+                          </span>
+                          {source.label}
+                        </span>
+                        <ArrowUpRight
+                          aria-hidden="true"
+                          className="size-4 shrink-0 text-primary transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-12">
+                <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">
+                  Guides complémentaires
+                </p>
+                <div className="mt-5 grid gap-px bg-border md:grid-cols-3">
+                  {[
+                    {
+                      href: '/ressources/ia-locale-vs-api-cloud',
+                      title: 'IA locale ou API cloud',
+                      description:
+                        'Comparer les coûts, la confidentialité et l’exploitation.',
+                    },
+                    {
+                      href: '/ressources/rag-local-entreprise',
+                      title: 'RAG local en entreprise',
+                      description:
+                        'Comprendre l’architecture, l’évaluation et les limites.',
+                    },
+                    {
+                      href: '/ressources/choisir-station-serveur-gpu-ia',
+                      title: 'Choisir un serveur GPU',
+                      description:
+                        'Dimensionner la mémoire et valider la charge avant achat.',
+                    },
+                  ].map((resource) => (
+                    <Link
+                      key={resource.href}
+                      href={resource.href}
+                      className="group flex min-h-52 flex-col justify-between bg-background p-6 transition-colors hover:bg-accent/30 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                    >
+                      <span>
+                        <span className="text-lg font-semibold tracking-tight">
+                          {resource.title}
+                        </span>
+                        <span className="mt-3 block text-sm leading-7 text-muted-foreground">
+                          {resource.description}
+                        </span>
+                      </span>
+                      <ArrowUpRight
+                        aria-hidden="true"
+                        className="mt-8 size-5 text-primary transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        ) : null}
+
         <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
             <div>
-              <TechnicalLabel index="06">Questions fréquentes</TechnicalLabel>
+              <TechnicalLabel index={faqIndex}>Questions fréquentes</TechnicalLabel>
               <h2 className="mt-5 text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
                 L’essentiel, sans détour.
               </h2>
@@ -287,7 +441,7 @@ export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
 
         <section className="px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="mx-auto max-w-7xl">
-            <TechnicalLabel index="07">Expertises associées</TechnicalLabel>
+            <TechnicalLabel index={relatedIndex}>Expertises associées</TechnicalLabel>
             <div className="mt-8 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
               {relatedServices.map((relatedService) => (
                 <Link

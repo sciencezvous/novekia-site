@@ -11,6 +11,20 @@ export type ServiceContentItem = {
   description: string
 }
 
+export type ServiceSource = {
+  label: string
+  publisher: string
+  href: string
+}
+
+export type ServiceDecisionGuide = {
+  introduction: string
+  architectures: ServiceContentItem[]
+  criteria: ServiceContentItem[]
+  limits: ServiceContentItem[]
+  sources: ServiceSource[]
+}
+
 export type ServicePageData = {
   slug: string
   eyebrow: string
@@ -26,6 +40,7 @@ export type ServicePageData = {
   process: ServiceContentItem[]
   faq: ServiceFaq[]
   keywords: string[]
+  decisionGuide?: ServiceDecisionGuide
 }
 
 export const servicePages = [
@@ -219,6 +234,88 @@ export const servicePages = [
           'Superviser la qualité, les performances, les accès et les évolutions.',
       },
     ],
+    decisionGuide: {
+      introduction:
+        'Le lieu d’exécution n’est pas une fin en soi. La bonne architecture relie la sensibilité des données, la qualité attendue, la charge, la disponibilité et la capacité de l’organisation à exploiter le système.',
+      architectures: [
+        {
+          title: 'Poste ou station isolée',
+          description:
+            'Approche adaptée au prototypage, à un petit nombre d’utilisateurs ou à un environnement volontairement déconnecté. Les modèles et les données restent sur une machine identifiée.',
+        },
+        {
+          title: 'Service IA sur réseau privé',
+          description:
+            'Un serveur d’inférence mutualisé expose une API interne avec authentification, journalisation, supervision et règles d’accès. Cette architecture facilite l’intégration aux logiciels métiers.',
+        },
+        {
+          title: 'Architecture hybride contrôlée',
+          description:
+            'Les traitements sensibles restent dans le périmètre privé ; un service externe peut être utilisé pour des tâches explicitement autorisées. Les flux, données envoyées et solutions de repli doivent être documentés.',
+        },
+      ],
+      criteria: [
+        {
+          title: 'Données et risque',
+          description:
+            'Classer les données, les destinataires autorisés, les obligations contractuelles et les conséquences d’une réponse incorrecte avant de choisir l’hébergement.',
+        },
+        {
+          title: 'Qualité vérifiable',
+          description:
+            'Comparer les modèles sur un jeu de questions représentatif, avec des réponses attendues, des cas d’échec et une règle de validation humaine.',
+        },
+        {
+          title: 'Charge et performance',
+          description:
+            'Mesurer le contexte, la concurrence, la latence acceptable, le débit et la disponibilité. Ces éléments déterminent la mémoire et l’architecture, pas l’inverse.',
+        },
+        {
+          title: 'Exploitation et coût complet',
+          description:
+            'Inclure intégration, énergie, hébergement, supervision, mises à jour, sécurité et temps d’exploitation dans la comparaison avec une API facturée à l’usage.',
+        },
+      ],
+      limits: [
+        {
+          title: 'Le local ne supprime pas les erreurs',
+          description:
+            'Un modèle local peut produire une réponse fausse, non sourcée ou sensible à une consigne malveillante. Évaluation, citations, permissions et garde-fous restent nécessaires.',
+        },
+        {
+          title: 'La qualité des sources reste décisive',
+          description:
+            'Un RAG ne corrige ni des documents obsolètes ni des droits d’accès mal définis. L’index doit être maintenu et les autorisations appliquées à la recherche.',
+        },
+        {
+          title: 'L’infrastructure impose des contraintes',
+          description:
+            'Mémoire, contexte, concurrence, stockage, refroidissement et disponibilité limitent les modèles réellement exploitables. Un test représentatif précède l’achat.',
+        },
+        {
+          title: 'L’exploitation est une responsabilité',
+          description:
+            'Les modèles, dépendances et pilotes évoluent. Il faut prévoir les mises à jour, la surveillance, le retour arrière et la personne responsable du service.',
+        },
+      ],
+      sources: [
+        {
+          label: 'Recommandations de sécurité pour un système d’IA générative',
+          publisher: 'ANSSI',
+          href: 'https://messervices.cyber.gouv.fr/guides/recommandations-de-securite-pour-un-systeme-dia-generative',
+        },
+        {
+          label: 'Questions-réponses sur l’utilisation d’un système d’IA générative',
+          publisher: 'CNIL',
+          href: 'https://cnil.fr/fr/les-questions-reponses-de-la-cnil-sur-lutilisation-dun-systeme-dia-generative',
+        },
+        {
+          label: 'Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks',
+          publisher: 'Lewis et al.',
+          href: 'https://arxiv.org/abs/2005.11401',
+        },
+      ],
+    },
     faq: [
       {
         question: 'Quelle différence entre IA locale, privée et souveraine ?',
