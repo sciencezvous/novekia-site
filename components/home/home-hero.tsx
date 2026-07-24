@@ -79,12 +79,12 @@ export function HomeHero() {
             className="absolute -right-2 top-12 hidden size-4 rotate-45 border-r border-t border-primary/30 bg-[#061126] lg:block"
           />
           <div className="flex items-center gap-5">
-            <div className="relative size-20 shrink-0 overflow-hidden border border-primary/40 bg-[#071224] shadow-[0_0_30px_rgba(8,124,255,0.25)] sm:size-24 lg:size-28">
+            <div className="relative size-20 shrink-0 overflow-hidden border border-primary/40 bg-[#071224] shadow-[0_0_30px_rgba(8,124,255,0.25)] sm:size-24 lg:size-36">
               <Image
                 src="/andy-legrand-novekia-v3.png"
                 alt="Andy Legrand, fondateur du studio d’ingénierie Novekia"
                 fill
-                sizes="(min-width: 1024px) 112px, (min-width: 640px) 96px, 80px"
+                sizes="(min-width: 1024px) 144px, (min-width: 640px) 96px, 80px"
                 className="object-cover object-[center_18%]"
               />
             </div>
@@ -107,9 +107,9 @@ export function HomeHero() {
           </div>
           <blockquote className="mt-6 border-t border-border/80 pt-6">
             <p className="text-pretty text-lg font-medium leading-relaxed text-foreground sm:text-xl lg:text-[1.375rem]">
-              « Un studio d’ingénierie où l’on comprend, conçoit, prototype et
-              déploie des systèmes solides — au plus près de vos métiers et sous
-              votre contrôle. »
+              « Pas une agence. Un studio d’ingénierie qui conçoit et déploie vos
+              logiciels métiers, votre IA locale et vos infrastructures de calcul —
+              robustes, mesurables et sous votre contrôle. »
             </p>
           </blockquote>
         </aside>
