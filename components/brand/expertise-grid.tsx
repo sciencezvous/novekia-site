@@ -84,6 +84,17 @@ export function ExpertiseGrid({
           <p className="flex-1 text-sm leading-relaxed text-muted-foreground">
             {expertise.description}
           </p>
+
+          <Link
+            href={expertise.href}
+            className="inline-flex w-fit items-center gap-2 font-mono text-xs uppercase tracking-[0.12em] text-primary outline-none transition-colors hover:text-lumineux focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Découvrir cette expertise
+            <ArrowUpRight
+              aria-hidden="true"
+              className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          </Link>
         </article>
       ))}
 

@@ -50,6 +50,7 @@ export const founderJsonLd: Record<string, unknown> = {
   '@type': 'Person',
   '@id': `${siteConfig.url}/#andy-legrand`,
   name: 'Andy Legrand',
+  url: `${siteConfig.url}/a-propos`,
   jobTitle: 'Fondateur',
   image: `${siteConfig.url}/andy-legrand-novekia-v3.png`,
   worksFor: {

@@ -3,7 +3,7 @@ export const siteConfig = {
   tagline: 'Synergies Intelligentes',
   description:
     "Novekia est un studio français d'ingénierie logicielle, d'intelligence artificielle locale, d'infrastructures de calcul haute performance et de R&D technologique. Nous concevons des infrastructures modulaires, sécurisées et évolutives pour accélérer vos performances.",
-  url: 'https://www.novekia.fr',
+  url: 'https://novekia.fr',
   contact: {
     email: 'contact@novekia.fr',
   },
@@ -18,36 +18,36 @@ export type NavItem = {
 export const mainNavigation: NavItem[] = [
   {
     label: 'Solutions',
-    href: '#expertises',
+    href: '/offres',
     children: [
       {
         label: 'Vue d\'ensemble',
-        href: '#expertises',
+        href: '/offres',
         description: 'Tous nos domaines d\'expertise.',
       },
       {
         label: 'Logiciels métiers sur mesure',
-        href: '#solution-logiciels-metiers',
+        href: '/logiciels-metiers-sur-mesure',
         description: 'Applications sur mesure pour vos opérations.',
       },
       {
         label: 'Intelligence artificielle locale',
-        href: '#solution-ia-locale',
+        href: '/intelligence-artificielle-locale',
         description: 'Modèles IA déployés sur site, sans dépendance cloud.',
       },
       {
         label: 'Infrastructures de calcul & serveurs IA',
-        href: '#solution-infrastructures-ia',
+        href: '/infrastructures-serveurs-ia',
         description: 'Conception, intégration et optimisation de stations GPU et serveurs IA.',
       },
       {
         label: 'Applications web et intégrations',
-        href: '#solution-applications-web',
+        href: '/applications-web-integrations',
         description: 'Interfaces, API et automatisations.',
       },
       {
         label: 'Création de sites web optimisés SEO & GEO',
-        href: '#solution-seo-geo',
+        href: '/creation-site-web-seo-geo',
         description: 'Sites premium structurés pour Google et les moteurs de réponse IA.',
       },
     ],
@@ -91,16 +91,16 @@ export const mainNavigation: NavItem[] = [
   },
   {
     label: 'À propos',
-    href: '#positionnement',
+    href: '/a-propos',
     children: [
       {
         label: 'Le studio Novekia',
-        href: '#positionnement',
+        href: '/a-propos',
         description: 'Qui nous sommes.',
       },
       {
         label: 'La vision du fondateur',
-        href: '#vision',
+        href: '/a-propos#vision',
         description: 'Pourquoi Novekia est un studio, pas une agence.',
       },
       {
@@ -159,29 +159,29 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     title: 'Offres',
     links: [
       { label: 'Vue d’ensemble', href: '/offres' },
-      { label: 'Logiciels métiers sur mesure', href: '/offres#solution-logiciels-metiers' },
-      { label: 'Intelligence artificielle locale', href: '/offres#solution-ia-locale' },
-      { label: 'Infrastructures de calcul & serveurs IA', href: '/offres#solution-infrastructures-ia' },
-      { label: 'Applications web et intégrations', href: '/offres#solution-applications-web' },
-      { label: 'Sites optimisés SEO & GEO', href: '/offres#solution-seo-geo' },
+      { label: 'Logiciels métiers sur mesure', href: '/logiciels-metiers-sur-mesure' },
+      { label: 'Intelligence artificielle locale', href: '/intelligence-artificielle-locale' },
+      { label: 'Infrastructures de calcul & serveurs IA', href: '/infrastructures-serveurs-ia' },
+      { label: 'Applications web et intégrations', href: '/applications-web-integrations' },
+      { label: 'Sites optimisés SEO & GEO', href: '/creation-site-web-seo-geo' },
     ],
   },
   {
     title: 'Solutions',
     links: [
-      { label: 'Vue d\'ensemble', href: '#expertises' },
-      { label: 'Logiciels métiers', href: '#solution-logiciels-metiers' },
-      { label: 'Intelligence locale', href: '#solution-ia-locale' },
-      { label: 'Infrastructures & IA', href: '#solution-infrastructures-ia' },
-      { label: 'Applications web', href: '#solution-applications-web' },
-      { label: 'Sites optimisés SEO & GEO', href: '#solution-seo-geo' },
+      { label: 'Vue d\'ensemble', href: '/offres' },
+      { label: 'Logiciels métiers', href: '/logiciels-metiers-sur-mesure' },
+      { label: 'Intelligence locale', href: '/intelligence-artificielle-locale' },
+      { label: 'Infrastructures & IA', href: '/infrastructures-serveurs-ia' },
+      { label: 'Applications web', href: '/applications-web-integrations' },
+      { label: 'Sites optimisés SEO & GEO', href: '/creation-site-web-seo-geo' },
     ],
   },
   {
     title: 'Studio',
     links: [
-      { label: 'Le studio', href: '#positionnement' },
-      { label: 'Vision du fondateur', href: '#vision' },
+      { label: 'Le studio', href: '/a-propos' },
+      { label: 'Vision du fondateur', href: '/a-propos#vision' },
       { label: 'Méthode', href: '#methode' },
       { label: 'Souveraineté', href: '#souverainete' },
       { label: 'R&D', href: '#research' },
