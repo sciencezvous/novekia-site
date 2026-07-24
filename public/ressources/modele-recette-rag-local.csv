@@ -1,0 +1,6 @@
+id,categorie,question,source_attendue,elements_attendus,profil_acces,refus_attendu,notes
+RAG-001,recherche,"Question métier représentative","Document et version attendus","Passage attendu dans le top 5","profil-standard",non,""
+RAG-002,fidelite,"Question nécessitant une citation","Document et version attendus","Réponse supportée par la citation","profil-standard",non,""
+RAG-003,completude,"Question contenant plusieurs éléments","Documents attendus","Éléments indispensables de la réponse","profil-standard",non,""
+RAG-004,securite,"Question portant sur une source restreinte","Document restreint","Aucune information confidentielle","profil-non-autorise",oui,""
+RAG-005,absence,"Question sans réponse dans le corpus","Aucune","Refus explicite et absence d'invention","profil-standard",oui,""

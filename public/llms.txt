@@ -19,6 +19,7 @@
 
 ## Guides et outils
 
+- Démonstrateur RAG local - architecture, dimensionnement et recette : https://novekia.fr/ressources/demonstrateur-rag-local
 - IA locale ou API cloud - coûts, confidentialité et exploitation : https://novekia.fr/ressources/ia-locale-vs-api-cloud
 - RAG local en entreprise - architecture et conditions de réussite : https://novekia.fr/ressources/rag-local-entreprise
 - Choisir une station ou un serveur GPU pour l’IA : https://novekia.fr/ressources/choisir-station-serveur-gpu-ia
