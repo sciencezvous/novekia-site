@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { AttributionTracker } from '@/components/analytics/attribution-tracker'
 import { siteConfig } from '@/lib/site-config'
 import { ScrollReveal } from '@/components/effects/scroll-reveal'
 import './globals.css'
@@ -78,6 +79,9 @@ export const metadata: Metadata = {
   icons: {
     icon: [{ url: '/novekia-icon.svg', type: 'image/svg+xml' }],
   },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
 }
 
 export const viewport: Viewport = {
@@ -96,6 +100,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} bg-background`}
     >
       <body className="font-sans antialiased">
+        <AttributionTracker />
         <ScrollReveal />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

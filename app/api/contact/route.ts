@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import {
+  sanitizeAttribution,
+  type LeadAttribution,
+} from '@/lib/lead-attribution'
 
 // Allowed needs matching the form options
 const ALLOWED_NEEDS = [
@@ -57,6 +61,7 @@ function generateEmailHtml(data: {
   need: string
   budget: string
   description: string
+  attribution: LeadAttribution
 }): string {
   const date = formatDateFr(new Date())
 
@@ -68,6 +73,30 @@ function generateEmailHtml(data: {
     { label: 'Besoin', value: data.need },
     { label: 'Budget', value: data.budget },
     { label: 'Description', value: data.description },
+    data.attribution.landingPath
+      ? { label: 'Page d’entrée', value: data.attribution.landingPath }
+      : null,
+    data.attribution.currentPath
+      ? { label: 'Page de conversion', value: data.attribution.currentPath }
+      : null,
+    data.attribution.referrer
+      ? { label: 'Référent', value: data.attribution.referrer }
+      : null,
+    data.attribution.utmSource
+      ? { label: 'UTM source', value: data.attribution.utmSource }
+      : null,
+    data.attribution.utmMedium
+      ? { label: 'UTM medium', value: data.attribution.utmMedium }
+      : null,
+    data.attribution.utmCampaign
+      ? { label: 'UTM campagne', value: data.attribution.utmCampaign }
+      : null,
+    data.attribution.utmContent
+      ? { label: 'UTM contenu', value: data.attribution.utmContent }
+      : null,
+    data.attribution.utmTerm
+      ? { label: 'UTM terme', value: data.attribution.utmTerm }
+      : null,
     { label: 'Reçu le', value: date },
   ].filter(Boolean)
 
@@ -128,6 +157,7 @@ function generateEmailText(data: {
   need: string
   budget: string
   description: string
+  attribution: LeadAttribution
 }): string {
   const date = new Date().toLocaleString('fr-FR', {
     timeZone: 'Europe/Paris',
@@ -142,6 +172,30 @@ function generateEmailText(data: {
   text += `Besoin: ${data.need}\n`
   text += `Budget: ${data.budget}\n`
   text += `\nDescription:\n${data.description}\n`
+  if (data.attribution.landingPath) {
+    text += `\nPage d’entrée: ${data.attribution.landingPath}\n`
+  }
+  if (data.attribution.currentPath) {
+    text += `Page de conversion: ${data.attribution.currentPath}\n`
+  }
+  if (data.attribution.referrer) {
+    text += `Référent: ${data.attribution.referrer}\n`
+  }
+  if (data.attribution.utmSource) {
+    text += `UTM source: ${data.attribution.utmSource}\n`
+  }
+  if (data.attribution.utmMedium) {
+    text += `UTM medium: ${data.attribution.utmMedium}\n`
+  }
+  if (data.attribution.utmCampaign) {
+    text += `UTM campagne: ${data.attribution.utmCampaign}\n`
+  }
+  if (data.attribution.utmContent) {
+    text += `UTM contenu: ${data.attribution.utmContent}\n`
+  }
+  if (data.attribution.utmTerm) {
+    text += `UTM terme: ${data.attribution.utmTerm}\n`
+  }
   text += `\nReçu le: ${date}\n`
 
   return text
@@ -197,6 +251,7 @@ export async function POST(request: NextRequest) {
     const description = String(formData.description ?? '').trim()
     const consent = formData.consent === 'on' || formData.consent === true
     const website = String(formData.website ?? '').trim() // honeypot
+    const attribution = sanitizeAttribution(formData.attribution)
 
     // Honeypot check: if website field is filled, return success without sending
     if (website) {
@@ -279,6 +334,7 @@ export async function POST(request: NextRequest) {
       need,
       budget,
       description,
+      attribution,
     }
 
     // Determine email subject (use company if available, otherwise name)

@@ -44,7 +44,11 @@ export default function PrivacyPolicyPage() {
           <li>type de besoin&nbsp;;</li>
           <li>budget indicatif, facultatif&nbsp;;</li>
           <li>description du projet&nbsp;;</li>
-          <li>confirmation de prise de connaissance de la présente politique.</li>
+          <li>confirmation de prise de connaissance de la présente politique&nbsp;;</li>
+          <li>
+            page d’entrée, page de conversion, référent sans paramètres et
+            paramètres de campagne UTM lorsqu’ils sont présents.
+          </li>
         </ul>
         <p className="text-muted-foreground">
           Des données techniques strictement nécessaires à la sécurité et au
@@ -61,6 +65,7 @@ export default function PrivacyPolicyPage() {
           <li>répondre au demandeur&nbsp;;</li>
           <li>qualifier un besoin technique ou commercial&nbsp;;</li>
           <li>préparer une éventuelle proposition&nbsp;;</li>
+          <li>comprendre l’origine générale des demandes et l’efficacité des contenus&nbsp;;</li>
           <li>assurer la sécurité du formulaire&nbsp;;</li>
           <li>détecter les soumissions automatisées ou abusives.</li>
         </ul>
@@ -183,8 +188,17 @@ export default function PrivacyPolicyPage() {
           Vercel, ce service ne dépose pas de cookies pour suivre les visiteurs
           et génère un identifiant temporaire anonymisé qui ne permet pas de
           suivre une personne entre différents sites ou différentes journées.
-          Aucune donnée issue du formulaire n’est utilisée à des fins de mesure
-          d’audience.
+          Après un envoi réussi, un événement de conversion non nominatif peut
+          indiquer la catégorie de besoin, la page d’entrée et une source
+          générale. Le nom, l’adresse e-mail, le téléphone et la description du
+          projet ne sont jamais transmis à Vercel Analytics.
+        </p>
+        <p className="text-muted-foreground">
+          Pendant la session, le navigateur conserve la première page visitée,
+          le référent limité à son origine et son chemin ainsi que les paramètres
+          UTM éventuels. Ces informations sont jointes à la demande reçue par
+          Novekia afin d’en comprendre l’origine. Les paramètres libres du
+          référent ne sont pas conservés.
         </p>
       </section>
 

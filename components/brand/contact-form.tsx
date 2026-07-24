@@ -1,11 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import { track } from '@vercel/analytics'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { PrimaryButton } from './primary-button'
 import { cn } from '@/lib/utils'
+import {
+  getStoredAttribution,
+  type LeadAttribution,
+} from '@/lib/lead-attribution'
 
 type ContactFormProps = {
   className?: string
@@ -56,7 +61,10 @@ function validateContactForm(formData: FormData): FormErrors {
   return errors
 }
 
-async function submitContactRequest(formData: FormData): Promise<{ success: boolean; error?: string }> {
+async function submitContactRequest(
+  formData: FormData,
+  attribution: LeadAttribution,
+): Promise<{ success: boolean; error?: string }> {
   try {
     const response = await fetch('/api/contact', {
       method: 'POST',
@@ -73,6 +81,7 @@ async function submitContactRequest(formData: FormData): Promise<{ success: bool
         description: formData.get('message'),
         consent: formData.get('consent'),
         website: formData.get('website'),
+        attribution,
       }),
     })
 
@@ -97,6 +106,21 @@ function FieldError({ id, message }: { id: string; message?: string }) {
       {message}
     </p>
   ) : null
+}
+
+function trackSuccessfulSubmission(
+  attribution: LeadAttribution,
+  need: string,
+) {
+  try {
+    track('contact_form_submitted', {
+      source: attribution.utmSource || attribution.referrerHost || 'direct',
+      landing_path: attribution.landingPath || 'unknown',
+      need,
+    })
+  } catch {
+    // Analytics must never block the confirmation shown to the visitor.
+  }
 }
 
 export function ContactForm({ className }: ContactFormProps) {
@@ -129,9 +153,17 @@ export function ContactForm({ className }: ContactFormProps) {
     setErrorMessage('')
     setSuccessMessage('')
 
-    const result = await submitContactRequest(new FormData(formElement))
+    const attribution = getStoredAttribution()
+    const result = await submitContactRequest(
+      new FormData(formElement),
+      attribution,
+    )
 
     if (result.success) {
+      trackSuccessfulSubmission(
+        attribution,
+        String(new FormData(formElement).get('need') ?? 'unknown'),
+      )
       setStatus('success')
       setSuccessMessage('Votre demande a bien été transmise à Novekia. Nous reviendrons vers vous dans les meilleurs délais.')
       formElement.reset()
