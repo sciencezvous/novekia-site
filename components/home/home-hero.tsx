@@ -72,7 +72,7 @@ export function HomeHero() {
         <aside
           id="vision"
           aria-labelledby="vision-title"
-          className="novekia-surface relative z-10 mb-8 mt-2 w-full overflow-visible border-primary/30 bg-[#030c1c]/90 p-6 shadow-[0_20px_70px_rgba(0,72,180,0.22)] backdrop-blur-xl sm:p-8 lg:absolute lg:bottom-[18rem] lg:right-8 lg:mb-0 lg:mt-0 lg:w-[min(46vw,42rem)] lg:p-10 xl:right-0"
+          className="novekia-surface relative z-10 mb-8 mt-2 w-full overflow-visible border-primary/30 bg-[#030c1c]/90 p-6 shadow-[0_20px_70px_rgba(0,72,180,0.22)] backdrop-blur-xl sm:p-8 lg:absolute lg:bottom-[23rem] lg:right-0 lg:mb-0 lg:mt-0 lg:w-[min(46vw,42rem)] lg:p-10 xl:-right-8 2xl:-right-32"
         >
           <span
             aria-hidden="true"
