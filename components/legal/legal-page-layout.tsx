@@ -9,6 +9,7 @@ type LegalPageLayoutProps = {
   eyebrow: string
   title: string
   introduction: string
+  lastUpdated?: string
   children: ReactNode
 }
 
@@ -16,6 +17,7 @@ export function LegalPageLayout({
   eyebrow,
   title,
   introduction,
+  lastUpdated = '12 juillet 2026',
   children,
 }: LegalPageLayoutProps) {
   return (
@@ -50,7 +52,7 @@ export function LegalPageLayout({
                 {introduction}
               </p>
               <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                Dernière mise à jour&nbsp;: 12 juillet 2026
+                Dernière mise à jour&nbsp;: {lastUpdated}
               </p>
             </header>
 

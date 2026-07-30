@@ -14,19 +14,33 @@ export function SiteFooter() {
               Technologies au service de la performance. Infrastructures
               modulaires, intelligence artificielle locale et R&D appliquée.
             </p>
-            <dl className="mt-2 flex flex-col gap-1 font-mono text-xs text-muted-foreground">
-              <div className="flex gap-2">
-                <dt className="sr-only">Email</dt>
-                <dd>
-                  <a
-                    href={`mailto:${siteConfig.contact.email}`}
-                    className="rounded-sm underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    {siteConfig.contact.email}
-                  </a>
-                </dd>
-              </div>
-            </dl>
+            <address className="mt-2 flex flex-col gap-1 font-mono text-xs not-italic leading-relaxed text-muted-foreground">
+              <p className="text-foreground">
+                {siteConfig.legal.owner} — {siteConfig.legal.status}
+              </p>
+              <p>
+                SIREN&nbsp;: {siteConfig.legal.siren} · SIRET&nbsp;:{' '}
+                {siteConfig.legal.siret}
+              </p>
+              <p>
+                {siteConfig.legal.streetAddress}, {siteConfig.legal.postalCode}{' '}
+                {siteConfig.legal.locality}, {siteConfig.legal.country}
+              </p>
+              <p className="flex flex-wrap gap-x-3 gap-y-1">
+                <a
+                  href={siteConfig.contact.phoneHref}
+                  className="rounded-sm underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {siteConfig.contact.phone}
+                </a>
+                <a
+                  href={`mailto:${siteConfig.contact.email}`}
+                  className="rounded-sm underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {siteConfig.contact.email}
+                </a>
+              </p>
+            </address>
           </div>
 
           <div className="grid grid-cols-2 gap-8 xl:grid-cols-4">
