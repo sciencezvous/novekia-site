@@ -2,9 +2,12 @@ import type { Metadata } from 'next'
 import { LegalPageLayout } from '@/components/legal/legal-page-layout'
 
 export const metadata: Metadata = {
-  title: 'Politique de confidentialité | Novekia',
+  title: 'Politique de confidentialité',
   description:
     'Politique de confidentialité de Novekia concernant les données transmises par le formulaire de contact et la mesure d’audience du site.',
+  alternates: {
+    canonical: '/politique-de-confidentialite',
+  },
 }
 
 export default function PrivacyPolicyPage() {

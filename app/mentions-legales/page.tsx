@@ -1,20 +1,43 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { JsonLd, organizationJsonLd } from '@/components/brand/json-ld'
 import { LegalPageLayout } from '@/components/legal/legal-page-layout'
+import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
-  title: 'Mentions légales | Novekia',
+  title: 'Mentions légales',
   description:
     'Informations légales relatives à l’éditeur du site Novekia, à son hébergement et à ses prestataires techniques.',
+  alternates: {
+    canonical: '/mentions-legales',
+  },
 }
 
 export default function LegalNoticesPage() {
   return (
-    <LegalPageLayout
-      eyebrow="Informations légales"
-      title="Mentions légales"
-      introduction="Les présentes mentions légales précisent l’identité de l’éditeur du site Novekia, ses coordonnées et les informations relatives à ses prestataires techniques."
-    >
+    <>
+      <JsonLd data={organizationJsonLd} />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          '@id': `${siteConfig.url}/mentions-legales#webpage`,
+          url: `${siteConfig.url}/mentions-legales`,
+          name: 'Mentions légales de Novekia',
+          description: metadata.description,
+          inLanguage: 'fr-FR',
+          about: {
+            '@id': `${siteConfig.url}/#organization`,
+          },
+          dateModified: '2026-07-30',
+        }}
+      />
+      <LegalPageLayout
+        eyebrow="Informations légales"
+        title="Mentions légales"
+        introduction="Les présentes mentions légales précisent l’identité de l’éditeur du site Novekia, ses coordonnées et les informations relatives à ses prestataires techniques."
+        lastUpdated="30 juillet 2026"
+      >
       <section aria-labelledby="editor">
         <h2 id="editor">Éditeur du site</h2>
         <p>
@@ -157,6 +180,7 @@ export default function LegalNoticesPage() {
           français, sous réserve des règles impératives applicables.
         </p>
       </section>
-    </LegalPageLayout>
+      </LegalPageLayout>
+    </>
   )
 }

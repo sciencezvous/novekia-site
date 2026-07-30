@@ -186,6 +186,10 @@ export function ContactForm({ className }: ContactFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className={cn('flex flex-col gap-5', className)} noValidate>
+      <p className="text-sm leading-relaxed text-muted-foreground">
+        Les champs marqués d’un astérisque sont obligatoires. Sans ces
+        informations, la demande ne peut pas être transmise.
+      </p>
       <div className="grid gap-5 sm:grid-cols-2">
         <div className={fieldClassName}>
           <Label htmlFor="contact-name">Nom et prénom <span aria-hidden="true">*</span></Label>

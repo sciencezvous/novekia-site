@@ -25,6 +25,26 @@ export const organizationJsonLd: Record<string, unknown> = {
   logo: `${siteConfig.url}/novekia-icon.svg`,
   image: `${siteConfig.url}/og.png`,
   email: siteConfig.contact.email,
+  telephone: siteConfig.contact.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: siteConfig.legal.streetAddress,
+    postalCode: siteConfig.legal.postalCode,
+    addressLocality: siteConfig.legal.locality,
+    addressCountry: 'FR',
+  },
+  identifier: [
+    {
+      '@type': 'PropertyValue',
+      propertyID: 'SIREN',
+      value: siteConfig.legal.siren,
+    },
+    {
+      '@type': 'PropertyValue',
+      propertyID: 'SIRET',
+      value: siteConfig.legal.siret,
+    },
+  ],
   founder: {
     '@id': `${siteConfig.url}/#andy-legrand`,
   },

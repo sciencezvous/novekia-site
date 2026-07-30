@@ -6,6 +6,19 @@ export const siteConfig = {
   url: 'https://novekia.fr',
   contact: {
     email: 'contact@novekia.fr',
+    phone: '07 67 84 27 57',
+    phoneHref: 'tel:+33767842757',
+  },
+  legal: {
+    owner: 'Andy Legrand',
+    tradingName: 'Novekia',
+    status: 'Entrepreneur individuel (EI)',
+    siren: '106 923 758',
+    siret: '106 923 758 00010',
+    streetAddress: '41 rue du Trève',
+    postalCode: '01480',
+    locality: 'Villeneuve',
+    country: 'France',
   },
 } as const
 
