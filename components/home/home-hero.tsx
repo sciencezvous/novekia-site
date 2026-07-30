@@ -16,7 +16,7 @@ export function HomeHero() {
   return (
     <Section
       tone="dark"
-      spacing="loose"
+      spacing="compact"
       contained={false}
       aria-labelledby="hero-title"
       className="min-h-[calc(100svh-4.5rem)] overflow-hidden border-t-0 lg:min-h-[calc(100svh-4rem)]"
@@ -39,33 +39,38 @@ export function HomeHero() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#020817_0%,rgba(2,8,23,0.55)_32%,rgba(2,8,23,0.08)_75%),linear-gradient(180deg,rgba(2,8,23,0.1),#020817_100%)]" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[calc(100svh-11rem)] w-full max-w-7xl flex-col justify-center px-5 sm:px-6 md:px-8">
-        <div className="max-w-4xl py-10 lg:max-w-[57%] lg:py-16">
+      <div className="relative mx-auto flex min-h-[calc(100svh-11rem)] w-full max-w-7xl flex-col justify-start px-5 sm:px-6 md:px-8">
+        <div className="max-w-4xl py-10 lg:-mt-20 lg:max-w-[57%]">
           <TechnicalLabel index="00">Studio d&apos;ingénierie technologique</TechnicalLabel>
           <h1
             id="hero-title"
-            className="mt-6 text-balance text-[clamp(3.3rem,11vw,6.7rem)] font-semibold leading-[0.88] tracking-[-0.065em]"
+            className="mt-5 text-balance text-[clamp(3rem,8.5vw,5.8rem)] font-semibold leading-[0.9] tracking-[-0.06em]"
           >
             Infrastructure
             <br />
             locale.
             <br />
             <span className="bg-gradient-to-r from-[#77c8ff] via-[#319bff] to-[#087cff] bg-clip-text text-transparent">
-              Intelligence
+              Intelligence qui
               <br />
-              souveraine.
+              reste chez vous.
             </span>
           </h1>
-          <p className="mt-7 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Novekia conçoit en France des systèmes numériques privés et performants :
-            intelligence artificielle locale, logiciels métiers, infrastructures de calcul
-            et architectures web pensées pour durer.
+          <p className="mt-5 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Novekia conçoit des solutions d&apos;IA et de logiciels métiers qui tournent
+            sur votre propre infrastructure. Vos données restent privées. Vos coûts restent
+            sous contrôle.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row [&>*]:w-full sm:[&>*]:w-auto">
-            <PrimaryButton href="#expertises" withArrow>
-              Découvrir nos solutions
-            </PrimaryButton>
-            <SecondaryButton href="#contact">Demander un audit</SecondaryButton>
+          <div className="mt-6">
+            <div className="flex flex-col gap-3 sm:flex-row [&>*]:w-full sm:[&>*]:w-auto">
+              <PrimaryButton href="#contact" withArrow>
+                Demander un échange gratuit
+              </PrimaryButton>
+              <SecondaryButton href="#expertises">Découvrir nos solutions</SecondaryButton>
+            </div>
+            <p className="mt-3 font-mono text-xs tracking-wide text-muted-foreground">
+              Réponse sous 48h <span aria-hidden="true">•</span> Sans engagement
+            </p>
           </div>
         </div>
 
