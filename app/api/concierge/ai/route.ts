@@ -40,6 +40,17 @@ const MISTRAL_DIAGNOSTICS = [
 
 type MistralDiagnostic = typeof MISTRAL_DIAGNOSTICS[number]
 
+type MistralEnvelopeShape = {
+  choiceKeys: string[]
+  hasMessage: boolean
+  hasMessages: boolean
+  messageKeys: string[]
+  contentKind: 'string' | 'array' | 'null' | 'missing' | 'other'
+  contentBlockTypes: string[]
+  toolCallsKind: 'missing' | 'null' | 'empty_array' | 'non_empty_array' | 'other'
+  finishReason: 'stop' | 'length' | 'unexpected' | null
+}
+
 function warningValue(warnings: readonly string[], prefix: string): string | null {
   const warning = warnings.find((value) => value.startsWith(prefix))
   return warning ? warning.slice(prefix.length) : null
@@ -47,6 +58,30 @@ function warningValue(warnings: readonly string[], prefix: string): string | nul
 
 function safeMistralDiagnostic(warnings: readonly string[]): MistralDiagnostic | null {
   return MISTRAL_DIAGNOSTICS.find((diagnostic) => warnings.includes(diagnostic)) ?? null
+}
+
+function safeShapeStrings(value: unknown): value is string[] {
+  return Array.isArray(value) && value.length <= 32 && value.every((item) =>
+    typeof item === 'string' && /^[a-z0-9_-]{1,64}$/i.test(item))
+}
+
+function readEnvelopeShape(warnings: readonly string[]): MistralEnvelopeShape | null {
+  const encoded = warningValue(warnings, 'mistral_envelope_shape:')
+  if (!encoded) return null
+  try {
+    const value = JSON.parse(decodeURIComponent(encoded)) as Record<string, unknown>
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+    if (!safeShapeStrings(value.choiceKeys) || !safeShapeStrings(value.messageKeys) ||
+      !safeShapeStrings(value.contentBlockTypes)) return null
+    if (typeof value.hasMessage !== 'boolean' || typeof value.hasMessages !== 'boolean') return null
+    if (!['string', 'array', 'null', 'missing', 'other'].includes(String(value.contentKind))) return null
+    if (!['missing', 'null', 'empty_array', 'non_empty_array', 'other'].includes(String(value.toolCallsKind))) return null
+    if (!(value.finishReason === null || value.finishReason === 'stop' ||
+      value.finishReason === 'length' || value.finishReason === 'unexpected')) return null
+    return value as MistralEnvelopeShape
+  } catch {
+    return null
+  }
 }
 
 function logMistralFailure(
@@ -68,6 +103,20 @@ function logMistralFailure(
   const finishReason = rawFinishReason === 'stop' || rawFinishReason === 'length' || rawFinishReason === 'unexpected'
     ? rawFinishReason
     : null
+
+  if (diagnostic === 'mistral_invalid_envelope') {
+    console.warn('[concierge-ai] mistral_invalid_envelope', readEnvelopeShape(warnings) ?? {
+      choiceKeys: [],
+      hasMessage: false,
+      hasMessages: false,
+      messageKeys: [],
+      contentKind: 'missing',
+      contentBlockTypes: [],
+      toolCallsKind: 'missing',
+      finishReason,
+    })
+    return
+  }
 
   console.warn('[concierge-ai]', {
     requestId,

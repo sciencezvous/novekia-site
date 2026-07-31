@@ -27,15 +27,31 @@ export type MistralDiagnosticCode =
 
 type MistralFinishReason = 'stop' | 'length' | 'unexpected'
 
+export type MistralEnvelopeShape = {
+  choiceKeys: string[]
+  hasMessage: boolean
+  hasMessages: boolean
+  messageKeys: string[]
+  contentKind: 'string' | 'array' | 'null' | 'missing' | 'other'
+  contentBlockTypes: string[]
+  toolCallsKind: 'missing' | 'null' | 'empty_array' | 'non_empty_array' | 'other'
+  finishReason: MistralFinishReason | null
+}
+
 function diagnosticWarnings(
   diagnostic: MistralDiagnosticCode,
   upstreamStatus: number | null,
   finishReason: MistralFinishReason | null,
+  envelopeShape?: MistralEnvelopeShape,
 ): string[] {
-  return [
+  const warnings = [
     diagnostic,
     ...responseMetadataWarnings(upstreamStatus, finishReason),
   ]
+  if (diagnostic === 'mistral_invalid_envelope' && envelopeShape) {
+    warnings.push(`mistral_envelope_shape:${encodeURIComponent(JSON.stringify(envelopeShape))}`)
+  }
+  return warnings
 }
 
 function responseMetadataWarnings(
@@ -56,6 +72,7 @@ function failedResponse(
   diagnostic?: MistralDiagnosticCode,
   upstreamStatus: number | null = null,
   finishReason: MistralFinishReason | null = null,
+  envelopeShape?: MistralEnvelopeShape,
 ): ConciergeAIResponse {
   return {
     success: false,
@@ -64,7 +81,7 @@ function failedResponse(
     output: null,
     structuredOutput: null,
     confidence: null,
-    warnings: diagnostic ? diagnosticWarnings(diagnostic, upstreamStatus, finishReason) : [],
+    warnings: diagnostic ? diagnosticWarnings(diagnostic, upstreamStatus, finishReason, envelopeShape) : [],
     latencyMs: Date.now() - startedAt,
     inputTokens: null,
     outputTokens: null,
@@ -87,14 +104,31 @@ function readUsage(value: unknown): { inputTokens: number | null; outputTokens: 
   }
 }
 
-export function readModelContent(value: unknown): string | null {
-  if (!isRecord(value) || !Array.isArray(value.choices) || value.choices.length === 0) return null
-  const first = value.choices[0]
-  if (!isRecord(first) || !isRecord(first.message)) return null
-  const message = first.message
-  if (message.tool_calls !== undefined &&
-    (!Array.isArray(message.tool_calls) || message.tool_calls.length > 0)) return null
+function hasInvalidToolCalls(message: Record<string, unknown>): boolean {
+  const toolCalls = message.tool_calls
+  return toolCalls !== undefined &&
+    toolCalls !== null &&
+    (!Array.isArray(toolCalls) || toolCalls.length > 0)
+}
 
+function selectModelMessage(choice: Record<string, unknown>): Record<string, unknown> | null {
+  if (choice.message !== undefined) {
+    return isRecord(choice.message) && !hasInvalidToolCalls(choice.message)
+      ? choice.message
+      : null
+  }
+  if (!Array.isArray(choice.messages) || choice.messages.length === 0) return null
+
+  const assistantMessages: Record<string, unknown>[] = []
+  for (const candidate of choice.messages) {
+    if (!isRecord(candidate) || hasInvalidToolCalls(candidate)) return null
+    if (candidate.role === 'tool') return null
+    if (candidate.role === 'assistant') assistantMessages.push(candidate)
+  }
+  return assistantMessages.length === 1 ? assistantMessages[0] : null
+}
+
+function readMessageContent(message: Record<string, unknown>): string | null {
   const content = message.content
   if (typeof content === 'string') {
     return content.trim().length > 0 && content.length <= MAX_MODEL_CONTENT_CHARACTERS
@@ -115,12 +149,76 @@ export function readModelContent(value: unknown): string | null {
   return combined.trim().length > 0 ? combined : null
 }
 
+export function readModelContent(value: unknown): string | null {
+  if (!isRecord(value) || !Array.isArray(value.choices) || value.choices.length === 0) return null
+  const first = value.choices[0]
+  if (!isRecord(first)) return null
+  const message = selectModelMessage(first)
+  return message ? readMessageContent(message) : null
+}
+
 export function readFinishReason(value: unknown): MistralFinishReason | null {
   if (!isRecord(value) || !Array.isArray(value.choices) || value.choices.length === 0) return null
   const first = value.choices[0]
   if (!isRecord(first)) return null
   if (first.finish_reason === 'stop' || first.finish_reason === 'length') return first.finish_reason
   return 'unexpected'
+}
+
+function safeKeyNames(value: Record<string, unknown> | null): string[] {
+  if (!value) return []
+  return [...new Set(Object.keys(value).slice(0, 32).map((key) =>
+    /^[a-z0-9_]{1,64}$/i.test(key) ? key : 'other'))].sort()
+}
+
+function shapeMessage(choice: Record<string, unknown>): Record<string, unknown> | null {
+  if (isRecord(choice.message)) return choice.message
+  if (!Array.isArray(choice.messages)) return null
+  const assistants = choice.messages.filter((candidate) =>
+    isRecord(candidate) && candidate.role === 'assistant')
+  return assistants.length === 1 && isRecord(assistants[0]) ? assistants[0] : null
+}
+
+export function describeMistralEnvelope(value: unknown): MistralEnvelopeShape {
+  const first = isRecord(value) && Array.isArray(value.choices) && isRecord(value.choices[0])
+    ? value.choices[0]
+    : null
+  const message = first ? shapeMessage(first) : null
+  const content = message?.content
+  const contentKind = message === null || !Object.hasOwn(message, 'content')
+    ? 'missing'
+    : content === null
+      ? 'null'
+      : typeof content === 'string'
+        ? 'string'
+        : Array.isArray(content)
+          ? 'array'
+          : 'other'
+  const contentBlockTypes = Array.isArray(content)
+    ? [...new Set(content.slice(0, 32).map((block) =>
+        isRecord(block) && typeof block.type === 'string' && /^[a-z0-9_-]{1,64}$/i.test(block.type)
+          ? block.type
+          : 'other'))]
+    : []
+  const toolCalls = message?.tool_calls
+  const toolCallsKind = message === null || toolCalls === undefined
+    ? 'missing'
+    : toolCalls === null
+      ? 'null'
+      : Array.isArray(toolCalls)
+        ? toolCalls.length === 0 ? 'empty_array' : 'non_empty_array'
+        : 'other'
+
+  return {
+    choiceKeys: safeKeyNames(first),
+    hasMessage: Boolean(first && Object.hasOwn(first, 'message')),
+    hasMessages: Boolean(first && Object.hasOwn(first, 'messages')),
+    messageKeys: safeKeyNames(message),
+    contentKind,
+    contentBlockTypes,
+    toolCallsKind,
+    finishReason: readFinishReason(value),
+  }
 }
 
 async function readResponseTextLimited(response: Response): Promise<string | null> {
@@ -221,11 +319,11 @@ export class MistralConciergeAIProvider implements ConciergeAIProvider {
         return failedResponse(startedAt, 'invalid_output', 'La réponse du fournisseur est tronquée.', false, 'mistral_truncated', response.status, finishReason)
       }
       if (finishReason !== 'stop') {
-        return failedResponse(startedAt, 'invalid_output', 'La fin de la réponse du fournisseur est invalide.', false, 'mistral_invalid_envelope', response.status, finishReason)
+        return failedResponse(startedAt, 'invalid_output', 'La fin de la réponse du fournisseur est invalide.', false, 'mistral_invalid_envelope', response.status, finishReason, describeMistralEnvelope(payload))
       }
       const content = readModelContent(payload)
       if (!content || content.length > MAX_MODEL_CONTENT_CHARACTERS) {
-        return failedResponse(startedAt, 'invalid_output', 'Le contenu retourné est absent ou trop long.', false, 'mistral_invalid_envelope', response.status, finishReason)
+        return failedResponse(startedAt, 'invalid_output', 'Le contenu retourné est absent ou trop long.', false, 'mistral_invalid_envelope', response.status, finishReason, describeMistralEnvelope(payload))
       }
 
       let structured: unknown
