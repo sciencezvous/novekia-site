@@ -1,14 +1,10 @@
+import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
-import { HomeHero } from '@/components/home/home-hero'
-import { PositionnementSection } from '@/components/home/positionnement-section'
-import { ExpertisesSection } from '@/components/home/expertises-section'
+import { InstitutionalHero } from '@/components/home/institutional-hero'
+import { BusinessPillarsSection } from '@/components/home/business-pillars-section'
 import { MethodeSection } from '@/components/home/methode-section'
-import { SouveraineteSection } from '@/components/home/souverainete-section'
-import { TechnologiesSection } from '@/components/home/technologies-section'
-import { ResearchSection } from '@/components/home/research-section'
-import { ProofSection } from '@/components/home/proof-section'
-import { TestimonialsSection } from '@/components/home/testimonials-section'
+import { TrustSection } from '@/components/home/trust-section'
 import { ContactSection } from '@/components/home/contact-section'
 import { FaqSection, homeFaq } from '@/components/home/faq-section'
 import {
@@ -19,6 +15,30 @@ import {
   websiteJsonLd,
 } from '@/components/brand/json-ld'
 import { HashNavigation } from '@/components/layout/hash-navigation'
+import { siteConfig } from '@/lib/site-config'
+
+export const metadata: Metadata = {
+  title: {
+    absolute: 'Novekia — Lead Engine Studio et solutions technologiques',
+  },
+  description: siteConfig.description,
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    locale: 'fr_FR',
+    url: siteConfig.url,
+    title: 'Novekia — Lead Engine Studio et solutions technologiques',
+    description: siteConfig.description,
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Novekia — studio commercial et technologique',
+      },
+    ],
+  },
+}
 
 export default function HomePage() {
   return (
@@ -44,37 +64,11 @@ export default function HomePage() {
       <HashNavigation />
       <SiteHeader />
       <main id="contenu">
-        {/* 00 — Hero */}
-        <HomeHero />
-
-        {/* 01 — Positionnement */}
-        <PositionnementSection />
-
-        {/* 02 — Expertises */}
-        <ExpertisesSection />
-
-        {/* 03 — Méthode */}
+        <InstitutionalHero />
+        <BusinessPillarsSection />
         <MethodeSection />
-
-        {/* 04 — Souveraineté */}
-        <SouveraineteSection />
-
-        {/* 05 — Technologies */}
-        <TechnologiesSection />
-
-        {/* 06 — Recherche & Développement */}
-        <ResearchSection />
-
-        {/* 07 — Preuve technique */}
-        <ProofSection />
-
-        {/* 08 — Témoignages clients */}
-        <TestimonialsSection />
-
-        {/* 09 — Questions fréquentes */}
+        <TrustSection />
         <FaqSection />
-
-        {/* 10 — Contact */}
         <ContactSection />
       </main>
       <SiteFooter />

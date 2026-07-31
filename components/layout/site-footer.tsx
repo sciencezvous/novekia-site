@@ -11,8 +11,9 @@ export function SiteFooter() {
           <div className="flex flex-col gap-5">
             <Logo href="/" />
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Technologies au service de la performance. Infrastructures
-              modulaires, intelligence artificielle locale et R&D appliquée.
+              Un studio français structuré autour de deux pôles&nbsp;:
+              prospection et qualification commerciale B2B, puis conception de
+              solutions numériques et d&apos;infrastructures.
             </p>
             <address className="mt-2 flex flex-col gap-1 font-mono text-xs not-italic leading-relaxed text-muted-foreground">
               <p className="text-foreground">

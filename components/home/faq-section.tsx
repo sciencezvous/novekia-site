@@ -5,27 +5,29 @@ export const homeFaq = [
   {
     question: 'Que fait Novekia ?',
     answer:
-      'Novekia est un studio français d’ingénierie technologique. Nous concevons des logiciels métiers, des systèmes d’intelligence artificielle locale, des infrastructures de calcul et des applications web pour les organisations qui veulent garder la maîtrise de leurs données et de leurs outils.',
+      'Novekia est un studio français structuré autour de deux pôles complémentaires. Lead Engine Studio construit des dispositifs de prospection et de qualification commerciale B2B. Novekia Solutions conçoit des sites web, logiciels métiers, automatisations, systèmes d’intelligence artificielle locale et infrastructures de calcul.',
   },
   {
-    question: 'Quelle différence entre IA locale, IA privée et IA souveraine ?',
+    question:
+      'Quelle différence entre Lead Engine Studio et Novekia Solutions ?',
     answer:
-      'Une IA locale s’exécute sur une infrastructure contrôlée par l’organisation. Une IA privée insiste sur la confidentialité des accès et des données. La souveraineté ajoute la maîtrise des dépendances, de l’hébergement, des modèles et des conditions d’exploitation. Le bon niveau dépend du cas d’usage.',
+      'Lead Engine Studio intervient sur l’identification des entreprises, la qualification des opportunités et la préparation des approches commerciales. Novekia Solutions intervient sur la conception et l’intégration des solutions numériques. Chaque pôle possède son périmètre, ses livrables et ses critères de validation.',
   },
   {
-    question: 'Comment Novekia améliore-t-elle le SEO et le GEO ?',
+    question:
+      'Lead Engine Studio envoie-t-il automatiquement des messages en masse ?',
     answer:
-      'Nous travaillons la structure technique, les performances, les métadonnées, les données structurées et surtout la clarté du contenu. Le GEO complète le SEO en rendant les offres, les preuves et les réponses suffisamment explicites pour être comprises et citées par les moteurs génératifs.',
+      'Non. Le dispositif privilégie la pertinence, la traçabilité des informations et la supervision humaine. Les actions sensibles et les prises de contact sont préparées selon le cadre défini avec le client, puis validées avant activation.',
   },
   {
-    question: 'Novekia intervient-elle uniquement sur des projets d’IA ?',
+    question: 'Les deux pôles peuvent-ils intervenir sur un même besoin ?',
     answer:
-      'Non. Nous intervenons aussi sur les logiciels métiers, les architectures web, les réseaux, les stations de calcul, les serveurs GPU et l’intégration de systèmes. L’IA n’est retenue que lorsqu’elle apporte une valeur mesurable.',
+      'Oui, lorsque le contexte le justifie. Lead Engine Studio peut clarifier un marché et les signaux commerciaux, tandis que Novekia Solutions peut construire l’outil, l’automatisation ou l’infrastructure nécessaire. Les deux interventions restent toutefois clairement séparées et documentées.',
   },
   {
     question: 'Comment démarre une mission ?',
     answer:
-      'La première étape est un échange de qualification. Nous clarifions le besoin, les utilisateurs, les contraintes, les données disponibles et le résultat attendu. Selon le contexte, la suite prend la forme d’un audit, d’un atelier d’architecture ou d’un prototype.',
+      'La première étape est un échange de qualification. Nous clarifions votre objectif, le contexte, les contraintes, les données disponibles et le résultat attendu. Novekia vous oriente ensuite vers le bon pôle et propose une prochaine étape proportionnée au besoin.',
   },
 ] as const
 
@@ -33,10 +35,10 @@ export function FaqSection() {
   return (
     <Section id="questions" tone="muted" aria-labelledby="questions-title">
       <SectionHeader
-        index="09"
+        index="04"
         eyebrow="Questions fréquentes"
         title={<span id="questions-title">Comprendre avant de décider.</span>}
-        description="Des réponses directes sur notre métier, notre approche de l’IA privée et notre travail SEO/GEO."
+        description="Des réponses directes sur l’organisation de Novekia, le rôle de chaque pôle et notre cadre d’intervention."
       />
 
       <div className="mt-12 divide-y divide-border border-y border-border">

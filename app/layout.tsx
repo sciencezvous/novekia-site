@@ -29,6 +29,10 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   keywords: [
+    'prospection B2B',
+    'qualification commerciale',
+    'développement commercial',
+    'studio commercial et technologique',
     'ingénierie logicielle',
     'intelligence artificielle locale',
     'IA souveraine',
@@ -66,7 +70,7 @@ export const metadata: Metadata = {
         url: '/og.png',
         width: 1200,
         height: 630,
-        alt: 'Novekia — infrastructure locale et intelligence souveraine',
+        alt: 'Novekia — Lead Engine Studio et solutions technologiques',
       },
     ],
   },
@@ -97,6 +101,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} bg-background`}
     >
       <body className="font-sans antialiased">

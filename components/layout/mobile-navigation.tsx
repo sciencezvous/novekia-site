@@ -155,7 +155,7 @@ export function MobileNavigation() {
             })}
           </ul>
           <PrimaryButton href="/#contact" className="mt-5 w-full" onClick={navigateAndClose}>
-            Demander un audit
+            Parler de votre projet
           </PrimaryButton>
         </nav>
       </div>

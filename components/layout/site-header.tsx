@@ -83,7 +83,7 @@ export function SiteHeader() {
 
           <div className="flex items-center gap-2">
             <PrimaryButton href="/#contact" className="hidden lg:inline-flex">
-              Demander un audit
+              Parler de votre projet
             </PrimaryButton>
             <MobileNavigation />
           </div>
