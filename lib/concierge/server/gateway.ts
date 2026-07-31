@@ -6,6 +6,7 @@ import {
   DeterministicConciergeAIProvider,
   MistralConciergeAIProvider,
 } from '../providers'
+import type { MistralDiagnosticCode } from '../providers/mistral-provider'
 import type { ConciergeAIGatewayConfig } from './gateway-config'
 import { getConciergeAIGatewayConfig } from './gateway-config'
 import { validateProviderResponse } from './response-validation'
@@ -95,7 +96,7 @@ export async function executeConciergeAI(
   }
 
   const reason = lowConfidence
-    ? 'La confiance du fournisseur était insuffisante.'
-    : 'Le fournisseur externe n’a pas retourné une réponse exploitable.'
+    ? 'mistral_low_confidence'
+    : initial.warnings.find((warning): warning is MistralDiagnosticCode => warning.startsWith('mistral_'))
   return executeFallback(request, reason)
 }

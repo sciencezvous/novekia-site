@@ -5,6 +5,7 @@ import type {
 } from '../ai-contract'
 import { buildMistralMessages, getTaskTemperature } from '../ai-prompts'
 import {
+  getMistralJsonSchema,
   getTaskConfidence,
   validateConciergeAITaskOutput,
 } from '../ai-schemas'
@@ -15,11 +16,20 @@ type FetchImplementation = typeof fetch
 const MAX_PROVIDER_RESPONSE_BYTES = 128 * 1024
 const MAX_MODEL_CONTENT_CHARACTERS = 20_000
 
+export type MistralDiagnosticCode =
+  | 'mistral_http_error'
+  | 'mistral_timeout'
+  | 'mistral_invalid_envelope'
+  | 'mistral_invalid_json'
+  | 'mistral_schema_rejected'
+  | 'mistral_low_confidence'
+
 function failedResponse(
   startedAt: number,
   code: NonNullable<ConciergeAIResponse['error']>['code'],
   message: string,
   retryable: boolean,
+  diagnostic?: MistralDiagnosticCode,
 ): ConciergeAIResponse {
   return {
     success: false,
@@ -28,7 +38,7 @@ function failedResponse(
     output: null,
     structuredOutput: null,
     confidence: null,
-    warnings: [],
+    warnings: diagnostic ? [diagnostic] : [],
     latencyMs: Date.now() - startedAt,
     inputTokens: null,
     outputTokens: null,
@@ -51,11 +61,31 @@ function readUsage(value: unknown): { inputTokens: number | null; outputTokens: 
   }
 }
 
-function readModelContent(value: unknown): string | null {
+export function readModelContent(value: unknown): string | null {
   if (!isRecord(value) || !Array.isArray(value.choices) || value.choices.length === 0) return null
   const first = value.choices[0]
   if (!isRecord(first) || !isRecord(first.message)) return null
-  return typeof first.message.content === 'string' ? first.message.content : null
+  const message = first.message
+  if (message.tool_calls !== undefined &&
+    (!Array.isArray(message.tool_calls) || message.tool_calls.length > 0)) return null
+
+  const content = message.content
+  if (typeof content === 'string') {
+    return content.trim().length > 0 && content.length <= MAX_MODEL_CONTENT_CHARACTERS
+      ? content
+      : null
+  }
+  if (!Array.isArray(content) || content.length === 0) return null
+
+  let combined = ''
+  for (const block of content) {
+    if (!isRecord(block) || block.type !== 'text' || typeof block.text !== 'string') return null
+    if (Object.keys(block).some((key) => key !== 'type' && key !== 'text')) return null
+    if (block.text.length === 0) return null
+    combined += block.text
+    if (combined.length > MAX_MODEL_CONTENT_CHARACTERS) return null
+  }
+  return combined.trim().length > 0 ? combined : null
 }
 
 async function readResponseTextLimited(response: Response): Promise<string | null> {
@@ -118,7 +148,14 @@ export class MistralConciergeAIProvider implements ConciergeAIProvider {
           messages: buildMistralMessages(request),
           temperature: getTaskTemperature(request.task),
           max_tokens: request.maxOutputTokens,
-          response_format: { type: 'json_object' },
+          response_format: {
+            type: 'json_schema',
+            json_schema: {
+              name: request.expectedSchema.name,
+              schema: getMistralJsonSchema(request.task),
+              strict: true,
+            },
+          },
         }),
         cache: 'no-store',
         signal: controller.signal,
@@ -127,34 +164,34 @@ export class MistralConciergeAIProvider implements ConciergeAIProvider {
       if (!response.ok) {
         const retryable = response.status === 429 || response.status >= 500
         const code = response.status === 429 ? 'rate_limited' : 'provider_error'
-        return failedResponse(startedAt, code, 'Le fournisseur n’a pas pu traiter la demande.', retryable)
+        return failedResponse(startedAt, code, 'Le fournisseur n’a pas pu traiter la demande.', retryable, 'mistral_http_error')
       }
 
       const rawBody = await readResponseTextLimited(response)
       if (rawBody === null) {
-        return failedResponse(startedAt, 'invalid_output', 'La réponse du fournisseur est trop volumineuse.', false)
+        return failedResponse(startedAt, 'invalid_output', 'La réponse du fournisseur est trop volumineuse.', false, 'mistral_invalid_envelope')
       }
 
       let payload: unknown
       try {
         payload = JSON.parse(rawBody)
       } catch {
-        return failedResponse(startedAt, 'invalid_output', 'La réponse du fournisseur est invalide.', false)
+        return failedResponse(startedAt, 'invalid_output', 'La réponse du fournisseur est invalide.', false, 'mistral_invalid_envelope')
       }
       const content = readModelContent(payload)
       if (!content || content.length > MAX_MODEL_CONTENT_CHARACTERS) {
-        return failedResponse(startedAt, 'invalid_output', 'Le contenu retourné est absent ou trop long.', false)
+        return failedResponse(startedAt, 'invalid_output', 'Le contenu retourné est absent ou trop long.', false, 'mistral_invalid_envelope')
       }
 
       let structured: unknown
       try {
         structured = JSON.parse(content)
       } catch {
-        return failedResponse(startedAt, 'invalid_output', 'Le contenu retourné n’est pas un objet JSON valide.', false)
+        return failedResponse(startedAt, 'invalid_output', 'Le contenu retourné n’est pas un objet JSON valide.', false, 'mistral_invalid_json')
       }
       const validated = validateConciergeAITaskOutput(request.task, structured)
       if (!validated) {
-        return failedResponse(startedAt, 'invalid_output', 'Le contenu retourné ne respecte pas le schéma.', false)
+        return failedResponse(startedAt, 'invalid_output', 'Le contenu retourné ne respecte pas le schéma.', false, 'mistral_schema_rejected')
       }
       const usage = readUsage(isRecord(payload) ? payload.usage : null)
       return {
@@ -178,6 +215,7 @@ export class MistralConciergeAIProvider implements ConciergeAIProvider {
         timedOut ? 'timeout' : 'provider_error',
         timedOut ? 'Le délai du fournisseur est dépassé.' : 'Le fournisseur est temporairement indisponible.',
         true,
+        timedOut ? 'mistral_timeout' : 'mistral_http_error',
       )
     } finally {
       clearTimeout(timeout)

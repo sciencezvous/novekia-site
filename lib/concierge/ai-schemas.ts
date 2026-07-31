@@ -157,6 +157,133 @@ export type ConciergeAIRouteEnvelope =
 const PATHS = ['lead_engine', 'solutions', 'information', 'direct_contact', 'unknown'] as const
 const POLES = ['lead_engine', 'solutions', 'human_review'] as const
 
+export type MistralJsonSchema = Readonly<Record<string, unknown>>
+
+type JsonSchemaProperties = Readonly<Record<string, MistralJsonSchema>>
+
+function objectSchema(
+  properties: JsonSchemaProperties,
+  required: readonly string[] = Object.keys(properties),
+): MistralJsonSchema {
+  return {
+    type: 'object',
+    properties,
+    required,
+    additionalProperties: false,
+  }
+}
+
+function boundedStringSchema(maxLength: number, allowEmpty = false): MistralJsonSchema {
+  return {
+    type: 'string',
+    minLength: allowEmpty ? 0 : 1,
+    maxLength,
+  }
+}
+
+const confidenceSchema: MistralJsonSchema = {
+  type: 'number',
+  minimum: 0,
+  maximum: 1,
+}
+
+const nullableTextSchema: MistralJsonSchema = {
+  anyOf: [
+    boundedStringSchema(600),
+    { type: 'null' },
+  ],
+}
+
+function inferredFieldSchema(value: MistralJsonSchema): MistralJsonSchema {
+  return objectSchema({
+    value,
+    provenance: { type: 'string', enum: ['inferred'] },
+    confidence: confidenceSchema,
+    rationale: boundedStringSchema(300, true),
+    requiresHumanReview: { type: 'boolean' },
+  })
+}
+
+const inferredRequiredTextSchema = inferredFieldSchema(boundedStringSchema(600))
+const inferredNullableTextSchema = inferredFieldSchema(nullableTextSchema)
+const inferredTextArraySchema: MistralJsonSchema = {
+  type: 'array',
+  maxItems: 10,
+  items: inferredRequiredTextSchema,
+}
+
+const taskJsonSchemas: Readonly<Record<ConciergeAITask, MistralJsonSchema>> = {
+  classify_intent: {
+    ...objectSchema({
+      path: { type: 'string', enum: PATHS },
+      solutionsCategory: {
+        type: ['string', 'null'],
+        enum: [...conciergeSolutionCategories, null],
+      },
+      confidence: confidenceSchema,
+      rationale: boundedStringSchema(400),
+      missingInformation: {
+        type: 'array',
+        maxItems: 8,
+        items: boundedStringSchema(200),
+      },
+      humanReviewRequired: { type: 'boolean' },
+    }),
+    anyOf: [
+      {
+        properties: { path: { enum: ['solutions'] } },
+        required: ['path'],
+      },
+      {
+        properties: { solutionsCategory: { type: 'null' } },
+        required: ['solutionsCategory'],
+      },
+    ],
+  },
+  extract_structured_answer: objectSchema({
+    fields: inferredTextArraySchema,
+    uncertainties: inferredTextArraySchema,
+  }),
+  rewrite_question: objectSchema({
+    question: boundedStringSchema(600),
+    confidence: confidenceSchema,
+    rationale: boundedStringSchema(300, true),
+    requiresHumanReview: { type: 'boolean' },
+  }),
+  summarize_qualification: objectSchema({
+    context: inferredNullableTextSchema,
+    objective: inferredNullableTextSchema,
+    currentSituation: inferredNullableTextSchema,
+    target: inferredNullableTextSchema,
+    mainNeed: inferredNullableTextSchema,
+    constraints: inferredTextArraySchema,
+    timeframe: inferredNullableTextSchema,
+    positiveSignals: inferredTextArraySchema,
+    uncertainties: inferredTextArraySchema,
+    missingInformation: inferredTextArraySchema,
+    humanReviewPoints: inferredTextArraySchema,
+    recommendedNovekiaPole: inferredFieldSchema({ type: 'string', enum: POLES }),
+    recommendedServiceCategory: inferredFieldSchema({
+      type: ['string', 'null'],
+      enum: [...conciergeSolutionCategories, null],
+    }),
+    recommendedNextAction: inferredRequiredTextSchema,
+  }),
+  detect_missing_information: objectSchema({
+    missingInformation: inferredTextArraySchema,
+  }),
+  prepare_human_handoff: objectSchema({
+    summary: inferredRequiredTextSchema,
+    importantPoints: inferredTextArraySchema,
+    missingInformation: inferredTextArraySchema,
+    humanReviewPoints: inferredTextArraySchema,
+  }),
+}
+
+export function getMistralJsonSchema(task: ConciergeAITask): MistralJsonSchema {
+  return taskJsonSchemas[task]
+}
+
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false
   const prototype = Object.getPrototypeOf(value)

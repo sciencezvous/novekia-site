@@ -28,6 +28,10 @@ const RESPONSE_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
 } as const
 
+function publicWarnings(warnings: readonly string[]): readonly string[] {
+  return warnings.filter((warning) => !warning.startsWith('mistral_'))
+}
+
 function jsonResponse(body: ConciergeAIRouteEnvelope, status: number) {
   return NextResponse.json(body, { status, headers: RESPONSE_HEADERS })
 }
@@ -167,7 +171,7 @@ export async function POST(request: NextRequest) {
       provider,
       model: response.model,
       confidence: response.confidence ?? getTaskConfidence(internalRequest.task, result),
-      warnings: response.warnings,
+      warnings: publicWarnings(response.warnings),
       fallbackUsed: response.fallbackUsed,
       latencyMs: response.latencyMs,
       usage: {
