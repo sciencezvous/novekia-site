@@ -258,6 +258,24 @@ export type ConciergeSessionError = {
   recoverable: boolean
 }
 
+export type ConciergeAIAssistanceStatus =
+  | 'idle'
+  | 'requesting'
+  | 'available'
+  | 'fallback'
+  | 'unavailable'
+  | 'error'
+
+export type ConciergeAIAssistanceState = {
+  enabled: boolean
+  disclosureAcknowledged: boolean
+  status: ConciergeAIAssistanceStatus
+  lastTask: import('./ai-contract').ConciergeAITask | null
+  lastRequestId: string | null
+  lastProvider: import('./ai-contract').ConciergeAIProviderName | null
+  warnings: readonly string[]
+}
+
 export type ConciergeSession = {
   sessionId: string
   schemaVersion: typeof CONCIERGE_SCHEMA_VERSION
@@ -279,6 +297,7 @@ export type ConciergeSession = {
   consent: ConciergeConsent | null
   humanReviewRequired: boolean
   errors: readonly ConciergeSessionError[]
+  aiAssistance: ConciergeAIAssistanceState
 }
 
 export type AnswerValidationResult = {

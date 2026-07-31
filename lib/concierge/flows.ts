@@ -7,7 +7,6 @@ import {
   type ConciergePath,
   type ConciergeQuestion,
   type ConciergeQuestionOption,
-  type ConciergeQuestionPath,
   type ConciergeStep,
   type ConciergeSystemStep,
 } from './types'

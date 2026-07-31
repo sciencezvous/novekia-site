@@ -3,7 +3,9 @@
 import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { conciergePathLabels } from '@/lib/concierge/config'
+import type { ConciergeAIRouteEnvelope } from '@/lib/concierge/ai-schemas'
 import type { ConciergeSummary as Summary } from '@/lib/concierge/types'
+import { ConciergeAISummary } from './concierge-ai-summary'
 
 type ConciergeSummaryProps = {
   summary: Summary
@@ -11,6 +13,13 @@ type ConciergeSummaryProps = {
   onBack: () => void
   onRestart: () => void
   final?: boolean
+  ai?: {
+    enabled: boolean
+    disclosureAcknowledged: boolean
+    status: 'idle' | 'requesting' | 'available' | 'fallback' | 'unavailable' | 'error'
+    onRequest: (input: Record<string, unknown>) => Promise<ConciergeAIRouteEnvelope>
+    onDisable: () => void
+  }
 }
 
 type SummaryItem = { label: string; value: string | null }
@@ -21,6 +30,7 @@ export function ConciergeSummaryView({
   onBack,
   onRestart,
   final = false,
+  ai,
 }: ConciergeSummaryProps) {
   const items: SummaryItem[] = [
     { label: 'Pôle', value: conciergePathLabels[summary.selectedPath.value] },
@@ -35,13 +45,13 @@ export function ConciergeSummaryView({
   return (
     <div data-concierge-step-id={final ? 'submission.ready' : 'summary.review'}>
       <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-primary">
-        {final ? 'Demande prête' : 'Synthèse du cadrage'}
+        {final ? 'Demande prête' : 'Informations fournies'}
       </p>
       <h3 className="mt-3 text-balance text-2xl font-semibold tracking-tight">
         {final ? 'Votre demande est structurée.' : 'Vérifiez les éléments déclarés.'}
       </h3>
       <p className="mt-3 text-sm leading-6 text-muted-foreground">
-        Cette synthèse reprend vos réponses sans interprétation par une IA.
+        Cette synthèse déterministe reprend vos réponses sans interprétation par une IA.
       </p>
 
       <dl className="mt-6 divide-y divide-border border-y border-border">
@@ -56,6 +66,17 @@ export function ConciergeSummaryView({
           </div>
         ))}
       </dl>
+
+      {!final && ai ? (
+        <ConciergeAISummary
+          summary={summary}
+          enabled={ai.enabled}
+          disclosureAcknowledged={ai.disclosureAcknowledged}
+          status={ai.status}
+          onRequest={ai.onRequest}
+          onDisable={ai.onDisable}
+        />
+      ) : null}
 
       {summary.missingInformation.length > 0 ? (
         <section className="mt-5 border border-border bg-background/40 p-4" aria-labelledby="concierge-missing-title">

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import {
   advanceConcierge,
+  clearConciergeAICache,
   createClientSessionId,
   createConciergeSession,
   emitConciergeEvent,
@@ -12,11 +13,14 @@ import {
   goBackConcierge,
   recordConciergeAnswer,
   recordConciergeSupplementalAnswer,
+  requestConciergeAI,
   restartConciergeSession,
   skipConciergeQuestion,
   startConciergePath,
   type ConciergeRuntimeState,
 } from '@/lib/concierge'
+import type { ConciergeAIRouteEnvelope } from '@/lib/concierge/ai-schemas'
+import type { ConciergeAITask } from '@/lib/concierge/ai-contract'
 import type { ConciergeAnswer, ConciergePath } from '@/lib/concierge/types'
 
 type SubmitAnswerInput = {
@@ -35,6 +39,7 @@ export function useConciergeSession() {
   )
   const [validationErrors, setValidationErrors] = useState<readonly string[]>([])
   const impressionRuntimeRef = useRef(runtime)
+  const aiAbortControllerRef = useRef<AbortController | null>(null)
 
   const emit = useCallback((
     eventName: Parameters<typeof emitConciergeEvent>[0]['eventName'],
@@ -141,10 +146,96 @@ export function useConciergeSession() {
   }, [runtime])
 
   const restart = useCallback(() => {
+    aiAbortControllerRef.current?.abort()
+    aiAbortControllerRef.current = null
+    clearConciergeAICache()
     const next = restartConciergeSession(runtime, createClientSessionId())
     setRuntime(next)
     setValidationErrors([])
   }, [runtime])
+
+  const updateAIAssistance = useCallback((patch: Partial<ConciergeRuntimeState['session']['aiAssistance']>) => {
+    setRuntime((current) => ({
+      ...current,
+      session: {
+        ...current.session,
+        aiAssistance: { ...current.session.aiAssistance, ...patch },
+      },
+    }))
+  }, [])
+
+  const acknowledgeAIDisclosure = useCallback(() => {
+    updateAIAssistance({ disclosureAcknowledged: true })
+  }, [updateAIAssistance])
+
+  const disableAIAssistance = useCallback(() => {
+    aiAbortControllerRef.current?.abort()
+    aiAbortControllerRef.current = null
+    updateAIAssistance({ enabled: false, status: 'idle', warnings: [] })
+  }, [updateAIAssistance])
+
+  const cancelAIRequest = useCallback(() => {
+    aiAbortControllerRef.current?.abort()
+    aiAbortControllerRef.current = null
+    setRuntime((current) => current.session.aiAssistance.status !== 'requesting'
+      ? current
+      : {
+          ...current,
+          session: {
+            ...current.session,
+            aiAssistance: { ...current.session.aiAssistance, status: 'idle' },
+          },
+        })
+  }, [])
+
+  const requestAI = useCallback(async (
+    task: ConciergeAITask,
+    input: string | Record<string, unknown>,
+  ): Promise<ConciergeAIRouteEnvelope> => {
+    aiAbortControllerRef.current?.abort()
+    const controller = new AbortController()
+    aiAbortControllerRef.current = controller
+    updateAIAssistance({
+      disclosureAcknowledged: true,
+      status: 'requesting',
+      lastTask: task,
+      warnings: [],
+    })
+    const snapshot = runtime.session
+    const result = await requestConciergeAI({
+      task,
+      input,
+      context: {
+        activePath: snapshot.activePath,
+        currentStepId: snapshot.currentStepId,
+        allowedServiceCategories: [],
+        systemRulesVersion: 'concierge-ai-rules-1.0.0',
+      },
+      sessionId: snapshot.sessionId,
+      path: snapshot.activePath,
+      stepId: snapshot.currentStepId,
+      sourcePage: snapshot.sourcePage,
+      signal: controller.signal,
+    })
+    if (aiAbortControllerRef.current !== controller) return result
+    aiAbortControllerRef.current = null
+    updateAIAssistance(result.success
+      ? {
+          status: result.fallbackUsed ? 'fallback' : 'available',
+          lastRequestId: result.requestId,
+          lastProvider: result.provider,
+          warnings: result.warnings,
+        }
+      : {
+          status: result.error.code === 'AI_DISABLED' || result.error.code === 'PROVIDER_UNAVAILABLE'
+            ? 'unavailable'
+            : 'error',
+          lastRequestId: result.requestId,
+          lastProvider: 'unavailable',
+          warnings: [],
+        })
+    return result
+  }, [runtime.session, updateAIAssistance])
 
   return {
     runtime,
@@ -158,6 +249,10 @@ export function useConciergeSession() {
     goBack,
     skip,
     restart,
+    acknowledgeAIDisclosure,
+    disableAIAssistance,
+    cancelAIRequest,
+    requestAI,
     emit,
   }
 }

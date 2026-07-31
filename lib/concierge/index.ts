@@ -1,4 +1,6 @@
 export * from './ai-contract'
+export * from './ai-client'
+export * from './ai-schemas'
 export * from './analytics'
 export * from './client-events'
 export * from './config'

@@ -52,6 +52,8 @@ export type ConciergeAIError = {
     | 'invalid_output'
     | 'policy_violation'
     | 'configuration_error'
+    | 'rate_limited'
+    | 'provider_error'
     | 'unknown'
   message: string
   retryable: boolean

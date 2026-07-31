@@ -9,6 +9,7 @@ import { conciergeDefinition, getConciergePageSuggestion } from '@/lib/concierge
 import type { ConciergePath } from '@/lib/concierge/types'
 import { ConciergeErrorBoundary } from './concierge-error-boundary'
 import { ConciergeInformation } from './concierge-information'
+import { ConciergeIntentAssistance } from './concierge-intent-assistance'
 import { ConciergeLauncher } from './concierge-launcher'
 import { ConciergePanel } from './concierge-panel'
 import { ConciergeProgress } from './concierge-progress'
@@ -16,7 +17,7 @@ import { ConciergeQuestionRenderer } from './concierge-question-renderer'
 import { ConciergeSummaryView } from './concierge-summary'
 import { useConciergeSession } from './use-concierge-session'
 
-type StaticScreen = 'choices' | 'information' | 'direct_contact'
+type StaticScreen = 'choices' | 'information' | 'direct_contact' | 'intent_assistance'
 
 const initialChoiceIcons = [Search, Cpu, BookOpen, MessageSquare] as const
 
@@ -35,6 +36,7 @@ function ConciergeRootContent() {
   }
 
   function closePanel() {
+    concierge.cancelAIRequest()
     setOpen(false)
     requestAnimationFrame(() => triggerRef.current?.focus())
   }
@@ -91,6 +93,15 @@ function ConciergeRootContent() {
             )
           })}
         </div>
+        {concierge.runtime.session.aiAssistance.enabled ? (
+          <button
+            type="button"
+            onClick={() => setStaticScreen('intent_assistance')}
+            className="mt-4 min-h-11 w-full rounded-md border border-primary/25 px-4 text-sm font-medium text-primary outline-none transition-colors hover:border-primary/55 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Décrire mon besoin en une phrase
+          </button>
+        ) : null}
         <p className="mt-5 text-xs leading-5 text-muted-foreground">
           Les réponses restent en mémoire uniquement tant que cette page est ouverte. Aucune donnée n’est envoyée.
         </p>
@@ -140,6 +151,13 @@ function ConciergeRootContent() {
           onContinue={concierge.continueSystemStep}
           onBack={concierge.goBack}
           onRestart={restart}
+          ai={{
+            enabled: concierge.runtime.session.aiAssistance.enabled,
+            disclosureAcknowledged: concierge.runtime.session.aiAssistance.disclosureAcknowledged,
+            status: concierge.runtime.session.aiAssistance.status,
+            onRequest: (input) => concierge.requestAI('summarize_qualification', input),
+            onDisable: concierge.disableAIAssistance,
+          }}
         />
       )
     }
@@ -208,6 +226,22 @@ function ConciergeRootContent() {
                 )
               : staticScreen === 'direct_contact'
                 ? renderDirectContact()
+                : staticScreen === 'intent_assistance'
+                  ? (
+                      <ConciergeIntentAssistance
+                        status={concierge.runtime.session.aiAssistance.status}
+                        onAnalyze={(description) => concierge.requestAI('classify_intent', description)}
+                        onConfirm={(path) => {
+                          concierge.selectPath(path)
+                          setStaticScreen('choices')
+                        }}
+                        onChooseManually={() => setStaticScreen('choices')}
+                        onDisable={() => {
+                          concierge.disableAIAssistance()
+                          setStaticScreen('choices')
+                        }}
+                      />
+                    )
                 : renderInitialChoices()}
         </ConciergePanel>
       ) : null}
