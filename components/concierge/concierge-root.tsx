@@ -1,0 +1,230 @@
+'use client'
+
+import { useRef, useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { ArrowLeft, ArrowRight, BookOpen, Cpu, MessageSquare, Search } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { conciergeDefinition, getConciergePageSuggestion } from '@/lib/concierge'
+import type { ConciergePath } from '@/lib/concierge/types'
+import { ConciergeErrorBoundary } from './concierge-error-boundary'
+import { ConciergeInformation } from './concierge-information'
+import { ConciergeLauncher } from './concierge-launcher'
+import { ConciergePanel } from './concierge-panel'
+import { ConciergeProgress } from './concierge-progress'
+import { ConciergeQuestionRenderer } from './concierge-question-renderer'
+import { ConciergeSummaryView } from './concierge-summary'
+import { useConciergeSession } from './use-concierge-session'
+
+type StaticScreen = 'choices' | 'information' | 'direct_contact'
+
+const initialChoiceIcons = [Search, Cpu, BookOpen, MessageSquare] as const
+
+function ConciergeRootContent() {
+  const pathname = usePathname()
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const [open, setOpen] = useState(false)
+  const [staticScreen, setStaticScreen] = useState<StaticScreen>('choices')
+  const concierge = useConciergeSession()
+  const hasAnswers = Object.keys(concierge.runtime.session.answers).length > 0
+  const pageSuggestion = getConciergePageSuggestion(pathname)
+
+  function openPanel() {
+    setOpen(true)
+    concierge.emit('concierge_opened', concierge.runtime)
+  }
+
+  function closePanel() {
+    setOpen(false)
+    requestAnimationFrame(() => triggerRef.current?.focus())
+  }
+
+  function restart() {
+    if (hasAnswers && !window.confirm('Recommencer effacera les réponses saisies dans cette page. Continuer ?')) {
+      return
+    }
+    concierge.restart()
+    setStaticScreen('choices')
+  }
+
+  function chooseInitialPath(path: Exclude<ConciergePath, 'unknown'>) {
+    if (path === 'information') {
+      setStaticScreen('information')
+      concierge.emit('concierge_path_selected', concierge.runtime, { selectedPath: path })
+      return
+    }
+    if (path === 'direct_contact') {
+      setStaticScreen('direct_contact')
+      concierge.emit('concierge_path_selected', concierge.runtime, { selectedPath: path })
+      return
+    }
+    concierge.selectPath(path)
+  }
+
+  function renderInitialChoices() {
+    return (
+      <div>
+        <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-primary">Premier cadrage</p>
+        <h3 className="mt-3 text-balance text-2xl font-semibold tracking-tight">Parlons de votre objectif.</h3>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+          {conciergeDefinition.openingMessage.replace('Parlons de votre objectif. ', '')}
+        </p>
+        {pageSuggestion ? (
+          <p className="mt-4 border-l-2 border-primary pl-3 text-xs leading-5 text-muted-foreground">
+            {pageSuggestion} Cette indication ne présélectionne aucun parcours.
+          </p>
+        ) : null}
+        <div className="mt-6 grid gap-2">
+          {conciergeDefinition.initialChoices.map((choice, index) => {
+            const Icon = initialChoiceIcons[index]
+            return (
+              <button
+                key={choice.id}
+                type="button"
+                onClick={() => chooseInitialPath(choice.path)}
+                className="group flex min-h-14 items-center gap-3 rounded-md border border-border bg-background/40 px-4 py-3 text-left outline-none transition-colors hover:border-primary/60 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Icon aria-hidden="true" className="size-5 shrink-0 text-primary" />
+                <span className="flex-1 text-sm font-medium">{choice.label}</span>
+                <ArrowRight aria-hidden="true" className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" />
+              </button>
+            )
+          })}
+        </div>
+        <p className="mt-5 text-xs leading-5 text-muted-foreground">
+          Les réponses restent en mémoire uniquement tant que cette page est ouverte. Aucune donnée n’est envoyée.
+        </p>
+      </div>
+    )
+  }
+
+  function renderDirectContact() {
+    return (
+      <div>
+        <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-primary">Échange humain</p>
+        <h3 className="mt-3 text-balance text-2xl font-semibold">Contacter directement Novekia.</h3>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+          Le formulaire du site permet de décrire votre besoin et de préparer un échange humain. Aucune coordonnée n’est demandée dans l’assistant avant ce clic.
+        </p>
+        <Link
+          href="/#contact"
+          onClick={closePanel}
+          className="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          Ouvrir le formulaire de contact
+          <ArrowRight aria-hidden="true" className="size-4" />
+        </Link>
+        <Button type="button" variant="ghost" size="lg" onClick={() => setStaticScreen('choices')} className="mt-2 min-h-11 w-full">
+          <ArrowLeft aria-hidden="true" /> Retour
+        </Button>
+      </div>
+    )
+  }
+
+  function renderActiveRuntime() {
+    const step = concierge.currentStep
+    if (!step) {
+      return (
+        <div>
+          <h3 className="text-lg font-semibold">Une difficulté empêche de poursuivre cette étape.</h3>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">Vous pouvez recommencer ou contacter directement Novekia.</p>
+          <Button type="button" onClick={restart} className="mt-5 min-h-11">Recommencer</Button>
+        </div>
+      )
+    }
+
+    if (step.kind === 'system' && step.stepType === 'summary' && concierge.runtime.session.summary) {
+      return (
+        <ConciergeSummaryView
+          summary={concierge.runtime.session.summary}
+          onContinue={concierge.continueSystemStep}
+          onBack={concierge.goBack}
+          onRestart={restart}
+        />
+      )
+    }
+
+    if (step.kind === 'system' && step.stepType === 'ready_to_submit' && concierge.runtime.session.summary) {
+      return (
+        <ConciergeSummaryView
+          summary={concierge.runtime.session.summary}
+          onContinue={() => undefined}
+          onBack={concierge.goBack}
+          onRestart={restart}
+          final
+        />
+      )
+    }
+
+    if (step.kind !== 'question') return null
+    const supplemental = concierge.runtime.session.answers[`${step.id}.__other`]
+    return (
+      <div>
+        <ConciergeProgress progress={concierge.progress} />
+        <ConciergeQuestionRenderer
+          key={`${step.id}:${concierge.validationErrors.some((error) => /secret|mot de passe|clé|jeton/i.test(error)) ? 'redacted' : 'active'}`}
+          question={step}
+          initialAnswer={concierge.runtime.session.answers[step.id]}
+          initialSupplemental={typeof supplemental === 'string' ? supplemental : ''}
+          errors={concierge.validationErrors}
+          canGoBack={concierge.canGoBack}
+          onContinue={concierge.submitAnswer}
+          onBack={concierge.goBack}
+          onSkip={concierge.skip}
+        />
+      </div>
+    )
+  }
+
+  const hasActiveRuntime = concierge.runtime.session.activePath !== 'unknown'
+
+  return (
+    <>
+      <ConciergeLauncher
+        open={open}
+        onClick={open ? closePanel : openPanel}
+        triggerRef={triggerRef}
+      />
+      {open ? (
+        <ConciergePanel
+          onClose={closePanel}
+          onRestart={restart}
+          hasAnswers={hasAnswers}
+        >
+          <div aria-live="polite" className="sr-only">
+            {concierge.validationErrors[0] ?? (
+              hasActiveRuntime ? `Étape ${concierge.progress.current} sur ${concierge.progress.total}` : 'Choisissez un objectif.'
+            )}
+          </div>
+          {hasActiveRuntime
+            ? renderActiveRuntime()
+            : staticScreen === 'information'
+              ? (
+                  <ConciergeInformation
+                    onChooseQualification={() => setStaticScreen('choices')}
+                    onBack={() => setStaticScreen('choices')}
+                    onNavigate={closePanel}
+                  />
+                )
+              : staticScreen === 'direct_contact'
+                ? renderDirectContact()
+                : renderInitialChoices()}
+        </ConciergePanel>
+      ) : null}
+    </>
+  )
+}
+
+export function ConciergeRoot() {
+  const [mounted, setMounted] = useState(true)
+  const [resetKey, setResetKey] = useState(0)
+  if (!mounted) return null
+  return (
+    <ConciergeErrorBoundary
+      onClose={() => setMounted(false)}
+      onRestart={() => setResetKey((current) => current + 1)}
+    >
+      <ConciergeRootContent key={resetKey} />
+    </ConciergeErrorBoundary>
+  )
+}
