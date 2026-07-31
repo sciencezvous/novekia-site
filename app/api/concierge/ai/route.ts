@@ -28,6 +28,58 @@ const RESPONSE_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
 } as const
 
+const MISTRAL_DIAGNOSTICS = [
+  'mistral_http_error',
+  'mistral_timeout',
+  'mistral_invalid_envelope',
+  'mistral_invalid_json',
+  'mistral_schema_rejected',
+  'mistral_truncated',
+  'mistral_low_confidence',
+] as const
+
+type MistralDiagnostic = typeof MISTRAL_DIAGNOSTICS[number]
+
+function warningValue(warnings: readonly string[], prefix: string): string | null {
+  const warning = warnings.find((value) => value.startsWith(prefix))
+  return warning ? warning.slice(prefix.length) : null
+}
+
+function safeMistralDiagnostic(warnings: readonly string[]): MistralDiagnostic | null {
+  return MISTRAL_DIAGNOSTICS.find((diagnostic) => warnings.includes(diagnostic)) ?? null
+}
+
+function logMistralFailure(
+  requestId: string,
+  task: ConciergeAITask,
+  warnings: readonly string[],
+  model: string,
+  diagnosticOverride?: MistralDiagnostic,
+) {
+  const diagnostic = diagnosticOverride ?? safeMistralDiagnostic(warnings)
+  if (!diagnostic) return
+
+  const rawStatus = warningValue(warnings, 'mistral_upstream_status:')
+  const parsedStatus = rawStatus === null || rawStatus === 'none' ? null : Number(rawStatus)
+  const upstreamStatus = parsedStatus !== null && Number.isInteger(parsedStatus) && parsedStatus >= 100 && parsedStatus <= 599
+    ? parsedStatus
+    : null
+  const rawFinishReason = warningValue(warnings, 'mistral_finish_reason:')
+  const finishReason = rawFinishReason === 'stop' || rawFinishReason === 'length' || rawFinishReason === 'unexpected'
+    ? rawFinishReason
+    : null
+
+  console.warn('[concierge-ai]', {
+    requestId,
+    task,
+    provider: 'mistral',
+    diagnostic,
+    upstreamStatus,
+    finishReason,
+    model,
+  })
+}
+
 function publicWarnings(warnings: readonly string[]): readonly string[] {
   return warnings.filter((warning) => !warning.startsWith('mistral_'))
 }
@@ -145,6 +197,12 @@ export async function POST(request: NextRequest) {
     )
     const response = await executeConciergeAI(internalRequest, { config })
     if (!response.success || !response.structuredOutput) {
+      logMistralFailure(
+        serverRequestId,
+        internalRequest.task,
+        response.warnings,
+        config.mistralModel,
+      )
       const mapped = mapProviderError(response.error, config.explicitlyDisabled)
       return errorResponse(
         serverRequestId,
@@ -160,6 +218,15 @@ export async function POST(request: NextRequest) {
 
     const result = validateConciergeAITaskOutput(internalRequest.task, response.structuredOutput)
     if (!result) {
+      if (response.provider === 'mistral') {
+        logMistralFailure(
+          serverRequestId,
+          internalRequest.task,
+          response.warnings,
+          config.mistralModel,
+          'mistral_schema_rejected',
+        )
+      }
       return errorResponse(serverRequestId, internalRequest.task, 'INVALID_OUTPUT', 'La réponse assistée n’a pas pu être validée.', 502)
     }
     const provider = response.provider === 'mistral' ? 'mistral' : 'deterministic'

@@ -6,7 +6,6 @@ import {
   DeterministicConciergeAIProvider,
   MistralConciergeAIProvider,
 } from '../providers'
-import type { MistralDiagnosticCode } from '../providers/mistral-provider'
 import type { ConciergeAIGatewayConfig } from './gateway-config'
 import { getConciergeAIGatewayConfig } from './gateway-config'
 import { validateProviderResponse } from './response-validation'
@@ -40,10 +39,12 @@ function unavailableResponse(
 
 async function executeFallback(
   request: ConciergeAIRequest,
-  warning?: string,
+  warnings: readonly string[] = [],
 ): Promise<ConciergeAIResponse> {
   const response = await new DeterministicConciergeAIProvider().execute(request)
-  return warning ? { ...response, warnings: [...response.warnings, warning] } : response
+  return warnings.length > 0
+    ? { ...response, warnings: [...response.warnings, ...warnings] }
+    : response
 }
 
 export async function executeConciergeAI(
@@ -60,9 +61,9 @@ export async function executeConciergeAI(
     if (request.fallbackAllowed && policy.fallbackSupported) {
       return executeFallback(
         request,
-        config.explicitlyDisabled
+        [config.explicitlyDisabled
           ? 'L’assistance externe est désactivée côté serveur.'
-          : 'Aucune clé fournisseur n’est configurée.',
+          : 'Aucune clé fournisseur n’est configurée.'],
       )
     }
     return unavailableResponse(
@@ -86,6 +87,7 @@ export async function executeConciergeAI(
           success: false,
           structuredOutput: null,
           confidence: null,
+          warnings: ['mistral_low_confidence', ...initial.warnings],
           error: {
             code: 'invalid_output',
             message: 'La confiance de la réponse est insuffisante.',
@@ -95,8 +97,8 @@ export async function executeConciergeAI(
       : initial
   }
 
-  const reason = lowConfidence
-    ? 'mistral_low_confidence'
-    : initial.warnings.find((warning): warning is MistralDiagnosticCode => warning.startsWith('mistral_'))
-  return executeFallback(request, reason)
+  const warnings = lowConfidence
+    ? ['mistral_low_confidence', ...initial.warnings]
+    : initial.warnings.filter((warning) => warning.startsWith('mistral_'))
+  return executeFallback(request, warnings)
 }
