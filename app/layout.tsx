@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { AttributionTracker } from '@/components/analytics/attribution-tracker'
+import { ConciergeRoot } from '@/components/concierge/concierge-root'
 import { siteConfig } from '@/lib/site-config'
 import { ScrollReveal } from '@/components/effects/scroll-reveal'
 import './globals.css'
@@ -108,6 +109,9 @@ export default function RootLayout({
         <AttributionTracker />
         <ScrollReveal />
         {children}
+        {process.env.NEXT_PUBLIC_CONCIERGE_ENABLED !== 'false' ? (
+          <ConciergeRoot />
+        ) : null}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
