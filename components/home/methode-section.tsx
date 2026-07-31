@@ -3,39 +3,32 @@ import { Section } from '@/components/layout/section'
 
 const steps = [
   {
-    id: 'service-cadrage',
+    id: 'methode-comprendre',
     index: '01',
-    title: 'Cadrage',
+    title: 'Comprendre',
     description:
-      'Compréhension du besoin, des utilisateurs, des contraintes techniques, du budget et des objectifs mesurables.',
+      'Définir le besoin, le marché, les contraintes et les objectifs avant de recommander une action.',
   },
   {
-    id: 'service-audit',
+    id: 'methode-analyser',
     index: '02',
-    title: 'Audit',
+    title: 'Analyser',
     description:
-      'Analyse de l’existant, des risques, des dépendances, des données et de l’infrastructure disponible.',
+      'Collecter, croiser et vérifier les informations réellement utiles à la décision.',
   },
   {
-    id: 'service-architecture',
+    id: 'methode-construire',
     index: '03',
-    title: 'Architecture',
+    title: 'Construire',
     description:
-      'Définition de la solution, des composants, des interfaces, des responsabilités et des critères de validation.',
+      'Préparer la stratégie commerciale ou concevoir la solution technique adaptée au contexte.',
   },
   {
-    id: 'service-prototypage',
+    id: 'methode-piloter',
     index: '04',
-    title: 'Prototypage',
+    title: 'Piloter',
     description:
-      'Construction d’une première version testable afin de réduire rapidement les principales incertitudes.',
-  },
-  {
-    id: 'service-deploiement',
-    index: '05',
-    title: 'Déploiement',
-    description:
-      'Mise en production, documentation, transfert de compétences, supervision et amélioration continue.',
+      'Mesurer les résultats, documenter les décisions et améliorer le dispositif dans la durée.',
   },
 ]
 
@@ -55,7 +48,6 @@ function StepIcon({ index }: { index: string }) {
       {index === '02' ? <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4M8 11h6M11 8v6" /></> : null}
       {index === '03' ? <><path d="M4 18V8l8-4 8 4v10l-8 3-8-3Z" /><path d="m4 8 8 4 8-4M12 12v9" /></> : null}
       {index === '04' ? <><path d="M5 19h14M7 16l3-3 3 2 4-6" /><circle cx="17" cy="9" r="2" /></> : null}
-      {index === '05' ? <><path d="M4 12h12M12 7l5 5-5 5" /><path d="M19 5v14" /></> : null}
     </svg>
   )
 }
@@ -64,13 +56,13 @@ export function MethodeSection() {
   return (
     <Section id="methode" tone="light" aria-labelledby="methode-title">
       <SectionHeader
-        index="03"
-        eyebrow="Méthode"
-        title={<span id="methode-title">Une démarche d&apos;ingénierie rigoureuse.</span>}
-        description="De l'audit à la mise en production, une méthode structurée et mesurable."
+        index="02"
+        eyebrow="Méthode commune"
+        title={<span id="methode-title">Une méthode pour décider et exécuter.</span>}
+        description="Le même cadre de travail relie la prospection, la qualification commerciale et la conception de solutions techniques."
       />
 
-      <ol className="relative mt-12 grid grid-cols-1 gap-0 md:grid-cols-5">
+      <ol className="relative mt-12 grid grid-cols-1 gap-0 md:grid-cols-4">
         <span
           aria-hidden="true"
           className="absolute bottom-0 left-5 top-0 w-px bg-border md:bottom-auto md:left-0 md:right-0 md:top-5 md:h-px md:w-auto"
@@ -100,7 +92,9 @@ export function MethodeSection() {
       </ol>
 
       <p className="mt-12 border-l-2 border-primary/40 bg-secondary/50 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
-        « Chaque projet est découpé en jalons validables afin de maîtriser les coûts, les délais et les risques. »
+        Chaque étape produit des éléments vérifiables avant de passer à la
+        suivante&nbsp;: hypothèses, sources, décisions, livrables et critères de
+        validation.
       </p>
     </Section>
   )

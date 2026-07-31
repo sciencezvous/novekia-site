@@ -2,7 +2,7 @@ export const siteConfig = {
   name: 'Novekia',
   tagline: 'Synergies Intelligentes',
   description:
-    "Novekia est un studio français d'ingénierie logicielle, d'intelligence artificielle locale, d'infrastructures de calcul haute performance et de R&D technologique. Nous concevons des infrastructures modulaires, sécurisées et évolutives pour accélérer vos performances.",
+    'Novekia est un studio français structuré autour de deux pôles : Lead Engine Studio pour la prospection et la qualification commerciale B2B, et Novekia Solutions pour la conception de sites web, logiciels métiers, automatisations, systèmes d’intelligence artificielle locale et infrastructures de calcul.',
   url: 'https://novekia.fr',
   contact: {
     email: 'contact@novekia.fr',
@@ -29,191 +29,84 @@ export type NavItem = {
 }
 
 export const mainNavigation: NavItem[] = [
+  { label: 'Lead Engine Studio', href: '/lead-engine-studio' },
   {
     label: 'Solutions',
-    href: '/offres',
+    href: '/solutions',
     children: [
       {
-        label: 'Vue d\'ensemble',
-        href: '/offres',
-        description: 'Tous nos domaines d\'expertise.',
+        label: 'Vue d’ensemble',
+        href: '/solutions',
+        description: 'Le point d’entrée des prestations techniques.',
       },
       {
-        label: 'Logiciels métiers sur mesure',
-        href: '/logiciels-metiers-sur-mesure',
-        description: 'Applications sur mesure pour vos opérations.',
-      },
-      {
-        label: 'Intelligence artificielle locale',
-        href: '/intelligence-artificielle-locale',
-        description: 'Modèles IA déployés sur site, sans dépendance cloud.',
-      },
-      {
-        label: 'Infrastructures de calcul & serveurs IA',
-        href: '/infrastructures-serveurs-ia',
-        description: 'Conception, intégration et optimisation de stations GPU et serveurs IA.',
-      },
-      {
-        label: 'Applications web et intégrations',
-        href: '/applications-web-integrations',
-        description: 'Interfaces, API et automatisations.',
-      },
-      {
-        label: 'Création de sites web optimisés SEO & GEO',
+        label: 'Sites web SEO & GEO',
         href: '/creation-site-web-seo-geo',
-        description: 'Sites premium structurés pour Google et les moteurs de réponse IA.',
+        description: 'Sites premium, visibles et structurés.',
+      },
+      {
+        label: 'Logiciels métiers',
+        href: '/logiciels-metiers-sur-mesure',
+        description: 'Outils sur mesure pour vos opérations.',
+      },
+      {
+        label: 'Applications et automatisations',
+        href: '/applications-web-integrations',
+        description: 'Interfaces, API, intégrations et flux.',
+      },
+      {
+        label: 'IA locale',
+        href: '/intelligence-artificielle-locale',
+        description: 'Systèmes d’IA exécutés sous votre contrôle.',
+      },
+      {
+        label: 'Infrastructures et serveurs IA',
+        href: '/infrastructures-serveurs-ia',
+        description: 'Stations GPU et infrastructures de calcul.',
       },
     ],
   },
-  { label: 'Offres', href: '/offres' },
-  {
-    label: 'Services',
-    href: '#methode',
-    children: [
-      {
-        label: 'Vue d\'ensemble',
-        href: '#methode',
-        description: 'Notre démarche d\'ingénierie.',
-      },
-      {
-        label: 'Cadrage',
-        href: '#service-cadrage',
-        description: 'Compréhension du besoin et objectifs.',
-      },
-      {
-        label: 'Audit',
-        href: '#service-audit',
-        description: 'Analyse de l\'existant et des risques.',
-      },
-      {
-        label: 'Architecture',
-        href: '#service-architecture',
-        description: 'Définition de la solution.',
-      },
-      {
-        label: 'Prototypage',
-        href: '#service-prototypage',
-        description: 'Version testable et validation.',
-      },
-      {
-        label: 'Déploiement',
-        href: '#service-deploiement',
-        description: 'Mise en production et suivi.',
-      },
-    ],
-  },
-  {
-    label: 'À propos',
-    href: '/a-propos',
-    children: [
-      {
-        label: 'Le studio Novekia',
-        href: '/a-propos',
-        description: 'Qui nous sommes.',
-      },
-      {
-        label: 'La vision du fondateur',
-        href: '/a-propos#vision',
-        description: 'Pourquoi Novekia est un studio, pas une agence.',
-      },
-      {
-        label: 'Notre méthode',
-        href: '#methode',
-        description: 'Notre démarche d\'ingénierie.',
-      },
-      {
-        label: 'Intelligence souveraine',
-        href: '#souverainete',
-        description: 'Nos valeurs technologiques.',
-      },
-      {
-        label: 'Recherche et développement',
-        href: '#research',
-        description: 'Nos innovations.',
-      },
-    ],
-  },
-  {
-    label: 'Ressources',
-    href: '/ressources',
-    children: [
-      {
-        label: 'Centre de ressources',
-        href: '/ressources',
-        description: 'Guides, schémas et outils de décision.',
-      },
-      {
-        label: 'Démonstrateur RAG local',
-        href: '/ressources/demonstrateur-rag-local',
-        description: 'Calcul, architecture et protocole de recette.',
-      },
-      {
-        label: 'IA locale ou API cloud',
-        href: '/ressources/ia-locale-vs-api-cloud',
-        description: 'Coûts, confidentialité et exploitation.',
-      },
-      {
-        label: 'RAG local en entreprise',
-        href: '/ressources/rag-local-entreprise',
-        description: 'Architecture et conditions de réussite.',
-      },
-      {
-        label: 'Choisir un serveur GPU',
-        href: '/ressources/choisir-station-serveur-gpu-ia',
-        description: 'Méthode et calculateur de mémoire.',
-      },
-      {
-        label: 'Checklist de cadrage IA',
-        href: '/ressources/checklist-cadrage-ia-locale',
-        description: '40 points à vérifier avant le prototype.',
-      },
-    ],
-  },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Méthode', href: '/#methode' },
+  { label: 'À propos', href: '/a-propos' },
+  { label: 'Ressources', href: '/ressources' },
+  { label: 'Contact', href: '/#contact' },
 ]
 
 export const footerNavigation: { title: string; links: { label: string; href: string }[] }[] = [
   {
-    title: 'Offres',
+    title: 'Lead Engine Studio',
     links: [
-      { label: 'Vue d’ensemble', href: '/offres' },
-      { label: 'Logiciels métiers sur mesure', href: '/logiciels-metiers-sur-mesure' },
-      { label: 'Intelligence artificielle locale', href: '/intelligence-artificielle-locale' },
-      { label: 'Infrastructures de calcul & serveurs IA', href: '/infrastructures-serveurs-ia' },
-      { label: 'Applications web et intégrations', href: '/applications-web-integrations' },
-      { label: 'Sites optimisés SEO & GEO', href: '/creation-site-web-seo-geo' },
+      { label: 'Présentation', href: '/lead-engine-studio' },
+      { label: 'Méthode', href: '/lead-engine-studio#methode' },
+      { label: 'Contact', href: '/#contact' },
     ],
   },
   {
-    title: 'Solutions',
+    title: 'Novekia Solutions',
     links: [
-      { label: 'Vue d\'ensemble', href: '/offres' },
+      { label: 'Vue d’ensemble', href: '/solutions' },
+      { label: 'Sites web SEO & GEO', href: '/creation-site-web-seo-geo' },
       { label: 'Logiciels métiers', href: '/logiciels-metiers-sur-mesure' },
-      { label: 'Intelligence locale', href: '/intelligence-artificielle-locale' },
-      { label: 'Infrastructures & IA', href: '/infrastructures-serveurs-ia' },
-      { label: 'Applications web', href: '/applications-web-integrations' },
-      { label: 'Sites optimisés SEO & GEO', href: '/creation-site-web-seo-geo' },
+      { label: 'IA locale', href: '/intelligence-artificielle-locale' },
+      { label: 'Infrastructures IA', href: '/infrastructures-serveurs-ia' },
     ],
   },
   {
     title: 'Studio',
     links: [
-      { label: 'Le studio', href: '/a-propos' },
+      { label: 'À propos', href: '/a-propos' },
       { label: 'Vision du fondateur', href: '/a-propos#vision' },
-      { label: 'Méthode', href: '#methode' },
-      { label: 'Souveraineté', href: '#souverainete' },
-      { label: 'R&D', href: '#research' },
+      { label: 'Méthode', href: '/#methode' },
+      { label: 'Contact', href: '/#contact' },
     ],
   },
   {
     title: 'Ressources',
     links: [
-      { label: 'Tous les guides', href: '/ressources' },
+      { label: 'Centre de ressources', href: '/ressources' },
       { label: 'Démonstrateur RAG local', href: '/ressources/demonstrateur-rag-local' },
       { label: 'IA locale ou API cloud', href: '/ressources/ia-locale-vs-api-cloud' },
       { label: 'RAG local en entreprise', href: '/ressources/rag-local-entreprise' },
-      { label: 'Choisir un serveur GPU', href: '/ressources/choisir-station-serveur-gpu-ia' },
-      { label: 'Checklist de cadrage IA', href: '/ressources/checklist-cadrage-ia-locale' },
     ],
   },
 ]

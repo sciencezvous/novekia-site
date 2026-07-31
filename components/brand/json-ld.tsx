@@ -52,7 +52,34 @@ export const organizationJsonLd: Record<string, unknown> = {
     '@type': 'Country',
     name: 'France',
   },
+  department: [
+    {
+      '@type': 'Organization',
+      '@id': `${siteConfig.url}/lead-engine-studio#department`,
+      name: 'Novekia Lead Engine Studio',
+      url: `${siteConfig.url}/lead-engine-studio`,
+      description:
+        'Pôle Novekia consacré à la prospection et à la qualification commerciale B2B sous supervision humaine.',
+      parentOrganization: {
+        '@id': `${siteConfig.url}/#organization`,
+      },
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${siteConfig.url}/solutions#department`,
+      name: 'Novekia Solutions',
+      url: `${siteConfig.url}/solutions`,
+      description:
+        'Pôle Novekia consacré à la conception et à l’intégration de solutions numériques et d’infrastructures.',
+      parentOrganization: {
+        '@id': `${siteConfig.url}/#organization`,
+      },
+    },
+  ],
   knowsAbout: [
+    'Prospection B2B',
+    'Qualification commerciale',
+    'Recherche d’entreprises et de décideurs',
     'Ingénierie logicielle',
     'Intelligence artificielle locale',
     'IA privée et souveraine',
@@ -102,7 +129,7 @@ export const homePageJsonLd: Record<string, unknown> = {
   '@type': 'WebPage',
   '@id': `${siteConfig.url}/#webpage`,
   url: siteConfig.url,
-  name: 'Novekia — Infrastructure locale et intelligence souveraine',
+  name: 'Novekia — Lead Engine Studio et solutions technologiques',
   description: siteConfig.description,
   inLanguage: 'fr-FR',
   isPartOf: {
