@@ -18,7 +18,12 @@ Pour la cybersécurité, ne fournis aucune instruction offensive et ne confirme 
 
 const TASK_RULES: Readonly<Record<ConciergeAITask, string>> = {
   classify_intent: `Classe prudemment la description dans path: lead_engine, solutions, information, direct_contact ou unknown.
-Une catégorie Solutions vaut website_seo_geo, business_software, web_app_integration, local_ai, ai_infrastructure, backup_continuity, cybersecurity_authorized_audit, other ou null.
+lead_engine couvre la recherche et le ciblage de prospects, l'identification d'entreprises ou de décideurs, les listes de prospection, l'acquisition B2B, la prise de contact, la qualification commerciale, les rendez-vous et le développement commercial.
+solutions couvre la création ou refonte de site, le SEO/GEO technique, le développement logiciel, les applications et intégrations, l'automatisation technique, l'IA locale, les serveurs ou stations IA, la sauvegarde, la cybersécurité et les audits autorisés.
+Une demande visant à trouver des entreprises, prospects, décideurs, contacts commerciaux, opportunités ou rendez-vous est lead_engine, même si elle emploie des termes génériques comme « solution », « outil » ou « développer ».
+Une demande visant à construire un logiciel, un CRM, une automatisation ou une infrastructure destinée à la prospection est solutions.
+Exemples: « Trouver des entreprises et les bons décideurs » -> lead_engine; « Développer notre prospection B2B » -> lead_engine; « Obtenir des rendez-vous qualifiés » -> lead_engine; « Créer un CRM de prospection sur mesure » -> solutions avec business_software; « Développer une application d'automatisation commerciale » -> solutions avec web_app_integration; « Refaire notre site et son référencement » -> solutions avec website_seo_geo.
+Une catégorie Solutions vaut website_seo_geo, business_software, web_app_integration, local_ai, ai_infrastructure, backup_continuity, cybersecurity_authorized_audit, other ou null. Si path n'est pas solutions, solutionsCategory doit être null.
 Si le besoin est ambigu ou la confiance faible, utilise unknown. Une demande cyber impose humanReviewRequired=true.`,
   extract_structured_answer: `Extrais uniquement les éléments explicitement présents ou raisonnablement déduits. Retourne fields et uncertainties, deux tableaux limités à 10 éléments.`,
   rewrite_question: `Reformule la question sans changer son sens, sans ajouter de promesse, de prix ou d'information. Retourne question, confidence, rationale et requiresHumanReview.`,
