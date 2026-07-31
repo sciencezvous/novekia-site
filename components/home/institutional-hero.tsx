@@ -3,6 +3,7 @@ import { PrimaryButton } from '@/components/brand/primary-button'
 import { SecondaryButton } from '@/components/brand/secondary-button'
 import { TechnicalLabel } from '@/components/brand/technical-label'
 import { Section } from '@/components/layout/section'
+import { FounderVisionBubble } from './founder-vision-bubble'
 
 export function InstitutionalHero() {
   return (
@@ -31,8 +32,8 @@ export function InstitutionalHero() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#020817_0%,rgba(2,8,23,0.72)_28%,rgba(2,8,23,0.1)_76%),linear-gradient(180deg,rgba(2,8,23,0.08),#020817_100%)]" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[calc(100svh-4.5rem)] w-full max-w-7xl items-center px-5 py-10 sm:px-6 sm:py-12 md:px-8 lg:min-h-[calc(100svh-4rem)] lg:py-10">
-        <div className="max-w-4xl lg:max-w-[64%]">
+      <div className="relative mx-auto grid min-h-[calc(100svh-4.5rem)] w-full max-w-7xl items-center gap-10 px-5 py-10 sm:px-6 sm:py-12 md:px-8 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[minmax(0,1.16fr)_minmax(23rem,0.84fr)] lg:gap-8 lg:py-10">
+        <div className="max-w-4xl">
           <TechnicalLabel index="00">
             Novekia — studio commercial et technologique
           </TechnicalLabel>
@@ -75,6 +76,8 @@ export function InstitutionalHero() {
             humaine <span aria-hidden="true">•</span> Sans engagement
           </p>
         </div>
+
+        <FounderVisionBubble className="lg:translate-y-8" />
       </div>
     </Section>
   )
