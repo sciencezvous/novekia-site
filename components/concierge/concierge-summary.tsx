@@ -3,15 +3,23 @@
 import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { conciergePathLabels } from '@/lib/concierge/config'
-import type { ConciergeAIRouteEnvelope } from '@/lib/concierge/ai-schemas'
+import type {
+  AssistedQualificationSummary,
+  ConciergeAIRouteEnvelope,
+} from '@/lib/concierge/ai-schemas'
+import type { ConciergeSubmissionUIState } from '@/lib/concierge/submission/client'
 import type { ConciergeSummary as Summary } from '@/lib/concierge/types'
 import { ConciergeAISummary } from './concierge-ai-summary'
+import { ConciergeSubmit } from './concierge-submit'
 
 type ConciergeSummaryProps = {
   summary: Summary
   onContinue: () => void
   onBack: () => void
   onRestart: () => void
+  onClose?: () => void
+  onSubmit?: (honeypot: string) => Promise<void>
+  submission?: ConciergeSubmissionUIState
   final?: boolean
   ai?: {
     enabled: boolean
@@ -19,6 +27,8 @@ type ConciergeSummaryProps = {
     status: 'idle' | 'requesting' | 'available' | 'fallback' | 'unavailable' | 'error'
     onRequest: (input: Record<string, unknown>) => Promise<ConciergeAIRouteEnvelope>
     onDisable: () => void
+    assisted: AssistedQualificationSummary | null
+    onAssistedChange: (summary: AssistedQualificationSummary | null) => void
   }
 }
 
@@ -29,6 +39,9 @@ export function ConciergeSummaryView({
   onContinue,
   onBack,
   onRestart,
+  onClose,
+  onSubmit,
+  submission,
   final = false,
   ai,
 }: ConciergeSummaryProps) {
@@ -75,6 +88,8 @@ export function ConciergeSummaryView({
           status={ai.status}
           onRequest={ai.onRequest}
           onDisable={ai.onDisable}
+          assisted={ai.assisted}
+          onAssistedChange={ai.onAssistedChange}
         />
       ) : null}
 
@@ -97,17 +112,13 @@ export function ConciergeSummaryView({
       ) : null}
 
       {final ? (
-        <div className="mt-6 border border-primary/35 bg-primary/8 p-4">
-          <p className="text-sm font-semibold leading-6">
-            Votre demande est prête. La transmission sécurisée sera activée après validation technique.
-          </p>
-          <p className="mt-2 text-xs leading-5 text-muted-foreground">
-            Aucune donnée n’a été envoyée dans cette version.
-          </p>
-          <Button type="button" disabled className="mt-4 min-h-11 w-full whitespace-normal px-4 text-center">
-            Transmission non activée dans cette version
-          </Button>
-        </div>
+        submission && onSubmit && onClose ? (
+          <ConciergeSubmit
+            submission={submission}
+            onSubmit={onSubmit}
+            onClose={onClose}
+          />
+        ) : null
       ) : (
         <div className="mt-6 grid gap-2">
           <Button type="button" size="lg" onClick={onContinue} className="min-h-11 w-full">
@@ -121,14 +132,14 @@ export function ConciergeSummaryView({
         </div>
       )}
 
-      <button
+      {submission?.status !== 'submitted' ? <button
         type="button"
         onClick={onRestart}
         className="mx-auto mt-5 flex min-h-11 items-center gap-2 rounded-sm px-3 text-xs text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
       >
         <RotateCcw aria-hidden="true" className="size-3.5" />
         Recommencer
-      </button>
+      </button> : null}
     </div>
   )
 }

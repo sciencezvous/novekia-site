@@ -4,7 +4,7 @@ import { LegalPageLayout } from '@/components/legal/legal-page-layout'
 export const metadata: Metadata = {
   title: 'Politique de confidentialité',
   description:
-    'Politique de confidentialité de Novekia concernant les données transmises par le formulaire de contact et la mesure d’audience du site.',
+    'Politique de confidentialité de Novekia concernant le formulaire de contact, le concierge et la mesure d’audience du site.',
   alternates: {
     canonical: '/politique-de-confidentialite',
   },
@@ -15,7 +15,8 @@ export default function PrivacyPolicyPage() {
     <LegalPageLayout
       eyebrow="Protection des données"
       title="Politique de confidentialité"
-      introduction="Cette politique explique comment Novekia traite les données personnelles transmises lorsque vous utilisez le formulaire de contact et consultez le site."
+      introduction="Cette politique explique comment Novekia traite les données personnelles transmises lorsque vous utilisez le formulaire de contact, le concierge de qualification et consultez le site."
+      lastUpdated="31 juillet 2026"
     >
       <section aria-labelledby="controller">
         <h2 id="controller">Responsable du traitement</h2>
@@ -34,6 +35,24 @@ export default function PrivacyPolicyPage() {
           </p>
           <p>Téléphone&nbsp;: <a href="tel:+33767842757">07 67 84 27 57</a></p>
         </address>
+      </section>
+
+      <section aria-labelledby="concierge">
+        <h2 id="concierge">Concierge de qualification</h2>
+        <p className="text-muted-foreground">
+          Le concierge aide le visiteur à structurer volontairement une demande
+          avant son envoi à Novekia. Il collecte les réponses au parcours choisi,
+          les coordonnées renseignées, les consentements horodatés et des données
+          d’attribution limitées. Aucune soumission n’est automatique.
+        </p>
+        <p className="text-muted-foreground">
+          L’assistance par intelligence artificielle est facultative. Lorsqu’elle
+          est activée, des informations de qualification expurgées des coordonnées
+          peuvent être traitées par Mistral afin de proposer une synthèse
+          complémentaire. La synthèse déterministe et la décision humaine restent
+          prioritaires. Le concierge ne prend aucune décision entièrement
+          automatisée et n’accepte ni devis, ni mission, ni autorisation technique.
+        </p>
       </section>
 
       <section aria-labelledby="collected-data">
@@ -106,6 +125,7 @@ export default function PrivacyPolicyPage() {
           <li>à Andy Legrand / Novekia&nbsp;;</li>
           <li>à Vercel, pour l’hébergement et l’exécution technique du site&nbsp;;</li>
           <li>à Resend, pour l’acheminement du message&nbsp;;</li>
+          <li>à Mistral, uniquement lorsque le visiteur active l’assistance IA facultative&nbsp;;</li>
           <li>aux prestataires strictement nécessaires au fonctionnement et à la sécurité du service.</li>
         </ul>
         <p className="text-muted-foreground">
@@ -116,8 +136,13 @@ export default function PrivacyPolicyPage() {
       <section aria-labelledby="retention">
         <h2 id="retention">Durées de conservation</h2>
         <p className="text-muted-foreground">
-          Les demandes sans relation contractuelle sont conservées pendant 12
-          mois à compter du dernier échange. En cas de relation contractuelle,
+          Les données de prospects n’ayant pas donné lieu à une relation
+          contractuelle sont conservées au maximum trois ans à compter de leur
+          collecte ou du dernier contact émanant du prospect. Une durée plus
+          courte est appliquée lorsque les données ne sont plus nécessaires.
+          Dans cette version, le concierge ne crée ni base de données, ni CRM et
+          transmet la demande par e-mail&nbsp;: la conservation dépend donc aussi
+          de la gestion maîtrisée de la boîte e-mail Novekia. En cas de relation contractuelle,
           les informations nécessaires à l’exécution du contrat, à la
           facturation, à la comptabilité ou à la défense des droits sont
           conservées pendant les durées légales applicables. Les journaux

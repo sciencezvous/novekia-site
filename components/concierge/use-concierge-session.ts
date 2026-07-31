@@ -20,8 +20,16 @@ import {
   type ConciergeRuntimeState,
 } from '@/lib/concierge'
 import type { ConciergeAIRouteEnvelope } from '@/lib/concierge/ai-schemas'
+import type { AssistedQualificationSummary } from '@/lib/concierge/ai-schemas'
 import type { ConciergeAITask } from '@/lib/concierge/ai-contract'
 import type { ConciergeAnswer, ConciergePath } from '@/lib/concierge/types'
+import {
+  buildConciergeSubmissionRequest,
+  createConciergeSubmissionId,
+  initialConciergeSubmissionState,
+  requestConciergeSubmission,
+  type ConciergeSubmissionUIState,
+} from '@/lib/concierge/submission/client'
 
 type SubmitAnswerInput = {
   answer: ConciergeAnswer
@@ -38,8 +46,13 @@ export function useConciergeSession() {
     }),
   )
   const [validationErrors, setValidationErrors] = useState<readonly string[]>([])
+  const [assistedSummary, setAssistedSummary] = useState<AssistedQualificationSummary | null>(null)
+  const [submissionId, setSubmissionId] = useState(createConciergeSubmissionId)
+  const [submission, setSubmission] = useState<ConciergeSubmissionUIState>(initialConciergeSubmissionState)
   const impressionRuntimeRef = useRef(runtime)
   const aiAbortControllerRef = useRef<AbortController | null>(null)
+  const submissionAbortControllerRef = useRef<AbortController | null>(null)
+  const submissionInFlightRef = useRef(false)
 
   const emit = useCallback((
     eventName: Parameters<typeof emitConciergeEvent>[0]['eventName'],
@@ -148,10 +161,16 @@ export function useConciergeSession() {
   const restart = useCallback(() => {
     aiAbortControllerRef.current?.abort()
     aiAbortControllerRef.current = null
+    submissionAbortControllerRef.current?.abort()
+    submissionAbortControllerRef.current = null
+    submissionInFlightRef.current = false
     clearConciergeAICache()
     const next = restartConciergeSession(runtime, createClientSessionId())
     setRuntime(next)
     setValidationErrors([])
+    setAssistedSummary(null)
+    setSubmissionId(createConciergeSubmissionId())
+    setSubmission(initialConciergeSubmissionState)
   }, [runtime])
 
   const updateAIAssistance = useCallback((patch: Partial<ConciergeRuntimeState['session']['aiAssistance']>) => {
@@ -237,6 +256,87 @@ export function useConciergeSession() {
     return result
   }, [runtime.session, updateAIAssistance])
 
+  const submitConcierge = useCallback(async (honeypot: string) => {
+    if (submissionInFlightRef.current || submission.status === 'submitted') return
+    const payload = buildConciergeSubmissionRequest({
+      session: runtime.session,
+      submissionId,
+      honeypot,
+      assistedSummary,
+    })
+    if (!payload) {
+      setSubmission({
+        status: 'error',
+        message: 'La demande doit être complétée avant son envoi.',
+        confirmationEmail: null,
+        warnings: [],
+      })
+      emit('concierge_error', runtime, { errorCode: 'invalid_submission_state' })
+      return
+    }
+
+    submissionInFlightRef.current = true
+    const controller = new AbortController()
+    submissionAbortControllerRef.current = controller
+    setSubmission({
+      status: 'submitting',
+      message: 'Transmission sécurisée en cours…',
+      confirmationEmail: null,
+      warnings: [],
+    })
+
+    const response = await requestConciergeSubmission(payload, { signal: controller.signal })
+    if (submissionAbortControllerRef.current !== controller) return
+    submissionAbortControllerRef.current = null
+    submissionInFlightRef.current = false
+
+    if (response.success) {
+      setSubmission({
+        status: 'submitted',
+        message: response.message,
+        confirmationEmail: response.confirmationEmail,
+        warnings: response.warnings,
+      })
+      setRuntime((current) => ({
+        ...current,
+        session: { ...current.session, status: 'submitted' },
+      }))
+      emit('concierge_submitted', runtime, {
+        confirmationEmail: response.confirmationEmail,
+      })
+      if (runtime.session.humanReviewRequired) {
+        emit('concierge_human_handoff', runtime, { reason: 'human_review_required' })
+      }
+      return
+    }
+
+    const status = response.error.code === 'RATE_LIMITED'
+      ? 'rate_limited'
+      : response.error.code === 'SUBMISSION_DISABLED'
+        ? 'disabled'
+        : 'error'
+    setSubmission({
+      status,
+      message: response.error.message,
+      confirmationEmail: null,
+      warnings: [],
+    })
+    emit('concierge_error', runtime, { errorCode: response.error.code.toLowerCase() })
+  }, [assistedSummary, emit, runtime, submission.status, submissionId])
+
+  const cancelSubmission = useCallback(() => {
+    if (!submissionInFlightRef.current) return
+    submissionAbortControllerRef.current?.abort()
+    submissionAbortControllerRef.current = null
+    submissionInFlightRef.current = false
+    setSubmission({
+      status: 'error',
+      message: 'L’envoi a été interrompu. Vous pouvez vérifier puis réessayer avec le même identifiant.',
+      confirmationEmail: null,
+      warnings: [],
+    })
+  }, [])
+
   return {
     runtime,
     currentStep,
@@ -253,6 +353,11 @@ export function useConciergeSession() {
     disableAIAssistance,
     cancelAIRequest,
     requestAI,
+    assistedSummary,
+    setAssistedSummary,
+    submission,
+    submitConcierge,
+    cancelSubmission,
     emit,
   }
 }

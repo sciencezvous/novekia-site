@@ -37,6 +37,7 @@ function ConciergeRootContent() {
 
   function closePanel() {
     concierge.cancelAIRequest()
+    concierge.cancelSubmission()
     setOpen(false)
     requestAnimationFrame(() => triggerRef.current?.focus())
   }
@@ -103,7 +104,7 @@ function ConciergeRootContent() {
           </button>
         ) : null}
         <p className="mt-5 text-xs leading-5 text-muted-foreground">
-          Les réponses restent en mémoire uniquement tant que cette page est ouverte. Aucune donnée n’est envoyée.
+          Les réponses restent en mémoire dans cette page et ne sont transmises qu’après votre action explicite.
         </p>
       </div>
     )
@@ -157,6 +158,8 @@ function ConciergeRootContent() {
             status: concierge.runtime.session.aiAssistance.status,
             onRequest: (input) => concierge.requestAI('summarize_qualification', input),
             onDisable: concierge.disableAIAssistance,
+            assisted: concierge.assistedSummary,
+            onAssistedChange: concierge.setAssistedSummary,
           }}
         />
       )
@@ -169,6 +172,9 @@ function ConciergeRootContent() {
           onContinue={() => undefined}
           onBack={concierge.goBack}
           onRestart={restart}
+          onClose={closePanel}
+          onSubmit={concierge.submitConcierge}
+          submission={concierge.submission}
           final
         />
       )
@@ -207,7 +213,11 @@ function ConciergeRootContent() {
         <ConciergePanel
           onClose={closePanel}
           onRestart={restart}
-          hasAnswers={hasAnswers}
+          hasAnswers={
+            hasAnswers &&
+            concierge.submission.status !== 'submitted' &&
+            concierge.submission.status !== 'submitting'
+          }
         >
           <div aria-live="polite" className="sr-only">
             {concierge.validationErrors[0] ?? (

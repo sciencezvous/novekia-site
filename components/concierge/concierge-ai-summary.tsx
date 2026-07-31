@@ -12,11 +12,13 @@ import { ConciergeAIDisclosure } from './concierge-ai-disclosure'
 
 type ConciergeAISummaryProps = {
   summary: ConciergeSummary
+  assisted: AssistedQualificationSummary | null
   enabled: boolean
   disclosureAcknowledged: boolean
   status: 'idle' | 'requesting' | 'available' | 'fallback' | 'unavailable' | 'error'
   onRequest: (input: Record<string, unknown>) => Promise<ConciergeAIRouteEnvelope>
   onDisable: () => void
+  onAssistedChange: (summary: AssistedQualificationSummary | null) => void
 }
 
 function summaryInput(summary: ConciergeSummary): Record<string, unknown> {
@@ -43,13 +45,14 @@ function displayValue(value: { value: string | null } | null): string | null {
 
 export function ConciergeAISummary({
   summary,
+  assisted,
   enabled,
   disclosureAcknowledged,
   status,
   onRequest,
   onDisable,
+  onAssistedChange,
 }: ConciergeAISummaryProps) {
-  const [assisted, setAssisted] = useState<AssistedQualificationSummary | null>(null)
   const [message, setMessage] = useState('')
 
   async function requestSummary() {
@@ -59,7 +62,7 @@ export function ConciergeAISummary({
       setMessage('La synthèse assistée n’est pas disponible. La synthèse déterministe ci-dessus reste valide.')
       return
     }
-    setAssisted(response.result)
+    onAssistedChange(response.result)
     if (response.fallbackUsed) {
       setMessage('La synthèse a été structurée avec les règles déterministes du concierge.')
     }
@@ -94,7 +97,7 @@ export function ConciergeAISummary({
             <Sparkles aria-hidden="true" />
             {status === 'requesting' ? 'Structuration en cours…' : 'Structurer cette synthèse avec l’assistant IA'}
           </Button>
-          <button type="button" onClick={onDisable} className="mt-3 min-h-10 w-full text-xs text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring">
+          <button type="button" onClick={() => { onAssistedChange(null); onDisable() }} className="mt-3 min-h-10 w-full text-xs text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring">
             Continuer sans assistance IA
           </button>
         </>

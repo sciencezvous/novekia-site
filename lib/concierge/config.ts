@@ -2,7 +2,7 @@ import type { ConciergePath } from './types'
 
 export const CONCIERGE_EVENT_NAME = 'novekia:concierge-event' as const
 export const CONTACT_CONSENT_VERSION = 'contact-consent-2026-07-v1' as const
-export const PRIVACY_POLICY_VERSION = 'privacy-policy-2026-07-12-v1' as const
+export const PRIVACY_POLICY_VERSION = 'privacy-policy-2026-07-31-v1' as const
 
 export const conciergeSectionLabels: Readonly<Record<string, string>> = {
   context: 'Contexte',

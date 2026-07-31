@@ -81,7 +81,7 @@ export function ConciergePanel({
         className="section-dark fixed inset-x-0 bottom-0 z-[90] flex h-[min(90dvh,48rem)] min-h-0 flex-col overflow-hidden rounded-t-xl border border-border bg-[#020817]/98 text-foreground shadow-[0_30px_100px_rgba(0,0,0,0.62)] sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[min(46rem,calc(100dvh-7rem))] sm:w-[min(27.5rem,calc(100vw-3rem))] sm:rounded-xl"
       >
         <p id="novekia-concierge-description" className="sr-only">
-          Assistant de qualification déterministe. Les réponses restent uniquement dans cette page et ne sont pas transmises.
+          Assistant de qualification déterministe. Les réponses ne sont transmises qu’après validation et clic explicite sur le bouton d’envoi.
         </p>
         <ConciergeHeader
           onClose={onClose}
