@@ -6,6 +6,7 @@ import type {
 import type {
   AIInferredField,
   AssistedQualificationSummary,
+  ClassifyIntentResult,
   ConciergeAITaskResult,
   ConciergeSolutionCategory,
 } from '../ai-schemas'
@@ -17,6 +18,8 @@ import {
 
 const CYBER_PATTERN = /\b(?:cyber|pentest|audit de s[ée]curit[ée]|vuln[ée]rabilit[ée]|pirat|attaque)\b/i
 const INJECTION_PATTERN = /(?:ignore (?:toutes? )?(?:les )?instructions|r[ée]v[èe]le (?:ton|le) prompt|appelle (?:cette )?url|classe-moi forc[ée]ment|dis que mon pentest est autoris[ée])/i
+const LEAD_ENGINE_PATTERN = /\b(?:prospection|prospects?|leads?|acquisition b2b|d[ée]veloppement commercial|rendez-vous|d[ée]cideurs?|contacts? commerciaux?|opportunit[ée]s commerciales?)\b|\b(?:identifier|trouver|cibler)\s+(?:des?\s+)?(?:entreprises|prospects?|d[ée]cideurs?|contacts?)\b/i
+const SOLUTION_BUILD_PATTERN = /\b(?:cr[ée]er|concevoir|d[ée]velopper|refondre|refaire|construire|impl[ée]menter|int[ée]grer|automatiser|installer|d[ée]ployer)\b/i
 
 function response(
   request: ConciergeAIRequest,
@@ -70,7 +73,7 @@ function inputText(request: ConciergeAIRequest): string {
   return typeof request.input === 'string' ? request.input.trim() : JSON.stringify(request.input)
 }
 
-function classify(request: ConciergeAIRequest): ConciergeAITaskResult {
+export function classifyConciergeIntent(request: ConciergeAIRequest): ClassifyIntentResult {
   const text = inputText(request).toLowerCase()
   const cyber = CYBER_PATTERN.test(text)
   if (INJECTION_PATTERN.test(text)) {
@@ -93,16 +96,20 @@ function classify(request: ConciergeAIRequest): ConciergeAITaskResult {
     ['cybersecurity_authorized_audit', CYBER_PATTERN],
   ]
   const category = categories.find(([, pattern]) => pattern.test(text))?.[0] ?? null
-  const lead = /\b(?:prospection|prospect|lead|commercial|rendez-vous|acquisition b2b)\b/i.test(text)
+  const lead = LEAD_ENGINE_PATTERN.test(text)
+  const buildsSolution = Boolean(category) && SOLUTION_BUILD_PATTERN.test(text)
   const information = /\b(?:comprendre|information|services?|que faites-vous|d[ée]couvrir)\b/i.test(text)
   const direct = /\b(?:contacter|rappeler|[ée]changer|parler [àa])\b/i.test(text)
-  const matches = Number(Boolean(category)) + Number(lead) + Number(information) + Number(direct)
-  const path = matches !== 1
-    ? 'unknown'
-    : lead ? 'lead_engine'
-      : category ? 'solutions'
-        : information ? 'information'
-          : 'direct_contact'
+  const secondaryMatches = Number(information) + Number(direct)
+  const path = buildsSolution
+    ? 'solutions'
+    : lead
+      ? 'lead_engine'
+      : category
+        ? 'solutions'
+        : secondaryMatches !== 1
+          ? 'unknown'
+          : information ? 'information' : 'direct_contact'
   const confidence = path === 'unknown' ? 0.35 : category || lead ? 0.72 : 0.62
   return {
     path,
@@ -181,7 +188,7 @@ function executeTask(request: ConciergeAIRequest): ConciergeAITaskResult {
   const text = inputText(request).slice(0, 600)
   switch (request.task) {
     case 'classify_intent':
-      return classify(request)
+      return classifyConciergeIntent(request)
     case 'summarize_qualification':
       return summarize(request)
     case 'detect_missing_information': {

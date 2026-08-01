@@ -98,6 +98,10 @@ Le provider utilise `AbortController`. Le client applique un timeout légèremen
 
 Le fallback déterministe est activé par défaut. Le client distingue techniquement un résultat validé, un fallback et une indisponibilité, mais le visiteur ne voit ni le fournisseur, ni le modèle, ni les tokens, ni la latence.
 
+Pour `classify_intent`, la Gateway calcule aussi l'orientation déterministe avant l'appel Mistral. Si cette orientation est explicite (`path != unknown`, confiance >= 0,70) et que Mistral propose un autre parcours, la Gateway conserve l'orientation déterministe, retourne `provider: deterministic`, `fallbackUsed: true` et ajoute le diagnostic interne `mistral_semantic_disagreement`. Un accord conserve la réponse Mistral. Un résultat déterministe ambigu laisse Mistral proposer une orientation prudente.
+
+Ce diagnostic ne contient que le requestId, la tâche, les deux parcours, les deux niveaux de confiance et le modèle. Il n'inclut jamais le texte utilisateur, le prompt, la réponse brute, des coordonnées ou une clé. Il n'est pas exposé dans l'interface visiteur.
+
 ## 18. Coûts et fréquence
 
 L’IA n’est jamais appelée à l’ouverture, pendant la frappe, pour les coordonnées ou pour les consentements. Une action explicite déclenche au maximum une classification par description et une synthèse par version. Un cache mémoire client réutilise un résultat identique dans la session. Les réponses HTTP utilisent `Cache-Control: no-store`.
