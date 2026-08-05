@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import type { ConciergeAvatarState } from './concierge-avatar'
 import { ConciergeHeader } from './concierge-header'
 
 const FOCUSABLE_SELECTOR =
@@ -11,6 +12,7 @@ type ConciergePanelProps = {
   onClose: () => void
   onRestart: () => void
   hasAnswers: boolean
+  avatarState?: ConciergeAvatarState
 }
 
 export function ConciergePanel({
@@ -18,6 +20,7 @@ export function ConciergePanel({
   onClose,
   onRestart,
   hasAnswers,
+  avatarState = 'idle',
 }: ConciergePanelProps) {
   const panelRef = useRef<HTMLDivElement>(null)
 
@@ -87,6 +90,7 @@ export function ConciergePanel({
           onClose={onClose}
           onRestart={onRestart}
           hasAnswers={hasAnswers}
+          avatarState={avatarState}
         />
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-5 sm:px-5 sm:pb-5">
           {children}

@@ -9,6 +9,7 @@ import { conciergeDefinition, getConciergePageSuggestion } from '@/lib/concierge
 import type { ConciergePath } from '@/lib/concierge/types'
 import { ConciergeErrorBoundary } from './concierge-error-boundary'
 import { ConciergeAvatar } from './concierge-avatar'
+import { ConciergeConversationContext } from './concierge-conversation-context'
 import { ConciergeInformation } from './concierge-information'
 import { ConciergeIntentAssistance } from './concierge-intent-assistance'
 import { ConciergeLauncher } from './concierge-launcher'
@@ -69,7 +70,7 @@ function ConciergeRootContent() {
     return (
       <div>
         <div className="flex items-start gap-3 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
-          <ConciergeAvatar size="sm" className="mt-1" />
+          <ConciergeAvatar size="sm" state="speaking" className="mt-1" />
           <div className="min-w-0 flex-1 rounded-lg rounded-tl-sm border border-primary/20 bg-primary/[0.06] p-4">
             <p className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-primary">Nova</p>
             <h3 className="mt-2.5 text-balance text-xl font-semibold tracking-tight">Parlons de votre objectif.</h3>
@@ -195,6 +196,10 @@ function ConciergeRootContent() {
     return (
       <div>
         <ConciergeProgress progress={concierge.progress} />
+        <ConciergeConversationContext
+          runtime={concierge.runtime}
+          currentSection={step.section}
+        />
         <ConciergeQuestionRenderer
           key={`${step.id}:${concierge.validationErrors.some((error) => /secret|mot de passe|clé|jeton/i.test(error)) ? 'redacted' : 'active'}`}
           question={step}
@@ -211,6 +216,10 @@ function ConciergeRootContent() {
   }
 
   const hasActiveRuntime = concierge.runtime.session.activePath !== 'unknown'
+  const avatarState = (
+    concierge.runtime.session.aiAssistance.status === 'requesting' ||
+    concierge.submission.status === 'submitting'
+  ) ? 'thinking' : hasActiveRuntime ? 'listening' : 'idle'
 
   return (
     <>
@@ -223,6 +232,7 @@ function ConciergeRootContent() {
         <ConciergePanel
           onClose={closePanel}
           onRestart={restart}
+          avatarState={avatarState}
           hasAnswers={
             hasAnswers &&
             concierge.submission.status !== 'submitted' &&
