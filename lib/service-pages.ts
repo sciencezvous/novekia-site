@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import type { ContactNeed } from '@/lib/contact-needs'
 import { siteConfig } from '@/lib/site-config'
 
 export type ServiceFaq = {
@@ -32,8 +33,11 @@ export type ServicePageData = {
   metaTitle: string
   metaDescription: string
   serviceType: string
+  contactNeed: ContactNeed
   intro: string
   directAnswer: string
+  idealFor: string[]
+  prerequisites: string[]
   problems: ServiceContentItem[]
   deliverables: ServiceContentItem[]
   useCases: string[]
@@ -52,10 +56,21 @@ export const servicePages = [
     metaDescription:
       'Logiciels métiers sur mesure, applications internes, portails professionnels et intégrations adaptés aux processus de votre organisation.',
     serviceType: 'Conception et développement de logiciels métiers sur mesure',
+    contactNeed: 'Logiciel sur mesure',
     intro:
       'Nous transformons des processus complexes, dispersés ou encore manuels en outils professionnels clairs, maintenables et intégrés à votre environnement.',
     directAnswer:
       'Un logiciel métier sur mesure est une application conçue autour des règles, des utilisateurs et des contraintes propres à une organisation. Il peut remplacer des fichiers dispersés, réduire les doubles saisies, automatiser des contrôles et relier les systèmes déjà en place.',
+    idealFor: [
+      'Un processus récurrent et important ne rentre pas correctement dans les logiciels standards.',
+      'Plusieurs équipes, données ou outils doivent être réunis dans un même parcours traçable.',
+      'Un responsable métier et des utilisateurs peuvent participer aux validations.',
+    ],
+    prerequisites: [
+      'Décrire le fonctionnement réel, y compris les exceptions et contournements actuels.',
+      'Identifier les données et systèmes à reprendre ou à connecter.',
+      'Définir un premier périmètre utile plutôt qu’une liste illimitée de fonctionnalités.',
+    ],
     problems: [
       {
         title: 'Processus fragmentés',
@@ -162,10 +177,21 @@ export const servicePages = [
     metaDescription:
       'Cadrage, prototypage et déploiement de modèles d’intelligence artificielle locale, RAG privé et inférence sur infrastructure contrôlée par votre organisation.',
     serviceType: 'Conception et déploiement de systèmes d’intelligence artificielle locale',
+    contactNeed: 'Intelligence artificielle locale',
     intro:
       'Novekia conçoit des systèmes d’IA exécutés sur une infrastructure définie avec vous, afin de maîtriser les données, les modèles, les accès et les conditions d’exploitation.',
     directAnswer:
       'Une intelligence artificielle locale exécute tout ou partie des modèles et traitements sur une infrastructure contrôlée par l’organisation. Elle permet d’adapter la confidentialité, la disponibilité, les performances et les coûts au cas d’usage, sans dépendre systématiquement d’une API publique.',
+    idealFor: [
+      'Une tâche précise peut être évaluée sur des documents, questions ou opérations représentatives.',
+      'La confidentialité, la maîtrise des flux ou la dépendance aux API sont des contraintes réelles.',
+      'Une validation humaine et des critères de qualité peuvent être intégrés au service.',
+    ],
+    prerequisites: [
+      'Identifier les données autorisées, leur qualité et les personnes qui peuvent y accéder.',
+      'Définir ce qu’est une réponse acceptable et les erreurs qui doivent être bloquées.',
+      'Tester le cas d’usage avant de choisir définitivement un modèle ou un serveur.',
+    ],
     problems: [
       {
         title: 'Données sensibles',
@@ -355,10 +381,21 @@ export const servicePages = [
     metaDescription:
       'Conception et intégration de stations GPU, serveurs IA, stockage et réseau dimensionnés pour l’inférence locale, le calcul intensif et vos contraintes d’exploitation.',
     serviceType: 'Conception et intégration d’infrastructures de calcul et serveurs IA',
+    contactNeed: 'Station ou serveur IA',
     intro:
       'Nous dimensionnons l’ensemble de la chaîne — calcul, mémoire, stockage, réseau, énergie et exploitation — à partir des charges de travail réelles.',
     directAnswer:
       'Une infrastructure IA ne se résume pas au choix d’un GPU. Le dimensionnement doit relier les modèles utilisés, leur précision, la mémoire nécessaire, le nombre d’utilisateurs, la latence attendue, le stockage, le réseau, l’énergie et les possibilités d’évolution.',
+    idealFor: [
+      'La charge de travail est connue, mesurable ou peut être reproduite avant l’achat.',
+      'Le calcul doit rester sur site ou dans un environnement privé maîtrisé.',
+      'L’organisation veut documenter les coûts, l’exploitation et les possibilités d’évolution.',
+    ],
+    prerequisites: [
+      'Mesurer les modèles, volumes, contextes et usages simultanés attendus.',
+      'Vérifier l’alimentation, le refroidissement, le réseau et l’emplacement disponibles.',
+      'Désigner les responsabilités de maintenance, sauvegarde et supervision.',
+    ],
     problems: [
       {
         title: 'Matériel choisi trop tôt',
@@ -466,10 +503,21 @@ export const servicePages = [
     metaDescription:
       'Conception d’applications web professionnelles, portails, API, automatisations et intégrations avec vos logiciels, bases de données et services existants.',
     serviceType: 'Conception d’applications web professionnelles et intégrations',
+    contactNeed: 'Application web',
     intro:
       'Nous concevons des interfaces rapides et accessibles, reliées proprement aux données, règles et systèmes qui font fonctionner votre organisation.',
     directAnswer:
       'Une application web métier est une interface accessible depuis un navigateur qui permet à des utilisateurs autorisés de consulter, créer ou traiter des données. Elle peut réunir plusieurs systèmes grâce à des API et automatisations, tout en conservant des règles d’accès et une traçabilité adaptées.',
+    idealFor: [
+      'Un parcours récurrent mobilise plusieurs utilisateurs, outils ou sources de données.',
+      'Des API, exports ou mécanismes d’échange permettent de relier les systèmes existants.',
+      'Des utilisateurs référents peuvent tester les parcours et prioriser les besoins.',
+    ],
+    prerequisites: [
+      'Cartographier les systèmes, propriétaires de données et droits d’accès.',
+      'Clarifier les volumes, dépendances et conséquences d’une indisponibilité.',
+      'Choisir un premier flux complet à livrer et mesurer avant d’étendre l’application.',
+    ],
     problems: [
       {
         title: 'Outils isolés',
@@ -576,10 +624,21 @@ export const servicePages = [
     metaDescription:
       'Création de sites web B2B rapides et structurés pour le SEO, Google AI Overviews et les moteurs de réponse générative, avec contenus clairs et données structurées.',
     serviceType: 'Création de sites web optimisés pour le SEO et le GEO',
+    contactNeed: 'SEO et GEO',
     intro:
       'Nous réunissons performance technique, architecture de contenu, données structurées et clarté éditoriale afin que vos pages soient utiles aux visiteurs, compréhensibles par Google et exploitables par les moteurs génératifs.',
     directAnswer:
       'Un site optimisé SEO et GEO associe des pages rapides et indexables à une architecture couvrant chaque intention de recherche. Il formule des réponses précises, relie les entités et services avec des données structurées, cite des preuves vérifiables et facilite l’attribution de l’information par les moteurs de recherche et de réponse.',
+    idealFor: [
+      'L’entreprise propose des expertises distinctes qui méritent chacune une page utile et spécifique.',
+      'Des preuves, connaissances métier et réponses concrètes peuvent être publiées durablement.',
+      'Les pages d’entrée, requêtes et conversions seront suivies après la mise en ligne.',
+    ],
+    prerequisites: [
+      'Clarifier les offres, audiences, zones desservies et objectifs commerciaux prioritaires.',
+      'Réunir les preuves vérifiables : réalisations, méthodes, auteurs, sources et limites.',
+      'Accepter qu’aucun prestataire ne puisse garantir une position ou une citation par un moteur tiers.',
+    ],
     problems: [
       {
         title: 'Une page pour trop de sujets',

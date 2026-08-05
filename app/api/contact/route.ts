@@ -4,19 +4,7 @@ import {
   sanitizeAttribution,
   type LeadAttribution,
 } from '@/lib/lead-attribution'
-
-// Allowed needs matching the form options
-const ALLOWED_NEEDS = [
-  'Prospection B2B et qualification commerciale',
-  'Logiciel sur mesure',
-  'Intelligence artificielle locale',
-  'Station ou serveur IA',
-  'Infrastructure de calcul',
-  'Application web',
-  'SEO et GEO',
-  'Audit technique',
-  'Autre',
-]
+import { isContactNeed } from '@/lib/contact-needs'
 
 // Allowed budgets matching the form options
 const ALLOWED_BUDGETS = [
@@ -292,7 +280,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate need
-    if (!need || !ALLOWED_NEEDS.includes(need)) {
+    if (!need || !isContactNeed(need)) {
       return NextResponse.json(
         { error: 'Besoin invalide' },
         { status: 400 }
