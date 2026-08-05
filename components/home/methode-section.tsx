@@ -56,7 +56,7 @@ export function MethodeSection() {
   return (
     <Section id="methode" tone="light" aria-labelledby="methode-title">
       <SectionHeader
-        index="02"
+        index="03"
         eyebrow="Méthode commune"
         title={<span id="methode-title">Une méthode pour décider et exécuter.</span>}
         description="Le même cadre de travail relie la prospection, la qualification commerciale et la conception de solutions techniques."

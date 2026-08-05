@@ -7,6 +7,7 @@ import {
 
 // Allowed needs matching the form options
 const ALLOWED_NEEDS = [
+  'Prospection B2B et qualification commerciale',
   'Logiciel sur mesure',
   'Intelligence artificielle locale',
   'Station ou serveur IA',

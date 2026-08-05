@@ -35,7 +35,7 @@ export function FaqSection() {
   return (
     <Section id="questions" tone="muted" aria-labelledby="questions-title">
       <SectionHeader
-        index="04"
+        index="06"
         eyebrow="Questions fréquentes"
         title={<span id="questions-title">Comprendre avant de décider.</span>}
         description="Des réponses directes sur l’organisation de Novekia, le rôle de chaque pôle et notre cadre d’intervention."

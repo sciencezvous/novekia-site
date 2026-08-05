@@ -34,7 +34,7 @@ export function ContactSection() {
       <div aria-hidden="true" className="technical-grid-pattern pointer-events-none absolute inset-0 opacity-20 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
       <div className="relative">
         <SectionHeader
-          index="05"
+          index="07"
           eyebrow="Contact"
           title={<span id="contact-title">Parlons de votre objectif.</span>}
           description="Développer votre prospection, qualifier un marché ou réaliser une solution numérique : décrivez votre contexte et Novekia vous orientera vers le bon pôle."

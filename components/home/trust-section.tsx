@@ -57,7 +57,7 @@ export function TrustSection() {
       aria-labelledby="trust-title"
     >
       <SectionHeader
-        index="03"
+        index="05"
         eyebrow="Principes de confiance"
         title={
           <span id="trust-title">
