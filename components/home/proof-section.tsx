@@ -1,28 +1,42 @@
 import Link from 'next/link'
-import { ArrowRight, Calculator, FileCheck2, ShieldCheck } from 'lucide-react'
+import {
+  ArrowUpRight,
+  Calculator,
+  FileCheck2,
+  ShieldCheck,
+} from 'lucide-react'
 import { SectionHeader } from '@/components/brand/section-header'
 import { Section } from '@/components/layout/section'
 
 const evidence = [
   {
-    title: 'Calcul reproductible',
+    eyebrow: 'Lead Engine Studio',
+    title: 'Un dispositif commercial explicite',
     description:
-      'Chaque hypothèse et chaque formule restent visibles. Le résultat peut être recalculé ou contesté.',
-    icon: Calculator,
-  },
-  {
-    title: 'Architecture explicite',
-    description:
-      'Identité, permissions, sources, recherche, inférence et contrôle sont traités comme un seul système.',
+      'Ciblage, critères de qualification, recherche des décideurs et livrables sont présentés avant le démarrage.',
+    href: '/lead-engine-studio#livrables',
+    cta: 'Voir les livrables',
     icon: ShieldCheck,
   },
   {
-    title: 'Recette téléchargeable',
+    eyebrow: 'Novekia Solutions',
+    title: 'Un démonstrateur RAG reproductible',
     description:
-      'Un modèle CSV structure les tests de recherche, de fidélité, de refus et de contrôle d’accès.',
+      'Le scénario, l’architecture, le calcul mémoire et le protocole de recette peuvent être examinés et contestés.',
+    href: '/ressources/demonstrateur-rag-local',
+    cta: 'Examiner le démonstrateur',
+    icon: Calculator,
+  },
+  {
+    eyebrow: 'Décision technique',
+    title: 'Des guides sourcés et actionnables',
+    description:
+      'IA locale, RAG et dimensionnement GPU sont traités avec critères de décision, limites et sources vérifiables.',
+    href: '/ressources',
+    cta: 'Consulter les ressources',
     icon: FileCheck2,
   },
-]
+] as const
 
 export function ProofSection() {
   return (
@@ -35,16 +49,16 @@ export function ProofSection() {
       <div aria-hidden="true" className="technical-grid-pattern absolute inset-0 opacity-15" />
       <div className="relative">
         <SectionHeader
-          index="07"
-          eyebrow="Preuve technique"
+          index="02"
+          eyebrow="Preuves vérifiables"
           title={
             <span id="proof-title">
-              Des preuves avant
+              Vérifiez notre méthode
               <br />
-              <span className="text-primary">les promesses.</span>
+              <span className="text-primary">avant de nous confier un projet.</span>
             </span>
           }
-          description="Novekia publie une première démonstration de méthode : un scénario RAG local avec hypothèses, architecture, calcul mémoire et protocole de recette."
+          description="Novekia montre ses périmètres, ses livrables et une partie de sa méthode avant le premier échange. Aucun résultat commercial ou technique dépendant d’un tiers n’est garanti artificiellement."
         />
 
         <div className="mt-12 grid gap-px bg-border lg:grid-cols-3">
@@ -52,29 +66,36 @@ export function ProofSection() {
             const Icon = item.icon
 
             return (
-              <article key={item.title} className="bg-background p-6 sm:p-8">
-                <Icon
-                  aria-hidden="true"
-                  className="size-7 text-primary"
-                  strokeWidth={1.4}
-                />
-                <h3 className="mt-6 text-xl font-semibold">{item.title}</h3>
+              <Link
+                key={item.title}
+                href={item.href}
+                className="group flex min-h-80 flex-col bg-background p-6 outline-none transition-colors hover:bg-accent/30 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:p-8"
+              >
+                <div className="flex items-start justify-between gap-6">
+                  <Icon
+                    aria-hidden="true"
+                    className="size-7 text-primary"
+                    strokeWidth={1.4}
+                  />
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className="size-5 text-primary transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  />
+                </div>
+                <p className="mt-7 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-primary">
+                  {item.eyebrow}
+                </p>
+                <h3 className="mt-3 text-xl font-semibold">{item.title}</h3>
                 <p className="mt-4 text-sm leading-7 text-muted-foreground">
                   {item.description}
                 </p>
-              </article>
+                <span className="mt-auto pt-8 font-mono text-xs uppercase tracking-[0.14em] text-primary">
+                  {item.cta}
+                </span>
+              </Link>
             )
           })}
         </div>
-
-        <Link
-          href="/ressources/demonstrateur-rag-local"
-          className="mt-8 flex min-h-14 items-center justify-between gap-6 border-y border-border py-4 text-lg font-semibold transition-colors hover:text-primary"
-        >
-          Examiner le démonstrateur RAG local
-          <ArrowRight aria-hidden="true" className="size-5 shrink-0" />
-        </Link>
-
       </div>
     </Section>
   )

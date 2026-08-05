@@ -72,8 +72,9 @@ export function InstitutionalHero() {
           </div>
 
           <p className="mt-4 font-mono text-xs tracking-wide text-muted-foreground">
-            Approche sur mesure <span aria-hidden="true">•</span> Supervision
-            humaine <span aria-hidden="true">•</span> Sans engagement
+            Réponse sous 48 h ouvrées <span aria-hidden="true">•</span>{' '}
+            Supervision humaine <span aria-hidden="true">•</span> Sans
+            engagement
           </p>
         </div>
 

@@ -3,7 +3,9 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { InstitutionalHero } from '@/components/home/institutional-hero'
 import { BusinessPillarsSection } from '@/components/home/business-pillars-section'
+import { ProofSection } from '@/components/home/proof-section'
 import { MethodeSection } from '@/components/home/methode-section'
+import { TestimonialsSection } from '@/components/home/testimonials-section'
 import { TrustSection } from '@/components/home/trust-section'
 import { ContactSection } from '@/components/home/contact-section'
 import { FaqSection, homeFaq } from '@/components/home/faq-section'
@@ -66,7 +68,9 @@ export default function HomePage() {
       <main id="contenu">
         <InstitutionalHero />
         <BusinessPillarsSection />
+        <ProofSection />
         <MethodeSection />
+        <TestimonialsSection />
         <TrustSection />
         <FaqSection />
         <ContactSection />

@@ -1,4 +1,5 @@
 import { Quote } from 'lucide-react'
+import { PrimaryButton } from '@/components/brand/primary-button'
 import { SectionHeader } from '@/components/brand/section-header'
 import { Section } from '@/components/layout/section'
 
@@ -25,7 +26,7 @@ export function TestimonialsSection() {
       aria-labelledby="testimonials-title"
     >
       <SectionHeader
-        index="08"
+        index="04"
         eyebrow="Retours clients"
         title={
           <span id="testimonials-title">
@@ -64,8 +65,19 @@ export function TestimonialsSection() {
       </div>
 
       <p className="mt-7 max-w-3xl text-sm leading-7 text-muted-foreground">
-        Témoignages reproduits sans note chiffrée ni résultat commercial ajouté.
+        Retours communiqués directement à Novekia et reproduits sans note
+        chiffrée ni résultat commercial ajouté.
       </p>
+
+      <div className="mt-8 flex flex-col items-start gap-4 border-t border-border pt-8 sm:flex-row sm:items-center sm:justify-between">
+        <PrimaryButton href="/#contact" withArrow>
+          Parler de votre objectif
+        </PrimaryButton>
+        <p className="font-mono text-xs tracking-wide text-muted-foreground">
+          Réponse sous 48 h ouvrées <span aria-hidden="true">•</span> Sans
+          engagement
+        </p>
+      </div>
     </Section>
   )
 }

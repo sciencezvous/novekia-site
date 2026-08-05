@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { track } from '@vercel/analytics'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -21,6 +21,7 @@ type FormErrors = Partial<Record<FieldName, string>>
 type SubmissionStatus = 'idle' | 'loading' | 'success' | 'error'
 
 const needOptions = [
+  'Prospection B2B et qualification commerciale',
   'Logiciel sur mesure',
   'Intelligence artificielle locale',
   'Station ou serveur IA',
@@ -123,7 +124,24 @@ function trackSuccessfulSubmission(
   }
 }
 
+function trackFormProgress(
+  eventName: 'contact_form_started' | 'contact_form_validation_failed',
+  properties?: Record<string, string | number>,
+) {
+  try {
+    const attribution = getStoredAttribution()
+    track(eventName, {
+      source: attribution.utmSource || attribution.referrerHost || 'direct',
+      landing_path: attribution.landingPath || 'unknown',
+      ...properties,
+    })
+  } catch {
+    // Measurement must never interrupt or expose the contact flow.
+  }
+}
+
 export function ContactForm({ className }: ContactFormProps) {
+  const hasTrackedStart = useRef(false)
   const [errors, setErrors] = useState<FormErrors>({})
   const [status, setStatus] = useState<SubmissionStatus>('idle')
   const [errorMessage, setErrorMessage] = useState('')
@@ -140,6 +158,9 @@ export function ContactForm({ className }: ContactFormProps) {
     setErrors(nextErrors)
 
     if (Object.keys(nextErrors).length > 0) {
+      trackFormProgress('contact_form_validation_failed', {
+        error_count: Object.keys(nextErrors).length,
+      })
       setStatus('idle')
       setErrorMessage('')
       setSuccessMessage('')
@@ -184,8 +205,19 @@ export function ContactForm({ className }: ContactFormProps) {
   const controlClassName = 'h-11 rounded-md bg-background/40'
   const selectClassName = 'h-11 w-full rounded-md border border-input bg-background/40 px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20'
 
+  function handleFormFocus() {
+    if (hasTrackedStart.current) return
+    hasTrackedStart.current = true
+    trackFormProgress('contact_form_started')
+  }
+
   return (
-    <form onSubmit={handleSubmit} className={cn('flex flex-col gap-5', className)} noValidate>
+    <form
+      onSubmit={handleSubmit}
+      onFocusCapture={handleFormFocus}
+      className={cn('flex flex-col gap-5', className)}
+      noValidate
+    >
       <p className="text-sm leading-relaxed text-muted-foreground">
         Les champs marqués d’un astérisque sont obligatoires. Sans ces
         informations, la demande ne peut pas être transmise.
@@ -275,7 +307,8 @@ export function ContactForm({ className }: ContactFormProps) {
           {status === 'loading' ? 'Envoi en cours...' : 'Envoyer ma demande'}
         </PrimaryButton>
         <p className="text-sm text-muted-foreground">
-          Vous pouvez également écrire directement à{' '}
+          Réponse sous 48 h ouvrées · Sans engagement. Vous pouvez également
+          écrire directement à{' '}
           <a href="mailto:contact@novekia.fr" className="text-primary underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">contact@novekia.fr</a>
         </p>
 
