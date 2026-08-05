@@ -71,7 +71,15 @@ export default function AboutPage() {
           description: metadata.description,
           inLanguage: 'fr-FR',
           isPartOf: { '@id': `${siteConfig.url}/#website` },
-          mainEntity: { '@id': `${siteConfig.url}/#andy-legrand` },
+          mainEntity: {
+            '@type': 'Person',
+            '@id': `${siteConfig.url}/#andy-legrand`,
+            name: 'Andy Legrand',
+            url: aboutUrl,
+            jobTitle: 'Fondateur',
+            image: `${siteConfig.url}/andy-legrand-novekia-v3.png`,
+            worksFor: { '@id': `${siteConfig.url}/#organization` },
+          },
           about: { '@id': `${siteConfig.url}/#organization` },
         }}
       />
