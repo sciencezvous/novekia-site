@@ -148,7 +148,7 @@ export type ConciergeInitialChoice = {
 }
 
 export type ConciergeDefinition = {
-  assistantName: 'Assistant Novekia'
+  assistantName: 'Nova'
   schemaVersion: typeof CONCIERGE_SCHEMA_VERSION
   openingMessage: string
   initialChoices: readonly ConciergeInitialChoice[]

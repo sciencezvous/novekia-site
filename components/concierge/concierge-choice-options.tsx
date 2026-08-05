@@ -10,6 +10,7 @@ type ConciergeChoiceOptionsProps = {
   fieldId: string
   describedBy?: string
   hasErrors: boolean
+  disabled?: boolean
   onAnswerChange: (answer: ConciergeAnswer) => void
 }
 
@@ -19,6 +20,7 @@ export function ConciergeChoiceOptions({
   fieldId,
   describedBy,
   hasErrors,
+  disabled = false,
   onAnswerChange,
 }: ConciergeChoiceOptionsProps) {
   if (question.answerType === 'boolean') {
@@ -33,11 +35,12 @@ export function ConciergeChoiceOptions({
             type="button"
             aria-pressed={answer === option.value}
             onClick={() => onAnswerChange(option.value)}
+            disabled={disabled}
             className={cn(
-              'min-h-12 rounded-md border px-4 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
+              'min-h-12 rounded-md border px-4 text-sm font-medium outline-none transition-[border-color,background-color,color,transform] focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-wait disabled:opacity-70 motion-reduce:transition-none',
               answer === option.value
-                ? 'border-primary bg-primary/15 text-foreground'
-                : 'border-border bg-background/40 text-muted-foreground hover:border-primary/50 hover:text-foreground',
+                ? 'scale-[1.01] border-primary bg-primary/15 text-foreground shadow-[0_0_24px_rgba(8,124,255,0.1)]'
+                : 'border-border bg-background/40 text-muted-foreground hover:-translate-y-0.5 hover:border-primary/50 hover:text-foreground',
             )}
           >
             {option.label}
@@ -55,6 +58,7 @@ export function ConciergeChoiceOptions({
           type="checkbox"
           checked={answer === true}
           onChange={(event) => onAnswerChange(event.target.checked)}
+          disabled={disabled}
           aria-invalid={hasErrors}
           aria-describedby={describedBy}
           className="mt-0.5 size-5 shrink-0 accent-primary focus-visible:outline-none"
@@ -101,6 +105,7 @@ export function ConciergeChoiceOptions({
               name={fieldId}
               value={option.value}
               checked={selected}
+              disabled={disabled}
               onChange={() => {
                 if (!multiple) {
                   onAnswerChange(option.value)

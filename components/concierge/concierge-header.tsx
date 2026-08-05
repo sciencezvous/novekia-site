@@ -19,10 +19,10 @@ export function ConciergeHeader({
       <ConciergeAvatar />
       <div className="min-w-0 flex-1">
         <h2 id="novekia-concierge-title" className="truncate text-sm font-semibold">
-          Assistant Novekia
+          Nova
         </h2>
         <p className="mt-0.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
-          Assistant numérique
+          Assistant
         </p>
       </div>
       {hasAnswers ? (
@@ -40,7 +40,7 @@ export function ConciergeHeader({
         type="button"
         onClick={onClose}
         className="inline-flex size-11 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        aria-label="Fermer l’Assistant Novekia"
+        aria-label="Fermer Nova"
       >
         <X aria-hidden="true" className="size-5" />
       </button>

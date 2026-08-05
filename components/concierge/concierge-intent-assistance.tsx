@@ -27,6 +27,12 @@ const categoryLabels: Readonly<Record<string, string>> = {
   other: 'Autre besoin',
 }
 
+const exampleNeeds = [
+  'Déployer une IA locale sans envoyer nos données dans le cloud',
+  'Identifier les bons décideurs pour développer notre prospection B2B',
+  'Créer un logiciel métier adapté à nos processus internes',
+] as const
+
 function confidenceLabel(confidence: number): string {
   if (confidence >= 0.75) return 'Confiance élevée'
   if (confidence >= 0.5) return 'Confiance modérée'
@@ -70,6 +76,13 @@ export function ConciergeIntentAssistance({
     }
   }
 
+  function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault()
+      void analyze()
+    }
+  }
+
   return (
     <div>
       <button
@@ -91,16 +104,50 @@ export function ConciergeIntentAssistance({
 
       {!suggestion ? (
         <>
+          <div className="mt-5">
+            <p className="font-mono text-[0.62rem] uppercase tracking-[0.12em] text-muted-foreground">
+              Exemples — cliquez pour commencer
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {exampleNeeds.map((example) => (
+                <button
+                  key={example}
+                  type="button"
+                  onClick={() => setDescription(example)}
+                  disabled={status === 'requesting'}
+                  className="rounded-full border border-border bg-background/35 px-3 py-2 text-left text-xs leading-5 text-muted-foreground outline-none transition-colors hover:border-primary/50 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                >
+                  {example}
+                </button>
+              ))}
+            </div>
+          </div>
           <Textarea
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             maxLength={600}
             rows={5}
             disabled={status === 'requesting'}
+            onKeyDown={handleKeyDown}
+            placeholder="Ex. Nous voulons déployer une IA privée pour interroger nos documents internes…"
             aria-label="Description courte de votre besoin"
             className="mt-5 min-h-32 resize-y bg-background/45"
           />
           <p className="mt-2 text-right font-mono text-[0.65rem] text-muted-foreground">{description.length}/600</p>
+          {status === 'requesting' ? (
+            <div className="mt-4 flex items-center gap-3 rounded-md border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-muted-foreground" role="status" aria-live="polite">
+              <span className="flex gap-1" aria-hidden="true">
+                {[0, 1, 2].map((index) => (
+                  <span
+                    key={index}
+                    className="size-1.5 animate-pulse rounded-full bg-primary motion-reduce:animate-none"
+                    style={{ animationDelay: `${index * 140}ms` }}
+                  />
+                ))}
+              </span>
+              J’analyse votre besoin et prépare une orientation…
+            </div>
+          ) : null}
           <Button
             type="button"
             size="lg"
@@ -111,6 +158,9 @@ export function ConciergeIntentAssistance({
             <Sparkles aria-hidden="true" />
             {status === 'requesting' ? 'Analyse en cours…' : 'Analyser mon besoin'}
           </Button>
+          <p className="mt-2 text-center text-[0.68rem] text-muted-foreground">
+            Raccourci clavier : Ctrl + Entrée
+          </p>
           <Button type="button" variant="ghost" size="lg" onClick={onDisable} className="mt-2 min-h-11 w-full">
             Continuer sans assistance IA
           </Button>

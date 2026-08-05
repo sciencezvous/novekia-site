@@ -1518,7 +1518,7 @@ export const directContactFlow: ConciergeFlowDefinition = {
 }
 
 export const conciergeDefinition: ConciergeDefinition = {
-  assistantName: 'Assistant Novekia',
+  assistantName: 'Nova',
   schemaVersion: CONCIERGE_SCHEMA_VERSION,
   openingMessage:
     'Parlons de votre objectif. En quelques questions, je peux vous orienter vers le pôle Novekia le plus pertinent et préparer un premier cadrage.',

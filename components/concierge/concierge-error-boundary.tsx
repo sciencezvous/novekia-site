@@ -27,7 +27,7 @@ export class ConciergeErrorBoundary extends Component<Props, State> {
 
     return (
       <div className="fixed bottom-6 right-6 z-[90] w-[min(27.5rem,calc(100vw-3rem))] border border-border bg-[#061225] p-5 text-foreground shadow-2xl">
-        <h2 className="text-lg font-semibold">Assistant Novekia</h2>
+        <h2 className="text-lg font-semibold">Nova</h2>
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
           Une difficulté empêche de poursuivre cette étape. Vous pouvez recommencer ou contacter directement Novekia.
         </p>

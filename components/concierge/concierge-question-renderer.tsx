@@ -1,11 +1,12 @@
 'use client'
 
-import { useId, useState } from 'react'
-import { ArrowLeft, ArrowRight, ShieldAlert } from 'lucide-react'
+import { useEffect, useId, useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight, LoaderCircle, ShieldAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { ConciergeAnswer, ConciergeQuestion } from '@/lib/concierge/types'
+import { ConciergeAvatar } from './concierge-avatar'
 import { ConciergeChoiceOptions } from './concierge-choice-options'
 import { ConciergeTextAnswer } from './concierge-text-answer'
 
@@ -32,7 +33,8 @@ function isOtherOption(value: string, label: string): boolean {
 function defaultAnswer(question: ConciergeQuestion, answer: ConciergeAnswer | undefined): ConciergeAnswer {
   if (answer !== undefined) return answer
   if (question.answerType === 'multiple_choice') return []
-  if (question.answerType === 'boolean' || question.answerType === 'consent') return false
+  if (question.answerType === 'boolean') return null
+  if (question.answerType === 'consent') return false
   if (question.answerType === 'range') return question.validation?.min ?? 0
   return ''
 }
@@ -55,6 +57,12 @@ function isSensitiveContext(question: ConciergeQuestion): boolean {
   ].includes(question.section)
 }
 
+function answerLabel(question: ConciergeQuestion, answer: ConciergeAnswer): string {
+  if (typeof answer === 'boolean') return answer ? 'Oui' : 'Non'
+  if (typeof answer !== 'string') return ''
+  return question.options?.find((option) => option.value === answer)?.label ?? answer
+}
+
 export function ConciergeQuestionRenderer({
   question,
   initialAnswer,
@@ -73,10 +81,16 @@ export function ConciergeQuestionRenderer({
   )
   const [supplemental, setSupplemental] = useState(initialSupplemental)
   const [localError, setLocalError] = useState('')
+  const [advancingAnswer, setAdvancingAnswer] = useState<ConciergeAnswer | null>(null)
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const visibleErrors = localError ? [localError] : errors
   const describedBy = [question.helpText ? helpId : '', visibleErrors.length ? errorId : '']
     .filter(Boolean)
     .join(' ') || undefined
+
+  useEffect(() => () => {
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
+  }, [])
 
   function submit() {
     if (answerHasOther(question, answer) && !supplemental.trim()) {
@@ -85,6 +99,23 @@ export function ConciergeQuestionRenderer({
     }
     setLocalError('')
     onContinue({ answer, supplemental: supplemental.trim() || undefined })
+  }
+
+  function handleAnswerChange(nextAnswer: ConciergeAnswer) {
+    if (advanceTimerRef.current) return
+    setAnswer(nextAnswer)
+    setLocalError('')
+
+    const canAdvanceImmediately = (
+      question.answerType === 'single_choice' || question.answerType === 'boolean'
+    ) && !answerHasOther(question, nextAnswer)
+
+    if (!canAdvanceImmediately) return
+
+    setAdvancingAnswer(nextAnswer)
+    advanceTimerRef.current = setTimeout(() => {
+      onContinue({ answer: nextAnswer })
+    }, 420)
   }
 
   function handleShortKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -110,34 +141,41 @@ export function ConciergeQuestionRenderer({
   )
   const choiceQuestion = ['single_choice', 'multiple_choice', 'boolean', 'consent']
     .includes(question.answerType)
+  const autoAdvanceQuestion = ['single_choice', 'boolean'].includes(question.answerType)
+  const isAdvancing = advancingAnswer !== null
 
   return (
     <div data-concierge-step-id={question.id}>
-      {question.answerType !== 'consent' ? (
-        <div>
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-primary">
-            {question.required ? 'Réponse requise' : 'Réponse facultative'}
-          </p>
-          <Label htmlFor={fieldId} className="mt-3 block text-balance text-xl font-semibold leading-7">
-            {question.prompt}
-          </Label>
-        </div>
-      ) : (
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-primary">
-          Consentement explicite
-        </p>
-      )}
+      <div className="flex items-start gap-3 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
+        <ConciergeAvatar size="sm" className="mt-1" />
+        <div className="min-w-0 flex-1 rounded-lg rounded-tl-sm border border-primary/20 bg-primary/[0.06] p-4">
+          {question.answerType !== 'consent' ? (
+            <div>
+              <p className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-primary">
+                Nova · {question.required ? 'réponse requise' : 'réponse facultative'}
+              </p>
+              <Label htmlFor={fieldId} className="mt-2.5 block text-balance text-lg font-semibold leading-7 sm:text-xl">
+                {question.prompt}
+              </Label>
+            </div>
+          ) : (
+            <p className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-primary">
+              Nova · consentement explicite
+            </p>
+          )}
 
-      {question.helpText ? (
-        <p id={helpId} className="mt-3 text-sm leading-6 text-muted-foreground">
-          {question.helpText}
-        </p>
-      ) : null}
-      {question.id === 'contact.email' ? (
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          Une adresse professionnelle est préférable lorsque vous en disposez.
-        </p>
-      ) : null}
+          {question.helpText ? (
+            <p id={helpId} className="mt-3 text-sm leading-6 text-muted-foreground">
+              {question.helpText}
+            </p>
+          ) : null}
+          {question.id === 'contact.email' ? (
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              Une adresse professionnelle est préférable lorsque vous en disposez.
+            </p>
+          ) : null}
+        </div>
+      </div>
       {isSensitiveContext(question) ? (
         <div className="mt-4 flex gap-3 border border-primary/20 bg-primary/5 p-3 text-xs leading-5 text-muted-foreground">
           <ShieldAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -153,7 +191,8 @@ export function ConciergeQuestionRenderer({
             fieldId={fieldId}
             describedBy={describedBy}
             hasErrors={visibleErrors.length > 0}
-            onAnswerChange={setAnswer}
+            disabled={isAdvancing}
+            onAnswerChange={handleAnswerChange}
           />
         ) : (
           <ConciergeTextAnswer
@@ -169,6 +208,15 @@ export function ConciergeQuestionRenderer({
           />
         )}
       </div>
+
+      {isAdvancing ? (
+        <div className="mt-4 flex justify-end" role="status" aria-live="polite">
+          <div className="max-w-[85%] rounded-lg rounded-tr-sm bg-primary px-4 py-3 text-sm font-medium text-primary-foreground shadow-[0_8px_28px_rgba(8,124,255,0.18)] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1">
+            <span>{answerLabel(question, advancingAnswer)}</span>
+            <LoaderCircle aria-hidden="true" className="ml-2 inline size-3.5 animate-spin motion-reduce:animate-none" />
+          </div>
+        </div>
+      ) : null}
 
       {answerHasOther(question, answer) ? (
         <div className="mt-4">
@@ -202,10 +250,16 @@ export function ConciergeQuestionRenderer({
             Passer
           </Button>
         ) : null}
-        <Button type="button" size="lg" onClick={submit} className="ml-auto min-h-11 px-4">
-          Continuer
-          <ArrowRight aria-hidden="true" />
-        </Button>
+        {autoAdvanceQuestion && !answerHasOther(question, answer) ? (
+          <p className="ml-auto text-right text-xs leading-5 text-muted-foreground">
+            {isAdvancing ? 'Je prépare la suite…' : 'Votre choix vous fait avancer automatiquement.'}
+          </p>
+        ) : (
+          <Button type="button" size="lg" onClick={submit} disabled={isAdvancing} className="ml-auto min-h-11 px-4">
+            Continuer
+            <ArrowRight aria-hidden="true" />
+          </Button>
+        )}
       </div>
     </div>
   )

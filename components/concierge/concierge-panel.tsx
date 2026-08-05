@@ -67,7 +67,7 @@ export function ConciergePanel({
     <>
       <button
         type="button"
-        aria-label="Fermer l’Assistant Novekia"
+        aria-label="Fermer Nova"
         onClick={onClose}
         className="fixed inset-0 z-[70] bg-black/55 backdrop-blur-[2px] sm:hidden"
       />
