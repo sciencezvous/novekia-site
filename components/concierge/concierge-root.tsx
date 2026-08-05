@@ -3,11 +3,12 @@
 import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ArrowLeft, ArrowRight, BookOpen, Cpu, MessageSquare, Search } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpen, Cpu, MessageSquare, Search, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { conciergeDefinition, getConciergePageSuggestion } from '@/lib/concierge'
 import type { ConciergePath } from '@/lib/concierge/types'
 import { ConciergeErrorBoundary } from './concierge-error-boundary'
+import { ConciergeAvatar } from './concierge-avatar'
 import { ConciergeInformation } from './concierge-information'
 import { ConciergeIntentAssistance } from './concierge-intent-assistance'
 import { ConciergeLauncher } from './concierge-launcher'
@@ -67,17 +68,25 @@ function ConciergeRootContent() {
   function renderInitialChoices() {
     return (
       <div>
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-primary">Premier cadrage</p>
-        <h3 className="mt-3 text-balance text-2xl font-semibold tracking-tight">Parlons de votre objectif.</h3>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          {conciergeDefinition.openingMessage.replace('Parlons de votre objectif. ', '')}
-        </p>
+        <div className="flex items-start gap-3 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
+          <ConciergeAvatar size="sm" className="mt-1" />
+          <div className="min-w-0 flex-1 rounded-lg rounded-tl-sm border border-primary/20 bg-primary/[0.06] p-4">
+            <p className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-primary">Assistant Novekia</p>
+            <h3 className="mt-2.5 text-balance text-xl font-semibold tracking-tight">Parlons de votre objectif.</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {conciergeDefinition.openingMessage.replace('Parlons de votre objectif. ', '')}
+            </p>
+          </div>
+        </div>
         {pageSuggestion ? (
           <p className="mt-4 border-l-2 border-primary pl-3 text-xs leading-5 text-muted-foreground">
             {pageSuggestion} Cette indication ne présélectionne aucun parcours.
           </p>
         ) : null}
-        <div className="mt-6 grid gap-2">
+        <p className="mb-2 mt-6 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
+          Réponses rapides
+        </p>
+        <div className="grid gap-2">
           {conciergeDefinition.initialChoices.map((choice, index) => {
             const Icon = initialChoiceIcons[index]
             return (
@@ -85,7 +94,7 @@ function ConciergeRootContent() {
                 key={choice.id}
                 type="button"
                 onClick={() => chooseInitialPath(choice.path)}
-                className="group flex min-h-14 items-center gap-3 rounded-md border border-border bg-background/40 px-4 py-3 text-left outline-none transition-colors hover:border-primary/60 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring"
+                className="group flex min-h-14 items-center gap-3 rounded-md border border-border bg-background/40 px-4 py-3 text-left outline-none transition-[border-color,background-color,transform] hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring active:translate-y-0 motion-reduce:transition-none"
               >
                 <Icon aria-hidden="true" className="size-5 shrink-0 text-primary" />
                 <span className="flex-1 text-sm font-medium">{choice.label}</span>
@@ -98,8 +107,9 @@ function ConciergeRootContent() {
           <button
             type="button"
             onClick={() => setStaticScreen('intent_assistance')}
-            className="mt-4 min-h-11 w-full rounded-md border border-primary/25 px-4 text-sm font-medium text-primary outline-none transition-colors hover:border-primary/55 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring"
+            className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-primary/25 px-4 text-sm font-medium text-primary outline-none transition-colors hover:border-primary/55 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring"
           >
+            <Sparkles aria-hidden="true" className="size-4" />
             Décrire mon besoin en une phrase
           </button>
         ) : null}
