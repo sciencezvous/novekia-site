@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import type { ConciergeAIRouteEnvelope, ClassifyIntentResult } from '@/lib/concierge/ai-schemas'
 import type { ConciergePath } from '@/lib/concierge/types'
 import { ConciergeAIDisclosure } from './concierge-ai-disclosure'
+import { ConciergeAvatar } from './concierge-avatar'
 
 const pathLabels: Readonly<Record<ConciergePath, string>> = {
   lead_engine: 'Développer ma prospection',
@@ -136,6 +137,7 @@ export function ConciergeIntentAssistance({
           <p className="mt-2 text-right font-mono text-[0.65rem] text-muted-foreground">{description.length}/600</p>
           {status === 'requesting' ? (
             <div className="mt-4 flex items-center gap-3 rounded-md border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-muted-foreground" role="status" aria-live="polite">
+              <ConciergeAvatar size="sm" state="thinking" />
               <span className="flex gap-1" aria-hidden="true">
                 {[0, 1, 2].map((index) => (
                   <span

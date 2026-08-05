@@ -291,6 +291,25 @@
 .concierge-avatar__status {
   animation: concierge-avatar-status 2s ease-out infinite;
 }
+.concierge-avatar[data-state='listening'] .concierge-avatar__halo {
+  animation-duration: 2.1s;
+}
+.concierge-avatar[data-state='thinking'] .concierge-avatar__orbit {
+  animation-duration: 1.15s;
+}
+.concierge-avatar[data-state='thinking'] .concierge-avatar__scan > span {
+  animation-duration: 1.45s;
+}
+.concierge-avatar[data-state='thinking'] .concierge-avatar__halo {
+  animation-duration: 1.25s;
+  opacity: 0.9;
+}
+.concierge-avatar[data-state='speaking'] .concierge-avatar__media {
+  animation-duration: 1.65s;
+}
+.concierge-avatar[data-state='speaking'] .concierge-avatar__status {
+  animation-duration: 1.25s;
+}
 
 .reveal-enabled [data-reveal] {
   opacity: 0;
