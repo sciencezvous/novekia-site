@@ -18,7 +18,7 @@ export function ConciergeLauncher({
     <button
       ref={triggerRef}
       type="button"
-      aria-label={open ? 'Réduire l’Assistant Novekia' : 'Ouvrir l’Assistant Novekia'}
+      aria-label={open ? 'Réduire Nova' : 'Ouvrir Nova'}
       aria-expanded={open}
       aria-controls="novekia-concierge-panel"
       onClick={onClick}
@@ -28,7 +28,7 @@ export function ConciergeLauncher({
       )}
     >
       <ConciergeAvatar size="sm" />
-      <span className="hidden sm:inline">Assistant Novekia</span>
+      <span className="hidden sm:inline">Nova</span>
     </button>
   )
 }

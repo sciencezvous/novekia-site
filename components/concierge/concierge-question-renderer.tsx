@@ -152,7 +152,7 @@ export function ConciergeQuestionRenderer({
           {question.answerType !== 'consent' ? (
             <div>
               <p className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-primary">
-                Assistant Novekia · {question.required ? 'réponse requise' : 'réponse facultative'}
+                Nova · {question.required ? 'réponse requise' : 'réponse facultative'}
               </p>
               <Label htmlFor={fieldId} className="mt-2.5 block text-balance text-lg font-semibold leading-7 sm:text-xl">
                 {question.prompt}
@@ -160,7 +160,7 @@ export function ConciergeQuestionRenderer({
             </div>
           ) : (
             <p className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-primary">
-              Assistant Novekia · consentement explicite
+              Nova · consentement explicite
             </p>
           )}
 

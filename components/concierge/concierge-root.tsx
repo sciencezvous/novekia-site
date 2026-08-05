@@ -71,7 +71,7 @@ function ConciergeRootContent() {
         <div className="flex items-start gap-3 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
           <ConciergeAvatar size="sm" className="mt-1" />
           <div className="min-w-0 flex-1 rounded-lg rounded-tl-sm border border-primary/20 bg-primary/[0.06] p-4">
-            <p className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-primary">Assistant Novekia</p>
+            <p className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-primary">Nova</p>
             <h3 className="mt-2.5 text-balance text-xl font-semibold tracking-tight">Parlons de votre objectif.</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               {conciergeDefinition.openingMessage.replace('Parlons de votre objectif. ', '')}
