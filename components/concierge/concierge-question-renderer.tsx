@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useId, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, LoaderCircle, ShieldAlert } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ShieldAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -147,7 +147,7 @@ export function ConciergeQuestionRenderer({
   return (
     <div data-concierge-step-id={question.id}>
       <div className="flex items-start gap-3 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
-        <ConciergeAvatar size="sm" className="mt-1" />
+        <ConciergeAvatar size="sm" state="speaking" className="mt-1" />
         <div className="min-w-0 flex-1 rounded-lg rounded-tl-sm border border-primary/20 bg-primary/[0.06] p-4">
           {question.answerType !== 'consent' ? (
             <div>
@@ -210,10 +210,24 @@ export function ConciergeQuestionRenderer({
       </div>
 
       {isAdvancing ? (
-        <div className="mt-4 flex justify-end" role="status" aria-live="polite">
-          <div className="max-w-[85%] rounded-lg rounded-tr-sm bg-primary px-4 py-3 text-sm font-medium text-primary-foreground shadow-[0_8px_28px_rgba(8,124,255,0.18)] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1">
-            <span>{answerLabel(question, advancingAnswer)}</span>
-            <LoaderCircle aria-hidden="true" className="ml-2 inline size-3.5 animate-spin motion-reduce:animate-none" />
+        <div className="mt-4 space-y-3" role="status" aria-live="polite">
+          <div className="flex justify-end">
+            <div className="max-w-[85%] rounded-lg rounded-tr-sm bg-primary px-4 py-3 text-sm font-medium text-primary-foreground shadow-[0_8px_28px_rgba(8,124,255,0.18)] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1">
+              <span>{answerLabel(question, advancingAnswer)}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <ConciergeAvatar size="sm" state="thinking" />
+            <span>Nova prépare la suite</span>
+            <span className="flex gap-1" aria-hidden="true">
+              {[0, 1, 2].map((index) => (
+                <span
+                  key={index}
+                  className="size-1 animate-pulse rounded-full bg-primary motion-reduce:animate-none"
+                  style={{ animationDelay: `${index * 120}ms` }}
+                />
+              ))}
+            </span>
           </div>
         </div>
       ) : null}

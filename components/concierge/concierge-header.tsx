@@ -1,22 +1,24 @@
 'use client'
 
 import { RotateCcw, X } from 'lucide-react'
-import { ConciergeAvatar } from './concierge-avatar'
+import { ConciergeAvatar, type ConciergeAvatarState } from './concierge-avatar'
 
 type ConciergeHeaderProps = {
   onClose: () => void
   onRestart: () => void
   hasAnswers: boolean
+  avatarState?: ConciergeAvatarState
 }
 
 export function ConciergeHeader({
   onClose,
   onRestart,
   hasAnswers,
+  avatarState = 'idle',
 }: ConciergeHeaderProps) {
   return (
     <header className="flex shrink-0 items-center gap-3 border-b border-border bg-[#061225]/95 px-4 py-3 sm:px-5">
-      <ConciergeAvatar />
+      <ConciergeAvatar state={avatarState} />
       <div className="min-w-0 flex-1">
         <h2 id="novekia-concierge-title" className="truncate text-sm font-semibold">
           Nova

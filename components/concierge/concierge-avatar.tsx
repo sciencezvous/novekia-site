@@ -3,9 +3,12 @@
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
+export type ConciergeAvatarState = 'idle' | 'listening' | 'thinking' | 'speaking'
+
 type ConciergeAvatarProps = {
   className?: string
   size?: 'sm' | 'md' | 'lg'
+  state?: ConciergeAvatarState
   media?: React.ReactNode
 }
 
@@ -18,6 +21,7 @@ const sizes = {
 export function ConciergeAvatar({
   className,
   size = 'md',
+  state = 'idle',
   media,
 }: ConciergeAvatarProps) {
   return (
@@ -27,6 +31,7 @@ export function ConciergeAvatar({
         sizes[size],
         className,
       )}
+      data-state={state}
       aria-hidden="true"
     >
       <span className="concierge-avatar__halo absolute -inset-1 rounded-full" />
