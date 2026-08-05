@@ -1,15 +1,23 @@
 # Novekia
 
-> Novekia est un studio français d’ingénierie technologique spécialisé dans les systèmes numériques privés, performants et maîtrisables.
+> Novekia est un studio français organisé autour de deux pôles complémentaires : Lead Engine Studio pour la prospection et la qualification B2B, et Novekia Solutions pour les systèmes numériques privés, performants et maîtrisables.
 
 ## Site officiel
 
 - Accueil : https://novekia.fr
+- Lead Engine Studio : https://novekia.fr/lead-engine-studio
+- Novekia Solutions : https://novekia.fr/solutions
 - Expertises et solutions : https://novekia.fr/offres
 - À propos du studio : https://novekia.fr/a-propos
 - Centre de ressources : https://novekia.fr/ressources
 
-## Expertises
+## Lead Engine Studio
+
+- Prospection et qualification commerciale B2B : https://novekia.fr/lead-engine-studio
+- Le dispositif recherche et documente les entreprises pertinentes, qualifie les opportunités et prépare les approches sous supervision humaine.
+- Novekia ne déclenche aucune prospection autonome et ne remplace pas la validation du client.
+
+## Novekia Solutions
 
 - Logiciels métiers sur mesure : https://novekia.fr/logiciels-metiers-sur-mesure
 - Intelligence artificielle locale : https://novekia.fr/intelligence-artificielle-locale
@@ -27,7 +35,7 @@
 
 ## Positionnement
 
-Novekia comprend, conçoit, prototype et déploie des solutions adaptées aux contraintes métier, techniques et opérationnelles. Le studio privilégie la maîtrise des données, des modèles, des dépendances et de l’infrastructure. L’intelligence artificielle n’est utilisée que lorsqu’elle apporte une valeur vérifiable.
+Novekia relie développement commercial, compréhension métier et ingénierie technologique. Le studio privilégie des décisions documentées, la supervision humaine, la maîtrise des données, des modèles, des dépendances et de l’infrastructure. L’intelligence artificielle n’est utilisée que lorsqu’elle apporte une valeur vérifiable.
 
 ## Contact
 

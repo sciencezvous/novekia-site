@@ -50,7 +50,7 @@ export const servicePages = [
     title: 'Logiciels métiers sur mesure pour vos opérations',
     metaTitle: 'Logiciels métiers sur mesure',
     metaDescription:
-      'Novekia conçoit des logiciels métiers sur mesure, applications internes, portails professionnels, automatisations et intégrations adaptés aux processus de votre organisation.',
+      'Logiciels métiers sur mesure, applications internes, portails professionnels et intégrations adaptés aux processus de votre organisation.',
     serviceType: 'Conception et développement de logiciels métiers sur mesure',
     intro:
       'Nous transformons des processus complexes, dispersés ou encore manuels en outils professionnels clairs, maintenables et intégrés à votre environnement.',

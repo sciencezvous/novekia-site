@@ -216,10 +216,11 @@ export default function PrivacyPolicyPage() {
           Vercel, ce service ne dépose pas de cookies pour suivre les visiteurs
           et génère un identifiant temporaire anonymisé qui ne permet pas de
           suivre une personne entre différents sites ou différentes journées.
-          Après un envoi réussi, un événement de conversion non nominatif peut
-          indiquer la catégorie de besoin, la page d’entrée et une source
-          générale. Le nom, l’adresse e-mail, le téléphone et la description du
-          projet ne sont jamais transmis à Vercel Analytics.
+          Des événements non nominatifs peuvent mesurer l’ouverture, la
+          progression et l’envoi du formulaire ou du concierge. Ils peuvent
+          indiquer le parcours choisi, la page d’entrée et une source générale.
+          Le nom, l’adresse e-mail, le téléphone, les réponses et la description
+          du projet ne sont jamais transmis à Vercel Analytics.
         </p>
         <p className="text-muted-foreground">
           Pendant la session, le navigateur conserve la première page visitée,

@@ -2,11 +2,12 @@ export const siteConfig = {
   name: 'Novekia',
   tagline: 'Synergies Intelligentes',
   description:
-    'Novekia est un studio français structuré autour de deux pôles : Lead Engine Studio pour la prospection et la qualification commerciale B2B, et Novekia Solutions pour la conception de sites web, logiciels métiers, automatisations, systèmes d’intelligence artificielle locale et infrastructures de calcul.',
+    'Novekia réunit un Lead Engine Studio pour la prospection B2B et un studio de solutions numériques : IA locale, logiciels métiers et infrastructures de calcul.',
   url: 'https://novekia.fr',
   contact: {
     email: 'contact@novekia.fr',
     phone: '07 67 84 27 57',
+    phoneE164: '+33767842757',
     phoneHref: 'tel:+33767842757',
   },
   legal: {

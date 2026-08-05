@@ -22,7 +22,7 @@ import { siteConfig } from '@/lib/site-config'
 export const metadata: Metadata = {
   title: 'Lead Engine Studio — prospection B2B qualifiée',
   description:
-    'Novekia Lead Engine Studio construit et opère des dispositifs de prospection B2B personnalisés : ciblage, recherche, qualification et préparation des approches sous supervision humaine.',
+    'Prospection B2B sur mesure : ciblage, recherche d’entreprises, qualification et préparation des approches sous supervision humaine.',
   alternates: { canonical: '/lead-engine-studio' },
   openGraph: {
     type: 'website',

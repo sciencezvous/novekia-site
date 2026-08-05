@@ -1,7 +1,11 @@
 import type { Metadata } from 'next'
 import { CheckSquare2, Printer } from 'lucide-react'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
-import { JsonLd } from '@/components/brand/json-ld'
+import {
+  founderIdentityJsonLd,
+  JsonLd,
+  organizationIdentityJsonLd,
+} from '@/components/brand/json-ld'
 import { TechnicalLabel } from '@/components/brand/technical-label'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
@@ -39,8 +43,8 @@ export default function LocalAiChecklistPage() {
           description: metadata.description,
           inLanguage: 'fr-FR',
           url,
-          author: { '@id': `${siteConfig.url}/#andy-legrand` },
-          publisher: { '@id': `${siteConfig.url}/#organization` },
+          author: founderIdentityJsonLd,
+          publisher: organizationIdentityJsonLd,
           datePublished: '2026-07-24',
           dateModified: '2026-07-24',
           encoding: {
