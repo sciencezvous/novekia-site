@@ -26,7 +26,7 @@ export function TestimonialsSection() {
       aria-labelledby="testimonials-title"
     >
       <SectionHeader
-        index="04"
+        index="05"
         eyebrow="Retours clients"
         title={
           <span id="testimonials-title">

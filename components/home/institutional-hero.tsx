@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { PrimaryButton } from '@/components/brand/primary-button'
+import { ConciergeTrigger } from '@/components/concierge/concierge-trigger'
 import { SecondaryButton } from '@/components/brand/secondary-button'
 import { TechnicalLabel } from '@/components/brand/technical-label'
 import { Section } from '@/components/layout/section'
@@ -59,15 +59,14 @@ export function InstitutionalHero() {
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <PrimaryButton
-              href="/lead-engine-studio"
-              withArrow
+            <ConciergeTrigger
+              source="hero"
               className="w-full sm:w-auto"
             >
-              Découvrir Lead Engine Studio
-            </PrimaryButton>
-            <SecondaryButton href="/solutions" className="w-full sm:w-auto">
-              Explorer Novekia Solutions
+              Qualifier mon besoin
+            </ConciergeTrigger>
+            <SecondaryButton href="#poles" className="w-full sm:w-auto">
+              Voir les deux expertises
             </SecondaryButton>
           </div>
 

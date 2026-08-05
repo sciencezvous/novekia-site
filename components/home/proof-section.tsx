@@ -49,7 +49,7 @@ export function ProofSection() {
       <div aria-hidden="true" className="technical-grid-pattern absolute inset-0 opacity-15" />
       <div className="relative">
         <SectionHeader
-          index="02"
+          index="03"
           eyebrow="Preuves vérifiables"
           title={
             <span id="proof-title">
