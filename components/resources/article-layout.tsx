@@ -2,7 +2,11 @@ import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { ArrowRight, CalendarDays, Clock3 } from 'lucide-react'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
-import { JsonLd } from '@/components/brand/json-ld'
+import {
+  founderIdentityJsonLd,
+  JsonLd,
+  organizationIdentityJsonLd,
+} from '@/components/brand/json-ld'
 import { PrimaryButton } from '@/components/brand/primary-button'
 import { TechnicalLabel } from '@/components/brand/technical-label'
 import { SiteFooter } from '@/components/layout/site-footer'
@@ -45,9 +49,15 @@ export function ArticleLayout({
           dateModified: article.modifiedAt,
           inLanguage: 'fr-FR',
           mainEntityOfPage: url,
-          author: { '@id': `${siteConfig.url}/#andy-legrand` },
-          publisher: { '@id': `${siteConfig.url}/#organization` },
-          image: `${siteConfig.url}/og.png`,
+          author: founderIdentityJsonLd,
+          publisher: organizationIdentityJsonLd,
+          image: {
+            '@type': 'ImageObject',
+            url: `${siteConfig.url}/og.png`,
+            width: 1200,
+            height: 630,
+            caption: 'Infrastructure locale et intelligence souveraine — Novekia',
+          },
         }}
       />
       <JsonLd
@@ -102,7 +112,13 @@ export function ArticleLayout({
               {article.description}
             </p>
             <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
-              <span>Par Andy Legrand</span>
+              <Link
+                href="/a-propos"
+                rel="author"
+                className="transition-colors hover:text-foreground"
+              >
+                Par Andy Legrand
+              </Link>
               <span className="flex items-center gap-2">
                 <CalendarDays aria-hidden="true" className="size-3.5" />
                 {formatArticleDate(article.publishedAt)}

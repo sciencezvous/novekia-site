@@ -4,7 +4,6 @@ import { servicePages } from '@/lib/service-pages'
 import { siteConfig } from '@/lib/site-config'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date()
   const routes = [
     { path: '', priority: 1, changeFrequency: 'monthly' as const },
     { path: '/lead-engine-studio', priority: 0.95, changeFrequency: 'monthly' as const },
@@ -16,11 +15,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       path: `/ressources/${article.slug}`,
       priority: 0.75,
       changeFrequency: 'monthly' as const,
+      lastModified: article.modifiedAt,
     })),
     {
       path: '/ressources/checklist-cadrage-ia-locale',
       priority: 0.7,
       changeFrequency: 'monthly' as const,
+      lastModified: '2026-07-24',
     },
     ...servicePages.map((service) => ({
       path: `/${service.slug}`,
@@ -34,7 +35,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...routes.map((route) => ({
       url: `${siteConfig.url}${route.path}`,
-      lastModified: now,
+      ...('lastModified' in route
+        ? { lastModified: route.lastModified }
+        : {}),
       changeFrequency: route.changeFrequency,
       priority: route.priority,
     })),

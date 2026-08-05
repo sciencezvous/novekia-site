@@ -8,6 +8,7 @@ import {
 } from './analytics'
 import { CONCIERGE_EVENT_NAME } from './config'
 import type { ConciergePath } from './types'
+import { trackConciergeFunnelEvent } from './analytics-client'
 
 type EmitConciergeEventInput = {
   eventName: ConciergeAnalyticsEventName
@@ -53,5 +54,6 @@ export function emitConciergeEvent(input: EmitConciergeEventInput): boolean {
       detail: event,
     }),
   )
+  trackConciergeFunnelEvent(event)
   return true
 }

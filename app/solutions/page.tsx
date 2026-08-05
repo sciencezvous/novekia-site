@@ -22,7 +22,7 @@ import { siteConfig } from '@/lib/site-config'
 export const metadata: Metadata = {
   title: 'Novekia Solutions — conception et intégration numérique',
   description:
-    'Novekia Solutions conçoit des sites web, logiciels métiers, applications, automatisations, systèmes d’intelligence artificielle locale et infrastructures de calcul adaptés aux usages réels.',
+    'Sites web, logiciels métiers, automatisations, IA locale et infrastructures de calcul conçus selon vos usages et contraintes réels.',
   alternates: { canonical: '/solutions' },
   openGraph: {
     type: 'website',

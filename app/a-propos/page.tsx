@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { Check, Quote } from 'lucide-react'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
-import { JsonLd } from '@/components/brand/json-ld'
+import { founderIdentityJsonLd, JsonLd } from '@/components/brand/json-ld'
 import { PrimaryButton } from '@/components/brand/primary-button'
 import { SecondaryButton } from '@/components/brand/secondary-button'
 import { TechnicalLabel } from '@/components/brand/technical-label'
@@ -71,15 +71,7 @@ export default function AboutPage() {
           description: metadata.description,
           inLanguage: 'fr-FR',
           isPartOf: { '@id': `${siteConfig.url}/#website` },
-          mainEntity: {
-            '@type': 'Person',
-            '@id': `${siteConfig.url}/#andy-legrand`,
-            name: 'Andy Legrand',
-            url: aboutUrl,
-            jobTitle: 'Fondateur',
-            image: `${siteConfig.url}/andy-legrand-novekia-v3.png`,
-            worksFor: { '@id': `${siteConfig.url}/#organization` },
-          },
+          mainEntity: founderIdentityJsonLd,
           about: { '@id': `${siteConfig.url}/#organization` },
         }}
       />

@@ -13,19 +13,46 @@ export function JsonLd({ data }: JsonLdProps) {
   )
 }
 
-export const organizationJsonLd: Record<string, unknown> = {
-  '@context': 'https://schema.org',
-  '@type': ['Organization', 'ProfessionalService'],
+export const organizationIdentityJsonLd: Record<string, unknown> = {
+  '@type': 'Organization',
   '@id': `${siteConfig.url}/#organization`,
   name: siteConfig.name,
+  url: siteConfig.url,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${siteConfig.url}/novekia-icon.svg`,
+  },
+}
+
+export const founderIdentityJsonLd: Record<string, unknown> = {
+  '@type': 'Person',
+  '@id': `${siteConfig.url}/#andy-legrand`,
+  name: 'Andy Legrand',
+  url: `${siteConfig.url}/a-propos`,
+  jobTitle: 'Fondateur',
+  image: `${siteConfig.url}/andy-legrand-novekia-v3.png`,
+  worksFor: {
+    '@id': `${siteConfig.url}/#organization`,
+  },
+}
+
+export const organizationJsonLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  ...organizationIdentityJsonLd,
+  '@type': ['Organization', 'ProfessionalService'],
   legalName: 'Andy Legrand — Novekia',
   slogan: siteConfig.tagline,
   description: siteConfig.description,
-  url: siteConfig.url,
-  logo: `${siteConfig.url}/novekia-icon.svg`,
   image: `${siteConfig.url}/og.png`,
   email: siteConfig.contact.email,
-  telephone: siteConfig.contact.phone,
+  telephone: siteConfig.contact.phoneE164,
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    email: siteConfig.contact.email,
+    telephone: siteConfig.contact.phoneE164,
+    availableLanguage: ['fr'],
+  },
   address: {
     '@type': 'PostalAddress',
     streetAddress: siteConfig.legal.streetAddress,
@@ -94,15 +121,7 @@ export const organizationJsonLd: Record<string, unknown> = {
 
 export const founderJsonLd: Record<string, unknown> = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  '@id': `${siteConfig.url}/#andy-legrand`,
-  name: 'Andy Legrand',
-  url: `${siteConfig.url}/a-propos`,
-  jobTitle: 'Fondateur',
-  image: `${siteConfig.url}/andy-legrand-novekia-v3.png`,
-  worksFor: {
-    '@id': `${siteConfig.url}/#organization`,
-  },
+  ...founderIdentityJsonLd,
   knowsAbout: [
     'Ingénierie logicielle',
     'Intelligence artificielle locale',
