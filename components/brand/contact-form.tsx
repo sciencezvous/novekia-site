@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { track } from '@vercel/analytics'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -11,6 +11,7 @@ import {
   getStoredAttribution,
   type LeadAttribution,
 } from '@/lib/lead-attribution'
+import { contactNeedOptions, isContactNeed } from '@/lib/contact-needs'
 
 type ContactFormProps = {
   className?: string
@@ -19,18 +20,6 @@ type ContactFormProps = {
 type FieldName = 'name' | 'company' | 'email' | 'phone' | 'need' | 'budget' | 'message' | 'consent'
 type FormErrors = Partial<Record<FieldName, string>>
 type SubmissionStatus = 'idle' | 'loading' | 'success' | 'error'
-
-const needOptions = [
-  'Prospection B2B et qualification commerciale',
-  'Logiciel sur mesure',
-  'Intelligence artificielle locale',
-  'Station ou serveur IA',
-  'Infrastructure de calcul',
-  'Application web',
-  'SEO et GEO',
-  'Audit technique',
-  'Autre',
-]
 
 const budgetOptions = [
   'Non défini',
@@ -142,10 +131,19 @@ function trackFormProgress(
 
 export function ContactForm({ className }: ContactFormProps) {
   const hasTrackedStart = useRef(false)
+  const needSelectRef = useRef<HTMLSelectElement>(null)
   const [errors, setErrors] = useState<FormErrors>({})
   const [status, setStatus] = useState<SubmissionStatus>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+
+  useEffect(() => {
+    const requestedNeed = new URLSearchParams(window.location.search).get('need')
+
+    if (requestedNeed && isContactNeed(requestedNeed) && needSelectRef.current) {
+      needSelectRef.current.value = requestedNeed
+    }
+  }, [])
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -249,9 +247,9 @@ export function ContactForm({ className }: ContactFormProps) {
       <div className="grid gap-5 sm:grid-cols-2">
         <div className={fieldClassName}>
           <Label htmlFor="contact-need">Type de besoin <span aria-hidden="true">*</span></Label>
-          <select id="contact-need" name="need" defaultValue="" className={selectClassName} aria-invalid={Boolean(errors.need)} aria-describedby={errors.need ? 'contact-need-error' : undefined}>
+          <select ref={needSelectRef} id="contact-need" name="need" defaultValue="" className={selectClassName} aria-invalid={Boolean(errors.need)} aria-describedby={errors.need ? 'contact-need-error' : undefined}>
             <option value="" disabled>Sélectionnez un besoin</option>
-            {needOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+            {contactNeedOptions.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
           <FieldError id="contact-need-error" message={errors.need} />
         </div>

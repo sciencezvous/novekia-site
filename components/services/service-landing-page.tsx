@@ -19,9 +19,10 @@ type ServiceLandingPageProps = {
 
 export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
   const url = `${siteConfig.url}/${service.slug}`
+  const contactHref = `/?need=${encodeURIComponent(service.contactNeed)}#contact`
   const hasDecisionGuide = Boolean(service.decisionGuide)
-  const faqIndex = hasDecisionGuide ? '07' : '06'
-  const relatedIndex = hasDecisionGuide ? '08' : '07'
+  const faqIndex = hasDecisionGuide ? '08' : '07'
+  const relatedIndex = hasDecisionGuide ? '09' : '08'
   const relatedServices = servicePages.filter(
     (candidate) => candidate.slug !== service.slug,
   )
@@ -121,7 +122,7 @@ export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
                   {service.intro}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <PrimaryButton href="/#contact" withArrow>
+                  <PrimaryButton href={contactHref} withArrow>
                     Parler de votre projet
                   </PrimaryButton>
                   <SecondaryButton href="/offres">
@@ -175,7 +176,77 @@ export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
 
         <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="mx-auto max-w-7xl">
-            <TechnicalLabel index="03">Livrables</TechnicalLabel>
+            <TechnicalLabel index="03">Critères de décision</TechnicalLabel>
+            <div className="mt-5 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+              <div>
+                <h2 className="max-w-xl text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
+                  Vérifiez l’adéquation avant d’engager le projet.
+                </h2>
+                <p className="mt-5 max-w-lg leading-relaxed text-muted-foreground">
+                  Ces repères permettent d’identifier rapidement si cette
+                  expertise correspond à votre situation et ce qu’il faut
+                  clarifier pendant le premier échange.
+                </p>
+              </div>
+
+              <div className="grid gap-px bg-border md:grid-cols-2">
+                <article className="bg-background p-6 sm:p-8">
+                  <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">
+                    Cette expertise est pertinente si
+                  </p>
+                  <ul className="mt-6 space-y-5">
+                    {service.idealFor.map((item) => (
+                      <li
+                        key={item}
+                        className="flex gap-3 text-sm leading-7 text-foreground/90"
+                      >
+                        <Check
+                          aria-hidden="true"
+                          className="mt-1 size-4 shrink-0 text-primary"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+
+                <article className="bg-accent/20 p-6 sm:p-8">
+                  <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">
+                    À clarifier avant de démarrer
+                  </p>
+                  <ul className="mt-6 space-y-5">
+                    {service.prerequisites.map((item) => (
+                      <li
+                        key={item}
+                        className="flex gap-3 text-sm leading-7 text-foreground/90"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="mt-2.5 size-1.5 shrink-0 bg-primary"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-col gap-4 border border-border bg-background/60 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+              <p className="text-sm leading-6 text-muted-foreground">
+                Vous n’avez pas encore toutes les réponses&nbsp;? Le premier
+                échange sert précisément à cadrer ces points, sans engagement.
+              </p>
+              <PrimaryButton href={contactHref} withArrow className="shrink-0">
+                Vérifier mon besoin
+              </PrimaryButton>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
+          <div className="mx-auto max-w-7xl">
+            <TechnicalLabel index="04">Livrables</TechnicalLabel>
             <div className="mt-5 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
               <h2 className="max-w-2xl text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
                 Une intervention concrète et transmissible.
@@ -219,7 +290,7 @@ export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
           />
           <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:gap-20">
             <div>
-              <TechnicalLabel index="04">Cas d’usage</TechnicalLabel>
+              <TechnicalLabel index="05">Cas d’usage</TechnicalLabel>
               <h2 className="mt-5 text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
                 Des usages identifiables, pas une promesse abstraite.
               </h2>
@@ -240,7 +311,7 @@ export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
             </div>
 
             <div>
-              <TechnicalLabel index="05">Méthode</TechnicalLabel>
+              <TechnicalLabel index="06">Méthode</TechnicalLabel>
               <ol className="mt-8 grid gap-px bg-border sm:grid-cols-2">
                 {service.process.map((step, index) => (
                   <li key={step.title} className="bg-background p-6">
@@ -263,7 +334,7 @@ export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
         {service.decisionGuide ? (
           <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
             <div className="mx-auto max-w-7xl">
-              <TechnicalLabel index="06">Guide de décision</TechnicalLabel>
+              <TechnicalLabel index="07">Guide de décision</TechnicalLabel>
               <div className="mt-5 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
                 <h2 className="max-w-xl text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
                   Choisir une architecture à partir du risque et de l’usage.
@@ -477,7 +548,7 @@ export function ServiceLandingPage({ service }: ServiceLandingPageProps) {
                 </h2>
               </div>
               <PrimaryButton
-                href="/#contact"
+                href={contactHref}
                 withArrow
                 className="relative mt-7 shrink-0 lg:mt-0"
               >
