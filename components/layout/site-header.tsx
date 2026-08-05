@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import { Logo } from '@/components/brand/logo'
-import { PrimaryButton } from '@/components/brand/primary-button'
+import { ConciergeTrigger } from '@/components/concierge/concierge-trigger'
 import { MobileNavigation } from './mobile-navigation'
 import { Container } from './container'
 import { mainNavigation } from '@/lib/site-config'
@@ -82,9 +82,9 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <PrimaryButton href="/#contact" className="hidden lg:inline-flex">
-              Parler de votre projet
-            </PrimaryButton>
+            <ConciergeTrigger source="header" className="hidden lg:inline-flex">
+              Démarrer le diagnostic
+            </ConciergeTrigger>
             <MobileNavigation />
           </div>
         </div>

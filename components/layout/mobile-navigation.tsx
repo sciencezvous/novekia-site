@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { PrimaryButton } from '@/components/brand/primary-button'
+import { ConciergeTrigger } from '@/components/concierge/concierge-trigger'
 import { mainNavigation } from '@/lib/site-config'
 import { cn } from '@/lib/utils'
 
@@ -154,9 +154,13 @@ export function MobileNavigation() {
               )
             })}
           </ul>
-          <PrimaryButton href="/#contact" className="mt-5 w-full" onClick={navigateAndClose}>
-            Parler de votre projet
-          </PrimaryButton>
+          <ConciergeTrigger
+            source="mobile_navigation"
+            className="mt-5 w-full"
+            onTrigger={navigateAndClose}
+          >
+            Démarrer le diagnostic
+          </ConciergeTrigger>
         </nav>
       </div>
     </div>

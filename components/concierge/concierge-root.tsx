@@ -1,11 +1,12 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ArrowLeft, ArrowRight, BookOpen, Cpu, MessageSquare, Search, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { conciergeDefinition, getConciergePageSuggestion } from '@/lib/concierge'
+import { CONCIERGE_OPEN_REQUEST_EVENT } from '@/lib/concierge/config'
 import type { ConciergePath } from '@/lib/concierge/types'
 import { ConciergeErrorBoundary } from './concierge-error-boundary'
 import { ConciergeAvatar } from './concierge-avatar'
@@ -31,6 +32,17 @@ function ConciergeRootContent() {
   const concierge = useConciergeSession()
   const hasAnswers = Object.keys(concierge.runtime.session.answers).length > 0
   const pageSuggestion = getConciergePageSuggestion(pathname)
+
+  useEffect(() => {
+    function handleOpenRequest() {
+      setOpen(true)
+    }
+
+    window.addEventListener(CONCIERGE_OPEN_REQUEST_EVENT, handleOpenRequest)
+    return () => {
+      window.removeEventListener(CONCIERGE_OPEN_REQUEST_EVENT, handleOpenRequest)
+    }
+  }, [])
 
   function openPanel() {
     setOpen(true)
