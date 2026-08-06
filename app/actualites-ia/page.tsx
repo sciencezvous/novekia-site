@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { BookOpenCheck, Newspaper, SearchCheck } from 'lucide-react'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
 import { JsonLd } from '@/components/brand/json-ld'
 import { TechnicalLabel } from '@/components/brand/technical-label'
@@ -24,27 +23,6 @@ export const metadata: Metadata = {
     images: ['/og.png'],
   },
 }
-
-const editorialPrinciples = [
-  {
-    title: 'Source primaire',
-    description:
-      'Chaque actualité renvoie à l’annonce, la documentation ou la publication d’origine.',
-    icon: SearchCheck,
-  },
-  {
-    title: 'Analyse Novekia',
-    description:
-      'Nous distinguons les faits publiés, notre interprétation et les points restant à vérifier.',
-    icon: BookOpenCheck,
-  },
-  {
-    title: 'Décision métier',
-    description:
-      'Chaque article traduit la nouveauté en critères d’architecture, d’exploitation et de risque.',
-    icon: Newspaper,
-  },
-] as const
 
 export default function AiNewsPage() {
   const url = `${siteConfig.url}/actualites-ia`
@@ -98,30 +76,6 @@ export default function AiNewsPage() {
                 apporte une analyse Novekia.
               </p>
             </div>
-          </div>
-        </section>
-
-        <section className="border-b border-border px-5 py-14 sm:px-6 md:px-8 md:py-20">
-          <div className="mx-auto grid max-w-7xl gap-px bg-border md:grid-cols-3">
-            {editorialPrinciples.map((principle) => {
-              const Icon = principle.icon
-
-              return (
-                <article key={principle.title} className="bg-background p-6 sm:p-8">
-                  <Icon
-                    aria-hidden="true"
-                    className="size-6 text-primary"
-                    strokeWidth={1.5}
-                  />
-                  <h2 className="mt-6 text-lg font-semibold">
-                    {principle.title}
-                  </h2>
-                  <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                    {principle.description}
-                  </p>
-                </article>
-              )
-            })}
           </div>
         </section>
 
