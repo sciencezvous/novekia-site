@@ -69,7 +69,27 @@ export const mainNavigation: NavItem[] = [
   },
   { label: 'Méthode', href: '/#methode' },
   { label: 'À propos', href: '/a-propos' },
-  { label: 'Ressources', href: '/ressources' },
+  {
+    label: 'Ressources',
+    href: '/ressources',
+    children: [
+      {
+        label: 'Centre de ressources',
+        href: '/ressources',
+        description: 'Guides, preuves et outils de cadrage.',
+      },
+      {
+        label: 'Actualités & analyses IA',
+        href: '/actualites-ia',
+        description: 'Les nouveautés IA traduites en décisions utiles.',
+      },
+      {
+        label: 'IA locale ou API cloud',
+        href: '/ressources/ia-locale-vs-api-cloud',
+        description: 'Comparer les architectures et leurs contraintes.',
+      },
+    ],
+  },
   { label: 'Contact', href: '/#contact' },
 ]
 
@@ -105,6 +125,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     title: 'Ressources',
     links: [
       { label: 'Centre de ressources', href: '/ressources' },
+      { label: 'Actualités & analyses IA', href: '/actualites-ia' },
       { label: 'Démonstrateur RAG local', href: '/ressources/demonstrateur-rag-local' },
       { label: 'IA locale ou API cloud', href: '/ressources/ia-locale-vs-api-cloud' },
       { label: 'RAG local en entreprise', href: '/ressources/rag-local-entreprise' },

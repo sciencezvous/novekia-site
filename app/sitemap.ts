@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { aiNewsArticles } from '@/lib/ai-news'
 import { resourceArticles } from '@/lib/resources'
 import { servicePages } from '@/lib/service-pages'
 import { siteConfig } from '@/lib/site-config'
@@ -11,6 +12,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/offres', priority: 0.9, changeFrequency: 'monthly' as const },
     { path: '/a-propos', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/ressources', priority: 0.8, changeFrequency: 'weekly' as const },
+    {
+      path: '/actualites-ia',
+      priority: 0.85,
+      changeFrequency: 'weekly' as const,
+    },
+    ...aiNewsArticles.map((article) => ({
+      path: `/actualites-ia/${article.slug}`,
+      priority: 0.8,
+      changeFrequency: 'monthly' as const,
+      lastModified: article.modifiedAt,
+    })),
     ...resourceArticles.map((article) => ({
       path: `/ressources/${article.slug}`,
       priority: 0.75,

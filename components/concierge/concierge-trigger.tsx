@@ -5,7 +5,12 @@ import { PrimaryButton } from '@/components/brand/primary-button'
 import { CONCIERGE_OPEN_REQUEST_EVENT } from '@/lib/concierge/config'
 
 type ConciergeTriggerProps = {
-  source: 'hero' | 'header' | 'mobile_navigation' | 'diagnostic_section'
+  source:
+    | 'hero'
+    | 'header'
+    | 'mobile_navigation'
+    | 'diagnostic_section'
+    | 'news_article'
   children: React.ReactNode
   className?: string
   withArrow?: boolean
