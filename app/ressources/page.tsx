@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
   ArrowRight,
+  Calculator,
   Check,
   FileCheck2,
   FlaskConical,
@@ -70,11 +71,18 @@ export default function ResourcesPage() {
           inLanguage: 'fr-FR',
           isPartOf: { '@id': `${siteConfig.url}/#website` },
           about: { '@id': `${siteConfig.url}/#organization` },
-          hasPart: resourceArticles.map((article) => ({
-            '@type': 'Article',
-            headline: article.title,
-            url: `${url}/${article.slug}`,
-          })),
+          hasPart: [
+            ...resourceArticles.map((article) => ({
+              '@type': 'Article',
+              headline: article.title,
+              url: `${url}/${article.slug}`,
+            })),
+            {
+              '@type': 'WebApplication',
+              name: 'Calculateur de dimensionnement IA local',
+              url: `${siteConfig.url}/outils/dimensionnement-ia`,
+            },
+          ],
         }}
       />
       <SiteHeader />
@@ -107,10 +115,50 @@ export default function ResourcesPage() {
           </div>
         </section>
 
+        <section className="relative overflow-hidden border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
+          <div aria-hidden="true" className="technical-grid-pattern absolute inset-0 opacity-15" />
+          <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-20">
+            <div>
+              <TechnicalLabel index="02">Novekia Proof Lab</TechnicalLabel>
+              <Calculator
+                aria-hidden="true"
+                className="mt-8 size-12 text-primary"
+                strokeWidth={1.4}
+              />
+              <h2 className="mt-5 text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
+                Dimensionnez une IA locale avant d’acheter.
+              </h2>
+              <p className="mt-5 leading-7 text-muted-foreground">
+                Modèle, quantification, contexte, sessions simultanées et corpus :
+                obtenez une enveloppe prudente de VRAM, RAM, stockage et architecture.
+              </p>
+              <PrimaryButton href="/outils/dimensionnement-ia" withArrow className="mt-7">
+                Ouvrir le calculateur
+              </PrimaryButton>
+            </div>
+
+            <div className="novekia-surface grid gap-px bg-border sm:grid-cols-2">
+              {[
+                ['VRAM', 'Fourchette de travail'],
+                ['RAM', 'Réserve système'],
+                ['Stockage', 'Corpus et versions'],
+                ['Architecture', 'Classe d’infrastructure'],
+              ].map(([label, detail]) => (
+                <div key={label} className="bg-[#030b19] p-6 sm:p-8">
+                  <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-primary">
+                    {label}
+                  </p>
+                  <p className="mt-3 text-sm font-semibold">{detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-20">
             <div>
-              <TechnicalLabel index="02">Actualités & analyses IA</TechnicalLabel>
+              <TechnicalLabel index="03">Actualités & analyses IA</TechnicalLabel>
               <Newspaper
                 aria-hidden="true"
                 className="mt-8 size-12 text-primary"
@@ -154,7 +202,7 @@ export default function ResourcesPage() {
 
         <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="mx-auto max-w-7xl">
-            <TechnicalLabel index="03">Guides prioritaires</TechnicalLabel>
+            <TechnicalLabel index="04">Guides prioritaires</TechnicalLabel>
             <div className="mt-8 grid gap-px bg-border md:grid-cols-2">
               {resourceArticles.map((article) => (
                 <div key={article.slug} className="relative">
@@ -168,7 +216,7 @@ export default function ResourcesPage() {
         <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
             <div>
-              <TechnicalLabel index="04">Preuve publiée</TechnicalLabel>
+              <TechnicalLabel index="05">Preuve publiée</TechnicalLabel>
               <ShieldCheck
                 aria-hidden="true"
                 className="mt-8 size-12 text-primary"
@@ -230,7 +278,7 @@ export default function ResourcesPage() {
           />
           <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-center lg:gap-20">
             <div>
-              <TechnicalLabel index="05">Outil de cadrage</TechnicalLabel>
+              <TechnicalLabel index="06">Outil de cadrage</TechnicalLabel>
               <FileCheck2
                 aria-hidden="true"
                 className="mt-8 size-12 text-primary"
@@ -286,7 +334,7 @@ export default function ResourcesPage() {
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
               <div>
-                <TechnicalLabel index="06">Méthode de preuve</TechnicalLabel>
+                <TechnicalLabel index="07">Méthode de preuve</TechnicalLabel>
                 <FlaskConical
                   aria-hidden="true"
                   className="mt-8 size-12 text-primary"

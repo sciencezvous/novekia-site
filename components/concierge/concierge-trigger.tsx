@@ -11,6 +11,7 @@ type ConciergeTriggerProps = {
     | 'mobile_navigation'
     | 'diagnostic_section'
     | 'news_article'
+    | 'sizing_tool'
   children: React.ReactNode
   className?: string
   withArrow?: boolean
