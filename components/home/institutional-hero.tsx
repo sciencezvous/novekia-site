@@ -16,31 +16,39 @@ export function InstitutionalHero() {
     >
       <div
         aria-hidden="true"
-        className="technical-grid-pattern pointer-events-none absolute inset-0 opacity-30 [mask-image:linear-gradient(to_bottom,black,transparent_92%)]"
+        className="technical-grid-pattern pointer-events-none absolute inset-0 opacity-25 [mask-image:linear-gradient(to_bottom,black,transparent_92%)]"
       />
       <div aria-hidden="true" className="novekia-glow -left-48 top-16" />
+      <div aria-hidden="true" className="hero-photon-field absolute inset-0" />
 
-      <div className="absolute inset-y-0 right-0 hidden w-[49%] lg:block">
+      <div className="absolute inset-y-0 right-0 hidden w-[52%] lg:block">
         <Image
           src="/hero-infrastructure.jpg"
           alt="Infrastructure technologique Novekia éclairée en bleu"
           fill
           priority
-          sizes="49vw"
-          className="object-cover object-center opacity-70 saturate-75"
+          sizes="52vw"
+          className="object-cover object-center opacity-80 saturate-[0.82] contrast-110"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,#020817_0%,rgba(2,8,23,0.72)_28%,rgba(2,8,23,0.1)_76%),linear-gradient(180deg,rgba(2,8,23,0.08),#020817_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,#020817_0%,rgba(2,8,23,0.74)_30%,rgba(2,8,23,0.08)_78%),linear-gradient(180deg,rgba(2,8,23,0.06),#020817_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_38%,rgba(8,124,255,0.22),transparent_30%)]" />
+
+        <div className="absolute right-8 top-8 z-10 flex items-center gap-3 border border-white/10 bg-[#020817]/70 px-4 py-3 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-[#b7c8e4] backdrop-blur-md xl:right-12 xl:top-12">
+          <span className="system-status-dot size-1.5 rounded-full bg-primary" />
+          Systèmes sous contrôle
+          <span className="text-primary">SYS.ACTIF</span>
+        </div>
       </div>
 
       <div className="relative mx-auto grid min-h-[calc(100svh-4.5rem)] w-full max-w-7xl items-center gap-10 px-5 py-10 sm:px-6 sm:py-12 md:px-8 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[minmax(0,1.16fr)_minmax(23rem,0.84fr)] lg:gap-8 lg:py-10">
-        <div className="max-w-4xl">
+        <div className="relative z-10 max-w-4xl">
           <TechnicalLabel index="00">
             Novekia — studio commercial et technologique
           </TechnicalLabel>
 
           <h1
             id="hero-title"
-            className="mt-6 text-balance text-[clamp(3rem,6vw,4.75rem)] font-semibold leading-[0.9] tracking-[-0.06em]"
+            className="mt-6 text-balance text-[clamp(3rem,6.4vw,5.4rem)] font-semibold leading-[0.88] tracking-[-0.065em]"
           >
             Détecter les
             <br />
@@ -77,7 +85,7 @@ export function InstitutionalHero() {
           </p>
         </div>
 
-        <FounderVisionBubble className="lg:translate-y-8" />
+        <FounderVisionBubble className="relative z-20 lg:translate-x-3 lg:translate-y-6" />
       </div>
     </Section>
   )

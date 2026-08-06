@@ -224,6 +224,24 @@
   0%, 100% { box-shadow: 0 0 0 0 rgba(8, 124, 255, 0.42); }
   50% { box-shadow: 0 0 0 5px rgba(8, 124, 255, 0); }
 }
+@keyframes photon-drift {
+  0%, 100% { transform: translate3d(-3%, 0, 0); opacity: 0.32; }
+  50% { transform: translate3d(5%, -2%, 0); opacity: 0.68; }
+}
+@keyframes system-status-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(8, 124, 255, 0.55); }
+  50% { box-shadow: 0 0 0 7px rgba(8, 124, 255, 0); }
+}
+@keyframes architecture-flow-pulse {
+  0% { transform: scaleX(0); opacity: 0; }
+  18% { opacity: 1; }
+  78% { opacity: 0.72; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+@keyframes architecture-radar-breathe {
+  0%, 100% { opacity: 0.24; transform: scale(0.96); }
+  50% { opacity: 0.5; transform: scale(1.04); }
+}
 
 @layer utilities {
   /* Motif de lignes techniques discret (à utiliser avec parcimonie) */
@@ -272,6 +290,32 @@
   .scan-sweep:focus-within::after {
     transform: translateX(620%);
   }
+  .hero-photon-field {
+    pointer-events: none;
+    opacity: 0.72;
+    background:
+      linear-gradient(112deg, transparent 56%, rgba(8, 124, 255, 0.2) 56.1%, transparent 56.35%),
+      linear-gradient(112deg, transparent 67%, rgba(82, 184, 255, 0.14) 67.1%, transparent 67.3%),
+      radial-gradient(ellipse at 76% 38%, rgba(8, 124, 255, 0.2), transparent 24%);
+    animation: photon-drift 14s ease-in-out infinite;
+  }
+  .system-status-dot {
+    animation: system-status-pulse 2.4s ease-out infinite;
+  }
+  .architecture-radar {
+    border: 1px solid rgba(82, 184, 255, 0.12);
+    background:
+      repeating-radial-gradient(circle, transparent 0 3.8rem, rgba(82, 184, 255, 0.08) 3.85rem 3.9rem),
+      conic-gradient(from 210deg, transparent 0deg, rgba(8, 124, 255, 0.18) 22deg, transparent 52deg);
+    animation: architecture-radar-breathe 8s ease-in-out infinite;
+  }
+  .architecture-node-light {
+    transform: scaleX(0);
+    animation: architecture-flow-pulse 4.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  .architecture-node:nth-child(2) .architecture-node-light { animation-delay: 0.7s; }
+  .architecture-node:nth-child(3) .architecture-node-light { animation-delay: 1.4s; }
+  .architecture-node:nth-child(4) .architecture-node-light { animation-delay: 2.1s; }
 }
 
 .concierge-avatar__halo {
@@ -325,6 +369,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   .novekia-glow {
+    animation: none;
+  }
+  .hero-photon-field,
+  .system-status-dot,
+  .architecture-radar,
+  .architecture-node-light {
     animation: none;
   }
   .scan-sweep::after {
