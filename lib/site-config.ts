@@ -84,6 +84,11 @@ export const mainNavigation: NavItem[] = [
         description: 'Les nouveautés IA traduites en décisions utiles.',
       },
       {
+        label: 'Calculateur IA local',
+        href: '/outils/dimensionnement-ia',
+        description: 'Estimer VRAM, RAM, stockage et architecture.',
+      },
+      {
         label: 'IA locale ou API cloud',
         href: '/ressources/ia-locale-vs-api-cloud',
         description: 'Comparer les architectures et leurs contraintes.',
@@ -126,6 +131,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     links: [
       { label: 'Centre de ressources', href: '/ressources' },
       { label: 'Actualités & analyses IA', href: '/actualites-ia' },
+      { label: 'Calculateur IA local', href: '/outils/dimensionnement-ia' },
       { label: 'Démonstrateur RAG local', href: '/ressources/demonstrateur-rag-local' },
       { label: 'IA locale ou API cloud', href: '/ressources/ia-locale-vs-api-cloud' },
       { label: 'RAG local en entreprise', href: '/ressources/rag-local-entreprise' },

@@ -3,6 +3,7 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { InstitutionalHero } from '@/components/home/institutional-hero'
 import { BusinessPillarsSection } from '@/components/home/business-pillars-section'
+import { SystemsShowcaseSection } from '@/components/home/systems-showcase-section'
 import { ConversionFunnelSection } from '@/components/home/conversion-funnel-section'
 import { ProofSection } from '@/components/home/proof-section'
 import { MethodeSection } from '@/components/home/methode-section'
@@ -69,6 +70,7 @@ export default function HomePage() {
       <main id="contenu">
         <InstitutionalHero />
         <BusinessPillarsSection />
+        <SystemsShowcaseSection />
         <ConversionFunnelSection />
         <ProofSection />
         <MethodeSection />

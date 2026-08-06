@@ -28,12 +28,12 @@ const evidence = [
     icon: Calculator,
   },
   {
-    eyebrow: 'Décision technique',
-    title: 'Des guides sourcés et actionnables',
+    eyebrow: 'Novekia Proof Lab',
+    title: 'Un calculateur d’architecture IA',
     description:
-      'IA locale, RAG et dimensionnement GPU sont traités avec critères de décision, limites et sources vérifiables.',
-    href: '/ressources',
-    cta: 'Consulter les ressources',
+      'Modèle, quantification, contexte et charge simultanée deviennent une enveloppe explicite de VRAM, RAM et stockage.',
+    href: '/outils/dimensionnement-ia',
+    cta: 'Dimensionner un scénario',
     icon: FileCheck2,
   },
 ] as const

@@ -13,6 +13,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/a-propos', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/ressources', priority: 0.8, changeFrequency: 'weekly' as const },
     {
+      path: '/outils/dimensionnement-ia',
+      priority: 0.85,
+      changeFrequency: 'monthly' as const,
+    },
+    {
       path: '/actualites-ia',
       priority: 0.85,
       changeFrequency: 'weekly' as const,
