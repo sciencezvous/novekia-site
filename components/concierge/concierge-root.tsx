@@ -12,7 +12,10 @@ import { ConciergeErrorBoundary } from './concierge-error-boundary'
 import { ConciergeAvatar } from './concierge-avatar'
 import { ConciergeConversationContext } from './concierge-conversation-context'
 import { ConciergeInformation } from './concierge-information'
-import { ConciergeIntentAssistance } from './concierge-intent-assistance'
+import {
+  ConciergeIntentAssistance,
+  type ConfirmedConciergeIntent,
+} from './concierge-intent-assistance'
 import { ConciergeLauncher } from './concierge-launcher'
 import { ConciergePanel } from './concierge-panel'
 import { ConciergeProgress } from './concierge-progress'
@@ -29,6 +32,8 @@ function ConciergeRootContent() {
   const triggerRef = useRef<HTMLButtonElement>(null)
   const [open, setOpen] = useState(false)
   const [staticScreen, setStaticScreen] = useState<StaticScreen>('choices')
+  const [confirmedIntent, setConfirmedIntent] = useState<ConfirmedConciergeIntent | null>(null)
+  const [answerPrefills, setAnswerPrefills] = useState<Readonly<Record<string, string>>>({})
   const concierge = useConciergeSession()
   const hasAnswers = Object.keys(concierge.runtime.session.answers).length > 0
   const pageSuggestion = getConciergePageSuggestion(pathname)
@@ -61,10 +66,14 @@ function ConciergeRootContent() {
       return
     }
     concierge.restart()
+    setConfirmedIntent(null)
+    setAnswerPrefills({})
     setStaticScreen('choices')
   }
 
   function chooseInitialPath(path: Exclude<ConciergePath, 'unknown'>) {
+    setConfirmedIntent(null)
+    setAnswerPrefills({})
     if (path === 'information') {
       setStaticScreen('information')
       concierge.emit('concierge_path_selected', concierge.runtime, { selectedPath: path })
@@ -76,6 +85,27 @@ function ConciergeRootContent() {
       return
     }
     concierge.selectPath(path)
+  }
+
+  function confirmAssistedIntent(intent: ConfirmedConciergeIntent) {
+    const { description, suggestion } = intent
+    const prefills: Record<string, string> = {}
+
+    if (suggestion.path === 'solutions') {
+      prefills['solutions.project_description'] = description
+      if (suggestion.solutionsCategory) {
+        prefills['solutions.need_category'] = suggestion.solutionsCategory
+      }
+    } else if (suggestion.path === 'lead_engine') {
+      prefills['lead.main_objective'] = description
+    } else if (suggestion.path === 'direct_contact') {
+      prefills['direct_contact.reason'] = description
+    }
+
+    setConfirmedIntent(intent)
+    setAnswerPrefills(prefills)
+    concierge.selectPath(suggestion.path)
+    setStaticScreen('choices')
   }
 
   function renderInitialChoices() {
@@ -211,11 +241,12 @@ function ConciergeRootContent() {
         <ConciergeConversationContext
           runtime={concierge.runtime}
           currentSection={step.section}
+          confirmedIntent={confirmedIntent}
         />
         <ConciergeQuestionRenderer
           key={`${step.id}:${concierge.validationErrors.some((error) => /secret|mot de passe|clé|jeton/i.test(error)) ? 'redacted' : 'active'}`}
           question={step}
-          initialAnswer={concierge.runtime.session.answers[step.id]}
+          initialAnswer={concierge.runtime.session.answers[step.id] ?? answerPrefills[step.id]}
           initialSupplemental={typeof supplemental === 'string' ? supplemental : ''}
           errors={concierge.validationErrors}
           canGoBack={concierge.canGoBack}
@@ -273,10 +304,7 @@ function ConciergeRootContent() {
                       <ConciergeIntentAssistance
                         status={concierge.runtime.session.aiAssistance.status}
                         onAnalyze={(description) => concierge.requestAI('classify_intent', description)}
-                        onConfirm={(path) => {
-                          concierge.selectPath(path)
-                          setStaticScreen('choices')
-                        }}
+                        onConfirm={confirmAssistedIntent}
                         onChooseManually={() => setStaticScreen('choices')}
                         onDisable={() => {
                           concierge.disableAIAssistance()

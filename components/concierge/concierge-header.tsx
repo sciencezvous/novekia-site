@@ -24,7 +24,7 @@ export function ConciergeHeader({
           Nova
         </h2>
         <p className="mt-0.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
-          Assistant
+          Qualification sécurisée
         </p>
       </div>
       {hasAnswers ? (

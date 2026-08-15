@@ -43,9 +43,16 @@ function confidenceLabel(confidence: number): string {
 type ConciergeIntentAssistanceProps = {
   status: 'idle' | 'requesting' | 'available' | 'fallback' | 'unavailable' | 'error'
   onAnalyze: (description: string) => Promise<ConciergeAIRouteEnvelope>
-  onConfirm: (path: Exclude<ConciergePath, 'unknown'>) => void
+  onConfirm: (intent: ConfirmedConciergeIntent) => void
   onChooseManually: () => void
   onDisable: () => void
+}
+
+export type ConfirmedConciergeIntent = {
+  description: string
+  suggestion: ClassifyIntentResult & {
+    path: Exclude<ConciergePath, 'unknown'>
+  }
 }
 
 export function ConciergeIntentAssistance({
@@ -58,6 +65,9 @@ export function ConciergeIntentAssistance({
   const [description, setDescription] = useState('')
   const [suggestion, setSuggestion] = useState<ClassifyIntentResult | null>(null)
   const [message, setMessage] = useState('')
+  const descriptionWillBePrefilled = suggestion
+    ? ['lead_engine', 'solutions', 'direct_contact'].includes(suggestion.path)
+    : false
 
   async function analyze() {
     if (description.trim().length < 10) {
@@ -181,10 +191,33 @@ export function ConciergeIntentAssistance({
           {suggestion.humanReviewRequired ? (
             <p className="mt-3 text-xs leading-5 text-muted-foreground">Cette orientation devra être contrôlée humainement.</p>
           ) : null}
+          {suggestion.missingInformation.length > 0 ? (
+            <div className="mt-4 rounded-md border border-border bg-background/35 p-3">
+              <p className="text-xs font-semibold text-foreground">Points encore à préciser pendant le cadrage :</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs leading-5 text-muted-foreground">
+                {suggestion.missingInformation.slice(0, 3).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           {suggestion.path !== 'unknown' ? (
-            <Button type="button" size="lg" onClick={() => onConfirm(suggestion.path as Exclude<ConciergePath, 'unknown'>)} className="mt-5 min-h-11 w-full">
+            <Button
+              type="button"
+              size="lg"
+              onClick={() => onConfirm({
+                description: description.trim(),
+                suggestion: suggestion as ConfirmedConciergeIntent['suggestion'],
+              })}
+              className="mt-5 min-h-11 w-full"
+            >
               Continuer avec cette orientation <ArrowRight aria-hidden="true" />
             </Button>
+          ) : null}
+          {suggestion.path !== 'unknown' && descriptionWillBePrefilled ? (
+            <p className="mt-2 text-center text-[0.68rem] leading-5 text-muted-foreground">
+              Votre description sera préremplie dans le cadrage et restera modifiable avant validation.
+            </p>
           ) : null}
           <Button type="button" variant="outline" size="lg" onClick={onChooseManually} className="mt-2 min-h-11 w-full">
             Choisir un autre parcours
