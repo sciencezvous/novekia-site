@@ -38,7 +38,7 @@ export class ConciergeErrorBoundary extends Component<Props, State> {
               this.props.onRestart()
               this.setState({ hasError: false })
             }}
-            className="min-h-11 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="min-h-11 rounded-md bg-action px-4 text-sm font-semibold text-primary-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Recommencer
           </button>

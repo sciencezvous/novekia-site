@@ -27,6 +27,7 @@ export function InstitutionalHero() {
           alt="Système de calcul et réseau de données Novekia éclairés en bleu"
           fill
           priority
+          fetchPriority="high"
           sizes="100vw"
           className="object-cover object-[66%_center] opacity-65 saturate-[0.88] contrast-110 sm:object-[62%_center] lg:opacity-90"
         />

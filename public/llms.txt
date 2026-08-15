@@ -1,43 +1,28 @@
 # Novekia
 
-> Novekia est un studio français organisé autour de deux pôles complémentaires : Lead Engine Studio pour la prospection et la qualification B2B, et Novekia Solutions pour les systèmes numériques privés, performants et maîtrisables.
+> Novekia est un studio français qui réunit un pôle de prospection B2B et un pôle de conception de solutions numériques.
 
-## Site officiel
+## Services
 
-- Accueil : https://novekia.fr
-- Lead Engine Studio : https://novekia.fr/lead-engine-studio
-- Novekia Solutions : https://novekia.fr/solutions
-- Expertises et solutions : https://novekia.fr/offres
-- À propos du studio : https://novekia.fr/a-propos
-- Centre de ressources : https://novekia.fr/ressources
+- [Lead Engine Studio](https://novekia.fr/lead-engine-studio): Ciblage, recherche d’entreprises, qualification et préparation d’approches B2B sous supervision humaine.
+- [Novekia Solutions](https://novekia.fr/solutions): Présentation des prestations de conception et d’intégration numérique.
+- [Logiciels métiers sur mesure](https://novekia.fr/logiciels-metiers-sur-mesure): Conception d’outils adaptés aux processus et règles de gestion de l’entreprise.
+- [Intelligence artificielle locale](https://novekia.fr/intelligence-artificielle-locale): Conception de systèmes d’IA exécutés sur une infrastructure contrôlée par l’entreprise.
+- [Infrastructures de calcul et serveurs IA](https://novekia.fr/infrastructures-serveurs-ia): Conception et intégration de stations GPU et d’infrastructures de calcul.
+- [Applications web et intégrations](https://novekia.fr/applications-web-integrations): Développement d’interfaces, d’API, d’intégrations et d’automatisations métier.
+- [Création de sites web SEO et GEO](https://novekia.fr/creation-site-web-seo-geo): Conception de sites web structurés pour les visiteurs et les moteurs de recherche.
 
-## Lead Engine Studio
+## Offres
 
-- Prospection et qualification commerciale B2B : https://novekia.fr/lead-engine-studio
-- Le dispositif recherche et documente les entreprises pertinentes, qualifie les opportunités et prépare les approches sous supervision humaine.
-- Novekia ne déclenche aucune prospection autonome et ne remplace pas la validation du client.
+- [Expertises et solutions](https://novekia.fr/offres): Vue d’ensemble des domaines d’intervention de Novekia.
 
-## Novekia Solutions
+## Expertise et entreprise
 
-- Logiciels métiers sur mesure : https://novekia.fr/logiciels-metiers-sur-mesure
-- Intelligence artificielle locale : https://novekia.fr/intelligence-artificielle-locale
-- Infrastructures de calcul et serveurs IA : https://novekia.fr/infrastructures-serveurs-ia
-- Applications web et intégrations métier : https://novekia.fr/applications-web-integrations
-- Création de sites web optimisés SEO et GEO : https://novekia.fr/creation-site-web-seo-geo
-
-## Guides et outils
-
-- Démonstrateur RAG local - architecture, dimensionnement et recette : https://novekia.fr/ressources/demonstrateur-rag-local
-- IA locale ou API cloud - coûts, confidentialité et exploitation : https://novekia.fr/ressources/ia-locale-vs-api-cloud
-- RAG local en entreprise - architecture et conditions de réussite : https://novekia.fr/ressources/rag-local-entreprise
-- Choisir une station ou un serveur GPU pour l’IA : https://novekia.fr/ressources/choisir-station-serveur-gpu-ia
-- Checklist de cadrage d’un projet d’IA locale : https://novekia.fr/ressources/checklist-cadrage-ia-locale
-
-## Positionnement
-
-Novekia relie développement commercial, compréhension métier et ingénierie technologique. Le studio privilégie des décisions documentées, la supervision humaine, la maîtrise des données, des modèles, des dépendances et de l’infrastructure. L’intelligence artificielle n’est utilisée que lorsqu’elle apporte une valeur vérifiable.
+- [À propos de Novekia](https://novekia.fr/a-propos): Présentation du studio, de son fondateur et de ses principes de travail.
+- [Centre de ressources](https://novekia.fr/ressources): Guides techniques sur l’IA locale, le RAG et les infrastructures GPU.
+- [Actualités et analyses IA](https://novekia.fr/actualites-ia): Analyses des nouveautés IA et de leurs conséquences techniques pour les entreprises.
+- [Calculateur de dimensionnement IA local](https://novekia.fr/outils/dimensionnement-ia): Estimation indicative de la VRAM, de la RAM, du stockage et du type d’architecture nécessaires.
 
 ## Contact
 
-- Email : contact@novekia.fr
-- Zone d’intervention : France, à distance ou sur site selon le contexte
+- [Contacter Novekia](https://novekia.fr/#contact): Formulaire permettant de présenter un besoin et de demander un échange.

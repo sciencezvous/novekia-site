@@ -212,7 +212,7 @@ export function ConciergeQuestionRenderer({
       {isAdvancing ? (
         <div className="mt-4 space-y-3" role="status" aria-live="polite">
           <div className="flex justify-end">
-            <div className="max-w-[85%] rounded-lg rounded-tr-sm bg-primary px-4 py-3 text-sm font-medium text-primary-foreground shadow-[0_8px_28px_rgba(8,124,255,0.18)] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1">
+            <div className="max-w-[85%] rounded-lg rounded-tr-sm bg-action px-4 py-3 text-sm font-medium text-primary-foreground shadow-[0_8px_28px_rgba(8,124,255,0.18)] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1">
               <span>{answerLabel(question, advancingAnswer)}</span>
             </div>
           </div>

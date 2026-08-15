@@ -144,7 +144,7 @@ function ConciergeRootContent() {
         <Link
           href="/#contact"
           onClick={closePanel}
-          className="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-action px-4 text-sm font-semibold text-primary-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           Ouvrir le formulaire de contact
           <ArrowRight aria-hidden="true" className="size-4" />

@@ -53,7 +53,6 @@ export function Logo({
     return (
       <Link
         href={href}
-        aria-label={`${siteConfig.name} — accueil`}
         className="inline-flex rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         {content}

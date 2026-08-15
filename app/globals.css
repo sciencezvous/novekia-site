@@ -15,6 +15,7 @@
   --novekia-nuit: #020817; /* bleu nuit */
   --novekia-profond: #061a3b; /* bleu profond */
   --novekia-electrique: #087cff; /* bleu électrique */
+  --novekia-action: #006bd6; /* surface d’action accessible sous texte blanc */
   --novekia-lumineux: #52b8ff; /* bleu lumineux */
   --novekia-clair: #dceeff; /* bleu clair */
   --novekia-surface-sombre: #071224;
@@ -42,6 +43,7 @@
   --color-nuit: var(--novekia-nuit);
   --color-profond: var(--novekia-profond);
   --color-electrique: var(--novekia-electrique);
+  --color-action: var(--novekia-action);
   --color-lumineux: var(--novekia-lumineux);
   --color-clair: var(--novekia-clair);
   --color-blanc-froid: var(--novekia-blanc-froid);
