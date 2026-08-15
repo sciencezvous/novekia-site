@@ -25,7 +25,7 @@ export function ChecklistDownload({ className }: ChecklistDownloadProps) {
       download
       onClick={trackDownload}
       className={cn(
-        'inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+        'inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-action px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-action/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         className,
       )}
     >

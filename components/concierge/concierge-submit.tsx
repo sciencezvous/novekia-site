@@ -34,7 +34,7 @@ export function ConciergeSubmit({ submission, onSubmit, onClose }: ConciergeSubm
           <Link
             href="/solutions"
             onClick={onClose}
-            className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-3 text-center text-sm font-medium text-primary-foreground outline-none transition-colors hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-action px-3 text-center text-sm font-medium text-primary-foreground outline-none transition-colors hover:bg-action/90 focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             Consulter les services Novekia
             <ArrowRight aria-hidden="true" className="size-4 shrink-0" />

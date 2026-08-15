@@ -55,7 +55,7 @@ export function ConciergeConversationContext({
   return (
     <section className="mb-5 space-y-3 border-b border-border/70 pb-5" aria-label="Dernier échange avec Nova">
       <div className="flex justify-end">
-        <div className="max-w-[86%] rounded-lg rounded-tr-sm bg-primary px-4 py-3 text-primary-foreground shadow-[0_8px_28px_rgba(8,124,255,0.15)]">
+        <div className="max-w-[86%] rounded-lg rounded-tr-sm bg-action px-4 py-3 text-primary-foreground shadow-[0_8px_28px_rgba(8,124,255,0.15)]">
           <p className="text-[0.65rem] font-medium uppercase tracking-[0.12em] text-primary-foreground/70">
             Votre réponse · {previousQuestion.label}
           </p>
