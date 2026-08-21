@@ -18,6 +18,7 @@ export const organizationIdentityJsonLd: Record<string, unknown> = {
   '@id': `${siteConfig.url}/#organization`,
   name: siteConfig.name,
   url: siteConfig.url,
+  sameAs: [siteConfig.profiles.linkedinCompany],
   logo: {
     '@type': 'ImageObject',
     '@id': `${siteConfig.url}/#logo`,
@@ -34,6 +35,7 @@ export const founderIdentityJsonLd: Record<string, unknown> = {
   '@id': `${siteConfig.url}/auteurs/andy-legrand#person`,
   name: 'Andy Legrand',
   url: `${siteConfig.url}/auteurs/andy-legrand`,
+  sameAs: [siteConfig.profiles.linkedinFounder],
   jobTitle: 'Fondateur de Novekia',
   image: `${siteConfig.url}/andy-legrand-novekia-v3.png`,
   worksFor: {

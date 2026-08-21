@@ -8,6 +8,8 @@
 - [À propos de Novekia](https://novekia.fr/a-propos): Identité, mission, implantation, produits, expertises et méthode de l’entreprise.
 - [Mentions légales](https://novekia.fr/mentions-legales): Identité de l’éditeur, immatriculation, coordonnées publiques et prestataires techniques.
 - [Andy Legrand, fondateur et auteur](https://novekia.fr/auteurs/andy-legrand): Page auteur officielle reliée aux ressources publiées sur novekia.fr.
+- [Novekia sur LinkedIn](https://www.linkedin.com/company/novekia/): Page LinkedIn officielle de l’entreprise.
+- [Andy Legrand sur LinkedIn](https://www.linkedin.com/in/andy-legrand-ba7b05426/): Profil LinkedIn officiel du fondateur.
 
 ## Produits développés par Novekia
 

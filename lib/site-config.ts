@@ -12,6 +12,10 @@ export const siteConfig = {
     phoneE164: '+33767842757',
     phoneHref: 'tel:+33767842757',
   },
+  profiles: {
+    linkedinCompany: 'https://www.linkedin.com/company/novekia/',
+    linkedinFounder: 'https://www.linkedin.com/in/andy-legrand-ba7b05426/',
+  },
   legal: {
     owner: 'Andy Legrand',
     tradingName: 'Novekia',

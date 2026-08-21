@@ -146,13 +146,24 @@ export default function AndyLegrandAuthorPage() {
                   distinguent les faits, les hypothèses, les limites et les
                   décisions qui nécessitent une validation humaine.
                 </p>
-                <Link
-                  href="/a-propos"
-                  className="mt-8 inline-flex items-center gap-2 border-b border-primary pb-1 font-mono text-xs uppercase tracking-[0.14em] text-primary transition-colors hover:text-foreground"
-                >
-                  À propos de Novekia
-                  <ArrowUpRight aria-hidden="true" className="size-4" />
-                </Link>
+                <div className="mt-8 flex flex-wrap gap-x-6 gap-y-4">
+                  <Link
+                    href="/a-propos"
+                    className="inline-flex items-center gap-2 border-b border-primary pb-1 font-mono text-xs uppercase tracking-[0.14em] text-primary transition-colors hover:text-foreground"
+                  >
+                    À propos de Novekia
+                    <ArrowUpRight aria-hidden="true" className="size-4" />
+                  </Link>
+                  <Link
+                    href={siteConfig.profiles.linkedinFounder}
+                    target="_blank"
+                    rel="me noopener noreferrer"
+                    className="inline-flex items-center gap-2 border-b border-primary pb-1 font-mono text-xs uppercase tracking-[0.14em] text-primary transition-colors hover:text-foreground"
+                  >
+                    Profil LinkedIn officiel
+                    <ArrowUpRight aria-hidden="true" className="size-4" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

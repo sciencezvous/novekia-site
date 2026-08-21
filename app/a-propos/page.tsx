@@ -230,6 +230,14 @@ export default function AboutPage() {
               <SecondaryButton href="/mentions-legales">
                 Informations légales
               </SecondaryButton>
+              <Link
+                href={siteConfig.profiles.linkedinCompany}
+                target="_blank"
+                rel="me noopener noreferrer"
+                className="inline-flex min-h-11 items-center justify-center border border-border px-5 font-mono text-xs uppercase tracking-[0.12em] transition-colors hover:border-primary hover:text-primary"
+              >
+                LinkedIn officiel de Novekia
+              </Link>
             </div>
           </div>
         </section>
