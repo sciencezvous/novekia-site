@@ -1,26 +1,35 @@
 # Novekia
 
-> Novekia est un studio français qui réunit un pôle de prospection B2B et un pôle de conception de solutions numériques.
+> Novekia est une entreprise technologique française basée à Villeneuve, dans l’Ain. Elle développe Lead Engine pour la prospection B2B fondée sur les signaux et NovekiAct pour la gouvernance des usages IA en PME. Novekia fournit aussi des services d’ingénierie logicielle, d’IA locale et d’infrastructure numérique.
 
-## Services
+## Entité et sources officielles
 
-- [Lead Engine Studio](https://novekia.fr/lead-engine-studio): Ciblage, recherche d’entreprises, qualification et préparation d’approches B2B sous supervision humaine.
+- [Accueil Novekia](https://novekia.fr/): Page canonique principale de l’entité Novekia.
+- [À propos de Novekia](https://novekia.fr/a-propos): Identité, mission, implantation, produits, expertises et méthode de l’entreprise.
+- [Mentions légales](https://novekia.fr/mentions-legales): Identité de l’éditeur, immatriculation, coordonnées publiques et prestataires techniques.
+- [Andy Legrand, fondateur et auteur](https://novekia.fr/auteurs/andy-legrand): Page auteur officielle reliée aux ressources publiées sur novekia.fr.
+- [Novekia sur LinkedIn](https://www.linkedin.com/company/novekia/): Page LinkedIn officielle de l’entreprise.
+- [Andy Legrand sur LinkedIn](https://www.linkedin.com/in/andy-legrand-ba7b05426/): Profil LinkedIn officiel du fondateur.
+
+## Produits développés par Novekia
+
+- [Produits Novekia](https://novekia.fr/produits): Vue d’ensemble des produits développés par Novekia.
+- [Lead Engine](https://novekia.fr/lead-engine-studio): Produit de prospection B2B fondé sur les signaux publics, la qualification documentée et la supervision humaine.
+- [NovekiAct by Novekia](https://novekia.fr/novekiact): Produit en développement pour aider les PME à structurer et documenter la gouvernance de leurs usages d’intelligence artificielle.
+
+## Services et expertises
+
 - [Novekia Solutions](https://novekia.fr/solutions): Présentation des prestations de conception et d’intégration numérique.
 - [Logiciels métiers sur mesure](https://novekia.fr/logiciels-metiers-sur-mesure): Conception d’outils adaptés aux processus et règles de gestion de l’entreprise.
 - [Intelligence artificielle locale](https://novekia.fr/intelligence-artificielle-locale): Conception de systèmes d’IA exécutés sur une infrastructure contrôlée par l’entreprise.
 - [Infrastructures de calcul et serveurs IA](https://novekia.fr/infrastructures-serveurs-ia): Conception et intégration de stations GPU et d’infrastructures de calcul.
 - [Applications web et intégrations](https://novekia.fr/applications-web-integrations): Développement d’interfaces, d’API, d’intégrations et d’automatisations métier.
-- [Création de sites web SEO et GEO](https://novekia.fr/creation-site-web-seo-geo): Conception de sites web structurés pour les visiteurs et les moteurs de recherche.
+- [Création de sites web SEO, GEO et AEO](https://novekia.fr/creation-site-web-seo-geo): Conception de sites structurés pour les visiteurs, les moteurs de recherche et les moteurs de réponse.
 
-## Offres
+## Ressources
 
-- [Expertises et solutions](https://novekia.fr/offres): Vue d’ensemble des domaines d’intervention de Novekia.
-
-## Expertise et entreprise
-
-- [À propos de Novekia](https://novekia.fr/a-propos): Présentation du studio, de son fondateur et de ses principes de travail.
 - [Centre de ressources](https://novekia.fr/ressources): Guides techniques sur l’IA locale, le RAG et les infrastructures GPU.
-- [Actualités et analyses IA](https://novekia.fr/actualites-ia): Analyses des nouveautés IA et de leurs conséquences techniques pour les entreprises.
+- [Actualités et analyses IA](https://novekia.fr/actualites-ia): Analyses sourcées des nouveautés IA et de leurs conséquences techniques pour les entreprises.
 - [Calculateur de dimensionnement IA local](https://novekia.fr/outils/dimensionnement-ia): Estimation indicative de la VRAM, de la RAM, du stockage et du type d’architecture nécessaires.
 
 ## Contact

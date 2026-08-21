@@ -22,8 +22,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
-    template: `%s — ${siteConfig.name}`,
+    default: `${siteConfig.name} — IA, logiciels et systèmes numériques`,
+    template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   alternates: {
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     'prospection B2B',
     'qualification commerciale',
     'développement commercial',
-    'studio commercial et technologique',
+    'entreprise technologique française',
     'ingénierie logicielle',
     'intelligence artificielle locale',
     'IA souveraine',
@@ -43,6 +43,8 @@ export const metadata: Metadata = {
     'R&D technologique',
     'logiciels métiers',
     'Novekia',
+    'Lead Engine',
+    'NovekiAct',
   ],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
@@ -63,26 +65,18 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_FR',
     url: siteConfig.url,
-    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    title: `${siteConfig.name} — IA, logiciels et systèmes numériques`,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [
-      {
-        url: '/og.png',
-        width: 1200,
-        height: 630,
-        alt: 'Novekia — Lead Engine Studio et solutions technologiques',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    title: `${siteConfig.name} — IA, logiciels et systèmes numériques`,
     description: siteConfig.description,
-    images: ['/og.png'],
   },
   icons: {
     icon: [{ url: '/novekia-icon.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   verification: process.env.GOOGLE_SITE_VERIFICATION
     ? { google: process.env.GOOGLE_SITE_VERIFICATION }

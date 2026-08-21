@@ -20,7 +20,7 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
-  title: 'Novekia Solutions — conception et intégration numérique',
+  title: 'Solutions numériques — conception et intégration',
   description:
     'Sites web, logiciels métiers, automatisations, IA locale et infrastructures de calcul conçus selon vos usages et contraintes réels.',
   alternates: { canonical: '/solutions' },
@@ -95,7 +95,7 @@ export default function SolutionsPage() {
           description: metadata.description,
           inLanguage: 'fr-FR',
           isPartOf: { '@id': `${siteConfig.url}/#website` },
-          about: { '@id': `${pageUrl}#department` },
+          about: { '@id': `${siteConfig.url}/#organization` },
           mainEntity: {
             '@type': 'ItemList',
             itemListElement: solutions.map((solution, index) => ({

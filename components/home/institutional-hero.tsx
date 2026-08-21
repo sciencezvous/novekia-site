@@ -44,7 +44,7 @@ export function InstitutionalHero() {
       <div className="relative mx-auto grid min-h-[calc(100svh-4.5rem)] w-full max-w-7xl items-center gap-10 px-5 py-12 sm:px-6 sm:py-16 md:px-8 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[minmax(0,1.08fr)_minmax(25rem,0.92fr)] lg:gap-12 lg:pb-32 lg:pt-20">
         <div className="relative z-10 max-w-4xl">
           <TechnicalLabel index="00">
-            Novekia — studio commercial et technologique
+            Novekia — entreprise technologique française
           </TechnicalLabel>
 
           <h1
@@ -61,10 +61,10 @@ export function InstitutionalHero() {
           </h1>
 
           <p className="mt-8 max-w-2xl text-pretty text-base leading-relaxed text-[#b7c8e4] sm:text-lg">
-            Novekia réunit deux expertises complémentaires&nbsp;: Lead Engine
-            Studio pour identifier et qualifier les opportunités commerciales,
-            et Novekia Solutions pour concevoir les outils numériques, les
-            systèmes d’IA et les infrastructures adaptés aux besoins détectés.
+            Novekia développe Lead Engine pour la prospection B2B fondée sur
+            les signaux et NovekiAct pour la gouvernance des usages IA en PME.
+            L’entreprise conçoit aussi des logiciels, des systèmes d’IA locale
+            et des infrastructures numériques.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -75,7 +75,7 @@ export function InstitutionalHero() {
               Qualifier mon besoin
             </ConciergeTrigger>
             <SecondaryButton href="#poles" className="w-full sm:w-auto">
-              Voir les deux expertises
+              Voir les produits et expertises
             </SecondaryButton>
           </div>
 
@@ -94,7 +94,7 @@ export function InstitutionalHero() {
           <dt className="font-mono text-[0.58rem] uppercase tracking-[0.2em] text-muted-foreground">
             Architecture
           </dt>
-          <dd className="mt-2 text-sm font-semibold uppercase">Deux pôles intégrés</dd>
+          <dd className="mt-2 text-sm font-semibold uppercase">Produits reliés à Novekia</dd>
         </div>
         <div className="border-x border-white/10 px-7 py-5">
           <dt className="font-mono text-[0.58rem] uppercase tracking-[0.2em] text-muted-foreground">

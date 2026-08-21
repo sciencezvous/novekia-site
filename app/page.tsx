@@ -12,18 +12,15 @@ import { TrustSection } from '@/components/home/trust-section'
 import { ContactSection } from '@/components/home/contact-section'
 import { FaqSection, homeFaq } from '@/components/home/faq-section'
 import {
+  brandGraphJsonLd,
   JsonLd,
-  founderJsonLd,
-  homePageJsonLd,
-  organizationJsonLd,
-  websiteJsonLd,
 } from '@/components/brand/json-ld'
 import { HashNavigation } from '@/components/layout/hash-navigation'
 import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Novekia — Lead Engine Studio et solutions technologiques',
+    absolute: 'Novekia — IA, logiciels et systèmes numériques',
   },
   description: siteConfig.description,
   alternates: { canonical: '/' },
@@ -31,26 +28,15 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_FR',
     url: siteConfig.url,
-    title: 'Novekia — Lead Engine Studio et solutions technologiques',
+    title: 'Novekia — IA, logiciels et systèmes numériques',
     description: siteConfig.description,
-    images: [
-      {
-        url: '/og.png',
-        width: 1200,
-        height: 630,
-        alt: 'Novekia — studio commercial et technologique',
-      },
-    ],
   },
 }
 
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={organizationJsonLd} />
-      <JsonLd data={founderJsonLd} />
-      <JsonLd data={websiteJsonLd} />
-      <JsonLd data={homePageJsonLd} />
+      <JsonLd data={brandGraphJsonLd} />
       <JsonLd
         data={{
           '@context': 'https://schema.org',

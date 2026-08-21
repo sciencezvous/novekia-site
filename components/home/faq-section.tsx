@@ -5,29 +5,29 @@ export const homeFaq = [
   {
     question: 'Que fait Novekia ?',
     answer:
-      'Novekia est un studio français structuré autour de deux pôles complémentaires. Lead Engine Studio construit des dispositifs de prospection et de qualification commerciale B2B. Novekia Solutions conçoit des sites web, logiciels métiers, automatisations, systèmes d’intelligence artificielle locale et infrastructures de calcul.',
+      'Novekia est une entreprise technologique française basée à Villeneuve, dans l’Ain. Elle développe Lead Engine pour la prospection B2B et NovekiAct pour la gouvernance des usages IA en PME. Elle fournit aussi des services d’ingénierie logicielle, d’IA locale et d’infrastructure numérique.',
   },
   {
     question:
-      'Quelle différence entre Lead Engine Studio et Novekia Solutions ?',
+      'Quelle relation existe entre Novekia, Lead Engine et NovekiAct ?',
     answer:
-      'Lead Engine Studio intervient sur l’identification des entreprises, la qualification des opportunités et la préparation des approches commerciales. Novekia Solutions intervient sur la conception et l’intégration des solutions numériques. Chaque pôle possède son périmètre, ses livrables et ses critères de validation.',
+      'Novekia est l’entreprise et la marque technologique mère. Lead Engine et NovekiAct sont deux produits développés par Novekia : le premier est consacré à la prospection B2B fondée sur les signaux, le second à la gouvernance des usages d’intelligence artificielle dans les PME.',
   },
   {
     question:
-      'Lead Engine Studio envoie-t-il automatiquement des messages en masse ?',
+      'Lead Engine envoie-t-il automatiquement des messages en masse ?',
     answer:
       'Non. Le dispositif privilégie la pertinence, la traçabilité des informations et la supervision humaine. Les actions sensibles et les prises de contact sont préparées selon le cadre défini avec le client, puis validées avant activation.',
   },
   {
-    question: 'Les deux pôles peuvent-ils intervenir sur un même besoin ?',
+    question: 'Quel est le statut de NovekiAct ?',
     answer:
-      'Oui, lorsque le contexte le justifie. Lead Engine Studio peut clarifier un marché et les signaux commerciaux, tandis que Novekia Solutions peut construire l’outil, l’automatisation ou l’infrastructure nécessaire. Les deux interventions restent toutefois clairement séparées et documentées.',
+      'NovekiAct est un produit en développement par Novekia. Sa page présente son objectif et son périmètre actuel sans promettre une conformité garantie, une certification ou des fonctionnalités non encore disponibles.',
   },
   {
     question: 'Comment démarre une mission ?',
     answer:
-      'La première étape est un échange de qualification. Nous clarifions votre objectif, le contexte, les contraintes, les données disponibles et le résultat attendu. Novekia vous oriente ensuite vers le bon pôle et propose une prochaine étape proportionnée au besoin.',
+      'La première étape est un échange de qualification. Nous clarifions votre objectif, le contexte, les contraintes, les données disponibles et le résultat attendu. Novekia vous oriente ensuite vers le produit ou l’expertise appropriée et propose une prochaine étape proportionnée au besoin.',
   },
 ] as const
 

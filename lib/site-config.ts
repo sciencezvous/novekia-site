@@ -2,13 +2,19 @@ export const siteConfig = {
   name: 'Novekia',
   tagline: 'Synergies Intelligentes',
   description:
-    'Novekia réunit un Lead Engine Studio pour la prospection B2B et un studio de solutions numériques : IA locale, logiciels métiers et infrastructures de calcul.',
+    'Entreprise technologique française : Lead Engine pour la prospection B2B, NovekiAct pour la gouvernance IA, logiciels, IA locale et infrastructures.',
+  entityDescription:
+    'Novekia est une entreprise technologique française basée à Villeneuve, dans l’Ain. Elle développe Lead Engine, un produit de prospection B2B fondé sur les signaux, et NovekiAct, un produit de gouvernance des usages IA pour les PME. Novekia fournit aussi des services d’ingénierie logicielle, d’IA locale et d’infrastructure numérique.',
   url: 'https://novekia.fr',
   contact: {
     email: 'contact@novekia.fr',
     phone: '07 67 84 27 57',
     phoneE164: '+33767842757',
     phoneHref: 'tel:+33767842757',
+  },
+  profiles: {
+    linkedinCompany: 'https://www.linkedin.com/company/novekia/',
+    linkedinFounder: 'https://www.linkedin.com/in/andy-legrand-ba7b05426/',
   },
   legal: {
     owner: 'Andy Legrand',
@@ -30,7 +36,27 @@ export type NavItem = {
 }
 
 export const mainNavigation: NavItem[] = [
-  { label: 'Lead Engine Studio', href: '/lead-engine-studio' },
+  {
+    label: 'Produits',
+    href: '/produits',
+    children: [
+      {
+        label: 'Vue d’ensemble',
+        href: '/produits',
+        description: 'Les produits développés par Novekia.',
+      },
+      {
+        label: 'Lead Engine',
+        href: '/lead-engine-studio',
+        description: 'Prospection B2B fondée sur les signaux.',
+      },
+      {
+        label: 'NovekiAct',
+        href: '/novekiact',
+        description: 'Gouvernance des usages IA pour les PME.',
+      },
+    ],
+  },
   {
     label: 'Solutions',
     href: '/solutions',
@@ -100,11 +126,12 @@ export const mainNavigation: NavItem[] = [
 
 export const footerNavigation: { title: string; links: { label: string; href: string }[] }[] = [
   {
-    title: 'Lead Engine Studio',
+    title: 'Produits Novekia',
     links: [
-      { label: 'Présentation', href: '/lead-engine-studio' },
-      { label: 'Méthode', href: '/lead-engine-studio#methode' },
-      { label: 'Contact', href: '/#contact' },
+      { label: 'Vue d’ensemble', href: '/produits' },
+      { label: 'Lead Engine', href: '/lead-engine-studio' },
+      { label: 'Méthode Lead Engine', href: '/lead-engine-studio#methode' },
+      { label: 'NovekiAct', href: '/novekiact' },
     ],
   },
   {
@@ -121,6 +148,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     title: 'Studio',
     links: [
       { label: 'À propos', href: '/a-propos' },
+      { label: 'Fondateur et auteur', href: '/auteurs/andy-legrand' },
       { label: 'Vision du fondateur', href: '/a-propos#vision' },
       { label: 'Méthode', href: '/#methode' },
       { label: 'Contact', href: '/#contact' },
