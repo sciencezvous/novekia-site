@@ -115,7 +115,7 @@ export function NewsArticleLayout({
             </p>
             <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
               <Link
-                href="/a-propos"
+                href="/auteurs/andy-legrand"
                 rel="author"
                 className="transition-colors hover:text-foreground"
               >

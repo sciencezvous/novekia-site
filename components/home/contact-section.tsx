@@ -37,7 +37,7 @@ export function ContactSection() {
           index="08"
           eyebrow="Contact"
           title={<span id="contact-title">Parlons de votre objectif.</span>}
-          description="Développer votre prospection, qualifier un marché ou réaliser une solution numérique : décrivez votre contexte et Novekia vous orientera vers le bon pôle."
+          description="Développer votre prospection, gouverner vos usages IA ou réaliser une solution numérique : décrivez votre contexte et Novekia vous orientera vers le produit ou l’expertise appropriée."
         />
 
         <div className="mt-10 grid grid-cols-1 gap-10 sm:mt-12 sm:gap-12 lg:grid-cols-2 lg:gap-16">

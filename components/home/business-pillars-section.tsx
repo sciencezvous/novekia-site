@@ -6,30 +6,44 @@ import { Section } from '@/components/layout/section'
 const pillars = [
   {
     index: '01',
-    title: 'Novekia Lead Engine Studio',
+    kind: 'Produit',
+    title: 'Lead Engine by Novekia',
     description:
-      'Un dispositif de prospection B2B qui identifie les entreprises pertinentes, analyse les signaux publics, qualifie les opportunités et prépare des approches commerciales personnalisées sous supervision humaine.',
+      'Le produit de prospection B2B développé par Novekia. Il identifie les entreprises pertinentes, analyse les signaux publics et documente la qualification avant activation.',
     points: [
       'Ciblage d’entreprises',
       'Qualification des opportunités',
-      'Recherche des décideurs',
-      'Personnalisation des approches',
-      'Préparation des rendez-vous',
+      'Preuves et niveau de confiance',
+      'Préparation des approches',
     ],
-    cta: 'Découvrir Lead Engine Studio',
+    cta: 'Découvrir Lead Engine',
     href: '/lead-engine-studio',
   },
   {
     index: '02',
+    kind: 'Produit',
+    title: 'NovekiAct by Novekia',
+    description:
+      'Un produit en développement pour aider les PME à inventorier leurs usages IA, clarifier les responsabilités et piloter un plan de gouvernance documenté.',
+    points: [
+      'Cartographie des usages IA',
+      'Responsabilités explicites',
+      'Risques et actions documentés',
+      'Preuves conservées',
+    ],
+    cta: 'Découvrir NovekiAct',
+    href: '/novekiact',
+  },
+  {
+    index: '03',
+    kind: 'Services',
     title: 'Novekia Solutions',
     description:
       'Un pôle de conception et d’intégration qui transforme les besoins identifiés en solutions numériques concrètes, adaptées aux usages, aux contraintes et au niveau de maturité du client.',
     points: [
-      'Sites web premium SEO et GEO',
+      'Sites web SEO, GEO et AEO',
       'Logiciels métiers et automatisations',
       'Intelligence artificielle locale',
-      'Applications web et intégrations',
-      'Stations et serveurs IA',
       'Infrastructures techniques sur mesure',
     ],
     cta: 'Explorer les solutions',
@@ -50,23 +64,23 @@ export function BusinessPillarsSection() {
         eyebrow="Architecture Novekia"
         title={
           <span id="poles-title">
-            Deux moteurs.
+            Des produits et des expertises.
             <br />
-            <span className="text-primary">Une même exigence de résultat.</span>
+            <span className="text-primary">Une seule entité&nbsp;: Novekia.</span>
           </span>
         }
-        description="Chaque pôle possède un métier clair. Ils partagent la même méthode : comprendre le contexte, vérifier les informations et construire un dispositif réellement exploitable."
+        description="Lead Engine et NovekiAct sont des produits développés par Novekia. Novekia Solutions regroupe les prestations d’ingénierie de l’entreprise. Chaque activité conserve un périmètre clair et la même méthode Evidence-First."
       />
 
-      <div className="mt-12 grid gap-px bg-border lg:grid-cols-2">
+      <div className="mt-12 grid gap-px bg-border lg:grid-cols-3">
         {pillars.map((pillar) => (
           <article
             key={pillar.title}
-            className="group flex min-h-[36rem] flex-col bg-background p-6 sm:p-8 lg:p-10"
+            className="group flex min-h-[34rem] flex-col bg-background p-6 sm:p-8 lg:p-9"
           >
             <div className="flex items-start justify-between gap-6">
               <span className="font-mono text-xs tracking-[0.18em] text-primary">
-                PÔLE {pillar.index}
+                {pillar.kind.toUpperCase()} {pillar.index}
               </span>
               <ArrowUpRight
                 aria-hidden="true"

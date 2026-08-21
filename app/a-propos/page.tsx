@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Check, Quote } from 'lucide-react'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
-import { founderIdentityJsonLd, JsonLd } from '@/components/brand/json-ld'
+import {
+  founderIdentityJsonLd,
+  JsonLd,
+  organizationIdentityJsonLd,
+} from '@/components/brand/json-ld'
 import { PrimaryButton } from '@/components/brand/primary-button'
 import { SecondaryButton } from '@/components/brand/secondary-button'
 import { TechnicalLabel } from '@/components/brand/technical-label'
@@ -11,25 +16,19 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
-  title: 'À propos du studio',
+  title: {
+    absolute: 'À propos de Novekia — entreprise technologique française',
+  },
   description:
-    'Découvrez Novekia, studio français d’ingénierie technologique fondé par Andy Legrand : logiciels métiers, IA locale, infrastructures de calcul et architectures web.',
+    'Identité, mission, produits et méthode de Novekia, entreprise technologique française qui développe Lead Engine et NovekiAct.',
   alternates: { canonical: '/a-propos' },
   openGraph: {
     type: 'profile',
     locale: 'fr_FR',
     url: `${siteConfig.url}/a-propos`,
-    title: 'À propos du studio — Novekia',
+    title: 'À propos de Novekia — entreprise technologique française',
     description:
-      'Un studio d’ingénierie technologique qui comprend, conçoit, prototype et déploie des systèmes solides.',
-    images: [
-      {
-        url: '/og.png',
-        width: 1200,
-        height: 630,
-        alt: 'Novekia — Synergies Intelligentes',
-      },
-    ],
+      'La source institutionnelle sur l’identité, les produits, les expertises et la méthode de Novekia.',
   },
 }
 
@@ -67,12 +66,16 @@ export default function AboutPage() {
           '@type': 'ProfilePage',
           '@id': `${aboutUrl}#webpage`,
           url: aboutUrl,
-          name: 'À propos du studio Novekia',
+          name: 'À propos de Novekia',
           description: metadata.description,
           inLanguage: 'fr-FR',
           isPartOf: { '@id': `${siteConfig.url}/#website` },
-          mainEntity: founderIdentityJsonLd,
+          mainEntity: organizationIdentityJsonLd,
           about: { '@id': `${siteConfig.url}/#organization` },
+          hasPart: {
+            '@type': 'WebPageElement',
+            about: founderIdentityJsonLd,
+          },
         }}
       />
       <JsonLd
@@ -115,26 +118,22 @@ export default function AboutPage() {
             <div className="mt-12 grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
               <div>
                 <TechnicalLabel index="01">
-                  Studio d’ingénierie technologique
+                  Identité de l’entreprise
                 </TechnicalLabel>
                 <h1 className="mt-6 max-w-4xl text-balance text-5xl font-semibold leading-[0.95] tracking-[-0.055em] sm:text-7xl">
-                  Un studio.
+                  Novekia.
                   <br />
-                  <span className="text-primary">Pas une agence.</span>
+                  <span className="text-primary">Une entreprise technologique française.</span>
                 </h1>
                 <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                  Novekia réunit la compréhension du métier, l’ingénierie
-                  logicielle, l’intelligence artificielle locale et
-                  l’infrastructure. L’objectif n’est pas de livrer une
-                  apparence&nbsp;: il est de construire un système utile,
-                  exploitable et durable.
+                  {siteConfig.entityDescription}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <PrimaryButton href="/#contact" withArrow>
                     Échanger avec le studio
                   </PrimaryButton>
-                  <SecondaryButton href="/offres">
-                    Découvrir nos expertises
+                  <SecondaryButton href="/produits">
+                    Découvrir les produits
                   </SecondaryButton>
                 </div>
               </div>
@@ -162,13 +161,86 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
+          <div className="mx-auto max-w-7xl">
+            <TechnicalLabel index="02">Identité de référence</TechnicalLabel>
+            <div className="mt-6 grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+              <div>
+                <h2 className="text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
+                  Une même marque pour des produits et des services clairement reliés.
+                </h2>
+                <p className="mt-6 text-base leading-8 text-muted-foreground">
+                  Novekia est le nom commercial d’Andy Legrand, entrepreneur
+                  individuel immatriculé en France. L’entreprise est basée à
+                  Villeneuve, dans l’Ain, et intervient auprès d’organisations
+                  françaises sur des projets numériques et d’intelligence
+                  artificielle.
+                </p>
+              </div>
+
+              <dl className="grid gap-px bg-border sm:grid-cols-2">
+                <div className="bg-background p-6">
+                  <dt className="font-mono text-xs uppercase tracking-[0.16em] text-primary">
+                    Entité principale
+                  </dt>
+                  <dd className="mt-3 text-lg font-semibold">Novekia</dd>
+                  <dd className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Entreprise technologique et marque mère.
+                  </dd>
+                </div>
+                <div className="bg-background p-6">
+                  <dt className="font-mono text-xs uppercase tracking-[0.16em] text-primary">
+                    Implantation
+                  </dt>
+                  <dd className="mt-3 text-lg font-semibold">
+                    Villeneuve, Ain, France
+                  </dd>
+                  <dd className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Projets à distance ou sur site selon le contexte.
+                  </dd>
+                </div>
+                <div className="bg-background p-6">
+                  <dt className="font-mono text-xs uppercase tracking-[0.16em] text-primary">
+                    Produit de prospection
+                  </dt>
+                  <dd className="mt-3 text-lg font-semibold">Lead Engine</dd>
+                  <dd className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Prospection B2B fondée sur les signaux et les preuves.
+                  </dd>
+                </div>
+                <div className="bg-background p-6">
+                  <dt className="font-mono text-xs uppercase tracking-[0.16em] text-primary">
+                    Produit de gouvernance IA
+                  </dt>
+                  <dd className="mt-3 text-lg font-semibold">NovekiAct</dd>
+                  <dd className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Gouvernance des usages IA pour les PME, en développement.
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <SecondaryButton href="/lead-engine-studio">
+                Lead Engine by Novekia
+              </SecondaryButton>
+              <SecondaryButton href="/novekiact">
+                NovekiAct by Novekia
+              </SecondaryButton>
+              <SecondaryButton href="/mentions-legales">
+                Informations légales
+              </SecondaryButton>
+            </div>
+          </div>
+        </section>
+
         <section
           id="vision"
           className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24"
         >
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20">
             <div>
-              <TechnicalLabel index="02">La vision</TechnicalLabel>
+              <TechnicalLabel index="03">La vision</TechnicalLabel>
               <h2 className="mt-5 text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
                 Relier les disciplines autour d’un résultat.
               </h2>
@@ -186,7 +258,13 @@ export default function AboutPage() {
                 métiers et sous votre contrôle.&nbsp;»
               </p>
               <footer className="mt-7 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                Andy Legrand · Fondateur de Novekia
+                <Link
+                  href="/auteurs/andy-legrand"
+                  rel="author"
+                  className="transition-colors hover:text-foreground"
+                >
+                  Andy Legrand · Fondateur de Novekia
+                </Link>
               </footer>
             </blockquote>
           </div>
@@ -194,9 +272,9 @@ export default function AboutPage() {
 
         <section className="border-b border-border px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="mx-auto max-w-7xl">
-            <TechnicalLabel index="03">Principes de travail</TechnicalLabel>
+            <TechnicalLabel index="04">Méthode Evidence-First</TechnicalLabel>
             <h2 className="mt-5 max-w-3xl text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
-              De la clarté dans les décisions, de la rigueur dans l’exécution.
+              Des affirmations reliées aux faits, des décisions qui restent vérifiables.
             </h2>
 
             <div className="mt-10 grid gap-px bg-border md:grid-cols-2">

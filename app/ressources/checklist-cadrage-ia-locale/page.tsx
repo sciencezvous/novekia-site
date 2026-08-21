@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { CheckSquare2, Printer } from 'lucide-react'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
 import {
@@ -25,6 +26,9 @@ export const metadata: Metadata = {
     title: 'Checklist de cadrage d’un projet d’IA locale — Novekia',
     description:
       'Quarante vérifications pour décider avant le prototype, le modèle ou le matériel.',
+    publishedTime: '2026-07-24',
+    modifiedTime: '2026-07-24',
+    authors: ['Andy Legrand'],
     images: ['/og.png'],
   },
 }
@@ -79,6 +83,16 @@ export default function LocalAiChecklistPage() {
             <p className="mt-7 max-w-3xl text-lg leading-8 text-muted-foreground">
               Quarante points de contrôle pour transformer une idée en décision
               documentée, avant de choisir un modèle, un RAG ou une machine.
+            </p>
+            <p className="mt-5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+              <Link
+                href="/auteurs/andy-legrand"
+                rel="author"
+                className="transition-colors hover:text-foreground"
+              >
+                Par Andy Legrand
+              </Link>{' '}
+              · Publié et mis à jour le 24 juillet 2026
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ChecklistDownload />

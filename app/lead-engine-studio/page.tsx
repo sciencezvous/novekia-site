@@ -10,7 +10,7 @@ import {
   UserCheck,
 } from 'lucide-react'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
-import { JsonLd } from '@/components/brand/json-ld'
+import { JsonLd, leadEngineIdentityJsonLd } from '@/components/brand/json-ld'
 import { PrimaryButton } from '@/components/brand/primary-button'
 import { SectionHeader } from '@/components/brand/section-header'
 import { TechnicalLabel } from '@/components/brand/technical-label'
@@ -20,18 +20,19 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
-  title: 'Lead Engine Studio — prospection B2B qualifiée',
+  title: {
+    absolute: 'Lead Engine — Prospection B2B fondée sur les signaux | Novekia',
+  },
   description:
-    'Prospection B2B sur mesure : ciblage, recherche d’entreprises, qualification et préparation des approches sous supervision humaine.',
+    'Lead Engine est le produit de prospection B2B développé par Novekia : ciblage, signaux publics, qualification documentée et approches sous supervision humaine.',
   alternates: { canonical: '/lead-engine-studio' },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
     url: `${siteConfig.url}/lead-engine-studio`,
-    title: 'Novekia Lead Engine Studio — prospection B2B qualifiée',
+    title: 'Lead Engine — Prospection B2B fondée sur les signaux | Novekia',
     description:
       'Transformez votre marché en opportunités commerciales documentées, priorisées et prêtes à être activées sous supervision humaine.',
-    images: ['/og.png'],
   },
 }
 
@@ -129,14 +130,21 @@ export default function LeadEngineStudioPage() {
       <JsonLd
         data={{
           '@context': 'https://schema.org',
+          ...leadEngineIdentityJsonLd,
+        }}
+      />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
           '@type': 'WebPage',
           '@id': `${pageUrl}#webpage`,
           url: pageUrl,
-          name: 'Novekia Lead Engine Studio',
+          name: 'Lead Engine — Prospection B2B fondée sur les signaux',
           description: metadata.description,
           inLanguage: 'fr-FR',
           isPartOf: { '@id': `${siteConfig.url}/#website` },
-          about: { '@id': `${pageUrl}#service` },
+          about: { '@id': `${pageUrl}#product` },
+          mainEntity: { '@id': `${pageUrl}#product` },
         }}
       />
       <JsonLd
@@ -144,13 +152,14 @@ export default function LeadEngineStudioPage() {
           '@context': 'https://schema.org',
           '@type': 'Service',
           '@id': `${pageUrl}#service`,
-          name: 'Novekia Lead Engine Studio',
+          name: 'Service opéré avec Lead Engine par Novekia',
           serviceType:
             'Prospection et qualification commerciale B2B sous supervision humaine',
           url: pageUrl,
           provider: { '@id': `${siteConfig.url}/#organization` },
           areaServed: { '@type': 'Country', name: 'France' },
-          description: metadata.description,
+          description:
+            'Service de prospection B2B opéré avec le produit Lead Engine et supervisé par Novekia.',
         }}
       />
       <JsonLd
@@ -167,7 +176,13 @@ export default function LeadEngineStudioPage() {
             {
               '@type': 'ListItem',
               position: 2,
-              name: 'Lead Engine Studio',
+              name: 'Produits',
+              item: `${siteConfig.url}/produits`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: 'Lead Engine',
               item: pageUrl,
             },
           ],
@@ -187,13 +202,14 @@ export default function LeadEngineStudioPage() {
             <Breadcrumbs
               items={[
                 { label: 'Accueil', href: '/' },
-                { label: 'Lead Engine Studio' },
+                { label: 'Produits', href: '/produits' },
+                { label: 'Lead Engine' },
               ]}
             />
             <div className="mt-12 grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-20">
               <div>
                 <TechnicalLabel index="01">
-                  Novekia Lead Engine Studio
+                  Lead Engine — un produit Novekia
                 </TechnicalLabel>
                 <h1 className="mt-6 max-w-5xl text-balance text-5xl font-semibold leading-[0.94] tracking-[-0.055em] sm:text-7xl">
                   Transformez votre marché en{' '}
@@ -205,9 +221,10 @@ export default function LeadEngineStudioPage() {
 
               <div>
                 <p className="max-w-xl text-lg leading-8 text-muted-foreground">
-                  Nous identifions les entreprises pertinentes, analysons les
-                  signaux disponibles, qualifions les opportunités et préparons
-                  des approches commerciales adaptées à votre positionnement.
+                  Lead Engine est le produit de prospection B2B développé par
+                  Novekia. Il identifie les entreprises pertinentes, analyse
+                  les signaux disponibles, documente la qualification et
+                  prépare des approches adaptées sous supervision humaine.
                 </p>
                 <PrimaryButton href="/#contact" withArrow className="mt-8">
                   Parler de ma prospection
@@ -234,7 +251,7 @@ export default function LeadEngineStudioPage() {
               <span id="capacites-title">
                 Ce que fait
                 <br />
-                <span className="text-primary">Lead Engine Studio.</span>
+                <span className="text-primary">Lead Engine.</span>
               </span>
             }
             description="Un dispositif concentré sur la prospection et la qualification commerciale, du cadrage de la cible à la préparation de l’activation."

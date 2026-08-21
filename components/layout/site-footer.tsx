@@ -11,9 +11,9 @@ export function SiteFooter() {
           <div className="flex flex-col gap-5">
             <Logo href="/" />
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Un studio français structuré autour de deux pôles&nbsp;:
-              prospection et qualification commerciale B2B, puis conception de
-              solutions numériques et d&apos;infrastructures.
+              Entreprise technologique française. Novekia développe Lead Engine
+              et NovekiAct, puis conçoit des logiciels, systèmes d&apos;IA locale et
+              infrastructures numériques.
             </p>
             <address className="mt-2 flex flex-col gap-1 font-mono text-xs not-italic leading-relaxed text-muted-foreground">
               <p className="text-foreground">

@@ -7,10 +7,17 @@ import { siteConfig } from '@/lib/site-config'
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
     { path: '', priority: 1, changeFrequency: 'monthly' as const },
+    { path: '/produits', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/lead-engine-studio', priority: 0.95, changeFrequency: 'monthly' as const },
+    { path: '/novekiact', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/solutions', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/offres', priority: 0.9, changeFrequency: 'monthly' as const },
-    { path: '/a-propos', priority: 0.7, changeFrequency: 'monthly' as const },
+    { path: '/a-propos', priority: 0.9, changeFrequency: 'monthly' as const },
+    {
+      path: '/auteurs/andy-legrand',
+      priority: 0.65,
+      changeFrequency: 'monthly' as const,
+    },
     { path: '/ressources', priority: 0.8, changeFrequency: 'weekly' as const },
     {
       path: '/outils/dimensionnement-ia',

@@ -66,7 +66,7 @@ export function TrustSection() {
             <span className="text-primary">la promesse.</span>
           </span>
         }
-        description="Les deux pôles Novekia reposent sur les mêmes exigences de contrôle, de clarté et de responsabilité."
+        description="Les produits et services Novekia reposent sur les mêmes exigences de contrôle, de clarté et de responsabilité."
       />
 
       <div className="mt-12 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">

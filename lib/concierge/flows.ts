@@ -1468,7 +1468,7 @@ export const informationFlow: ConciergeFlowDefinition = {
   path: 'information',
   label: 'Comprendre les services Novekia',
   description:
-    'Orientation initiale vers le bon pôle avant une éventuelle demande de contact.',
+    'Orientation initiale vers le bon parcours avant une éventuelle demande de contact.',
   startStepId: 'information.topic',
   exitStepId: 'submission.ready',
   steps: [

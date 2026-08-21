@@ -10,7 +10,7 @@ import { Section } from '@/components/layout/section'
 
 const evidence = [
   {
-    eyebrow: 'Lead Engine Studio',
+    eyebrow: 'Lead Engine by Novekia',
     title: 'Un dispositif commercial explicite',
     description:
       'Ciblage, critères de qualification, recherche des décideurs et livrables sont présentés avant le démarrage.',
