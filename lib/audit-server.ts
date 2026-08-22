@@ -109,6 +109,10 @@ function readIngressConfig() {
   const rawUrl = process.env.NOVEKIA_AUDIT_INGRESS_URL?.trim()
   const token = process.env.NOVEKIA_AUDIT_INGRESS_TOKEN?.trim()
   if (!rawUrl || !token) {
+    console.warn('[audit-ingress-config]', {
+      hasUrl: Boolean(rawUrl),
+      hasToken: Boolean(token),
+    })
     throw new AuditFacadeError(
       503,
       'Le moteur de pré-audit est momentanément indisponible.'
