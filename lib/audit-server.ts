@@ -8,6 +8,8 @@ import {
 const MAX_TARGET_LENGTH = 1000
 const AUDIT_TIMEOUT_MS = 55_000
 const RATE_WINDOW_MS = 60 * 60 * 1000
+const DEFAULT_AUDIT_INGRESS_URL =
+  'https://novekia-lead-engine-studio-production.up.railway.app/api/public/website-audit'
 
 type RateBucket = { count: number; resetAt: number }
 const rateBuckets = new Map<string, RateBucket>()
@@ -106,13 +108,10 @@ export function normalizeAuditTarget(rawValue: unknown) {
 }
 
 function readIngressConfig() {
-  const rawUrl = process.env.NOVEKIA_AUDIT_INGRESS_URL?.trim()
+  const rawUrl =
+    process.env.NOVEKIA_AUDIT_INGRESS_URL?.trim() || DEFAULT_AUDIT_INGRESS_URL
   const token = process.env.NOVEKIA_AUDIT_INGRESS_TOKEN?.trim()
-  if (!rawUrl || !token) {
-    console.warn('[audit-ingress-config]', {
-      hasUrl: Boolean(rawUrl),
-      hasToken: Boolean(token),
-    })
+  if (!token) {
     throw new AuditFacadeError(
       503,
       'Le moteur de pré-audit est momentanément indisponible.'
