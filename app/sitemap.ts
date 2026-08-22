@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/novekiact', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/solutions', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/offres', priority: 0.9, changeFrequency: 'monthly' as const },
+    { path: '/audit', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/a-propos', priority: 0.9, changeFrequency: 'monthly' as const },
     {
       path: '/auteurs/andy-legrand',
