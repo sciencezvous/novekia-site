@@ -54,7 +54,7 @@ function isV1ScoreMap(value: unknown) {
 }
 
 function isNonNegativeInteger(value: unknown) {
-  return Number.isInteger(value) && typeof value === 'number' && value >= 0
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0
 }
 
 export function isPublicAuditResult(value: unknown): value is PublicAuditResult {
