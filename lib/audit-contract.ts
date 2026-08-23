@@ -1,3 +1,12 @@
+export const PUBLIC_AUDIT_SCORE_VERSION = 'public-audit-v1' as const
+
+const PUBLIC_AUDIT_SCORE_CATEGORIES = [
+  'accessibility_indexability',
+  'on_page_seo',
+  'structured_data_entity',
+  'technical_integrity',
+] as const
+
 export type PublicAuditFinding = {
   id: string
   category: string
@@ -17,8 +26,11 @@ export type PublicAuditResult = {
   target_url: string
   target_domain: string
   status: 'completed'
-  opportunity_index: number
-  coverage_score: number
+  public_audit_score: number
+  category_scores: Record<string, number>
+  category_coverage: Record<string, number>
+  coverage: number
+  score_version: typeof PUBLIC_AUDIT_SCORE_VERSION
   confidence_score: number
   pages_collected: number
   pages_planned: number
@@ -26,6 +38,32 @@ export type PublicAuditResult = {
   summary: string
   positive_observations: string[]
   findings: PublicAuditFinding[]
+}
+
+function isBoundedScore(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 100
+}
+
+function isV1ScoreMap(value: unknown) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const scores = value as Record<string, unknown>
+  return (
+    Object.values(scores).every(isBoundedScore) &&
+    PUBLIC_AUDIT_SCORE_CATEGORIES.every((category) => isBoundedScore(scores[category]))
+  )
+}
+
+function hasMeasuredV1Categories(value: unknown) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const coverage = value as Record<string, unknown>
+  return PUBLIC_AUDIT_SCORE_CATEGORIES.every((category) => {
+    const measured = coverage[category]
+    return isBoundedScore(measured) && measured > 0
+  })
+}
+
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0
 }
 
 export function isPublicAuditResult(value: unknown): value is PublicAuditResult {
@@ -37,14 +75,19 @@ export function isPublicAuditResult(value: unknown): value is PublicAuditResult 
     typeof data.target_url === 'string' &&
     typeof data.target_domain === 'string' &&
     data.status === 'completed' &&
-    typeof data.opportunity_index === 'number' &&
-    data.opportunity_index >= 0 &&
-    data.opportunity_index <= 100 &&
-    typeof data.coverage_score === 'number' &&
-    typeof data.confidence_score === 'number' &&
-    typeof data.pages_collected === 'number' &&
-    typeof data.pages_planned === 'number' &&
-    typeof data.total_findings === 'number' &&
+    isBoundedScore(data.public_audit_score) &&
+    isV1ScoreMap(data.category_scores) &&
+    isV1ScoreMap(data.category_coverage) &&
+    hasMeasuredV1Categories(data.category_coverage) &&
+    isBoundedScore(data.coverage) &&
+    data.coverage > 0 &&
+    data.score_version === PUBLIC_AUDIT_SCORE_VERSION &&
+    isBoundedScore(data.confidence_score) &&
+    isNonNegativeInteger(data.pages_collected) &&
+    data.pages_collected > 0 &&
+    isNonNegativeInteger(data.pages_planned) &&
+    data.pages_planned >= data.pages_collected &&
+    isNonNegativeInteger(data.total_findings) &&
     typeof data.summary === 'string' &&
     Array.isArray(data.positive_observations) &&
     Array.isArray(data.findings)

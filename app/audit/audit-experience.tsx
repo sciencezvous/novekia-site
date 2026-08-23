@@ -19,15 +19,23 @@ import {
 } from '@/lib/audit-contract'
 import { getStoredAttribution } from '@/lib/lead-attribution'
 
-const CATEGORY_LABELS: Record<string, string> = {
+const FINDING_CATEGORY_LABELS: Record<string, string> = {
   technical_seo: 'SEO technique',
   on_page_seo: 'SEO on-page',
   geo_readiness: 'GEO / signaux AEO',
   trust_authority: 'Confiance & autorité',
   conversion: 'Conversion',
   performance_observation: 'Performance observée',
+  local_visibility: 'Visibilité locale',
   public_hygiene: 'Hygiène publique',
   accessibility_observation: 'Accessibilité observée',
+}
+
+const SCORE_CATEGORY_LABELS: Record<string, string> = {
+  accessibility_indexability: 'Accessibilité & indexabilité',
+  on_page_seo: 'SEO on-page',
+  structured_data_entity: 'Données structurées & entité',
+  technical_integrity: 'Intégrité technique',
 }
 
 const SEVERITY_LABELS: Record<string, string> = {
@@ -38,7 +46,7 @@ const SEVERITY_LABELS: Record<string, string> = {
   info: 'Information',
 }
 
-const CATEGORY_IMPACTS: Record<string, string> = {
+const FINDING_IMPACTS: Record<string, string> = {
   technical_seo:
     'Ce point peut compliquer l’exploration, l’indexation ou l’interprétation technique du site.',
   on_page_seo:
@@ -51,23 +59,29 @@ const CATEGORY_IMPACTS: Record<string, string> = {
     'Ce point peut créer une friction entre la visite du site et la prise de contact ou l’action attendue.',
   performance_observation:
     'Ce signal mérite une mesure plus approfondie avant de conclure sur son impact réel sur l’expérience.',
+  local_visibility:
+    'Ce point peut limiter la compréhension locale de l’activité ou de sa zone de service.',
   public_hygiene:
     'Ce point indique une configuration publique perfectible qui mérite une vérification ciblée.',
   accessibility_observation:
     'Ce point peut rendre certains contenus plus difficiles à utiliser ou à interpréter pour une partie des visiteurs.',
 }
 
-function categoryLabel(value: string) {
-  return CATEGORY_LABELS[value] ?? value.replaceAll('_', ' ')
+function findingCategoryLabel(value: string) {
+  return FINDING_CATEGORY_LABELS[value] ?? value.replaceAll('_', ' ')
+}
+
+function scoreCategoryLabel(value: string) {
+  return SCORE_CATEGORY_LABELS[value] ?? value.replaceAll('_', ' ')
 }
 
 function severityLabel(value: string) {
   return SEVERITY_LABELS[value] ?? value
 }
 
-function categoryImpact(value: string) {
+function findingImpact(value: string) {
   return (
-    CATEGORY_IMPACTS[value] ??
+    FINDING_IMPACTS[value] ??
     'Ce constat mérite une vérification ciblée afin d’en mesurer l’impact et de prioriser la correction.'
   )
 }
@@ -82,20 +96,16 @@ function safeEvidenceUrl(value: string | null) {
   }
 }
 
-function visibilityScore(result: PublicAuditResult) {
-  return Math.max(0, Math.min(100, 100 - result.opportunity_index))
-}
-
 function verdict(result: PublicAuditResult) {
-  const score = visibilityScore(result)
+  const score = result.public_audit_score
 
   if (score >= 90) {
     return {
-      title: 'Très bon niveau observé sur l’échantillon.',
+      title: 'Très bon niveau observé sur le périmètre vérifié.',
       body:
         result.total_findings > 0
-          ? 'Votre site présente une base solide. Quelques corrections ciblées peuvent encore améliorer sa visibilité et supprimer les écarts détectés.'
-          : 'Aucun écart prioritaire n’a été retenu sur les pages examinées. Ce pré-audit reste borné et ne valide pas l’ensemble du site ni toutes les dimensions SEO, GEO et AEO.',
+          ? 'La base mesurée est solide. Quelques corrections ciblées peuvent encore améliorer les signaux contrôlés.'
+          : 'Aucun écart prioritaire n’a été retenu sur les contrôles effectivement couverts. Le pré-audit reste borné et ne valide pas l’ensemble du site.',
     }
   }
 
@@ -103,22 +113,22 @@ function verdict(result: PublicAuditResult) {
     return {
       title: 'Bon niveau observé — quelques corrections restent utiles.',
       body:
-        'La base est saine sur l’échantillon analysé. Les constats ci-dessous indiquent les corrections les plus utiles pour renforcer encore la visibilité du site.',
+        'La base est saine sur les contrôles couverts. Les constats ci-dessous indiquent les corrections les plus utiles à traiter en priorité.',
     }
   }
 
   if (score >= 55) {
     return {
-      title: 'Base exploitable — plusieurs améliorations peuvent renforcer la visibilité.',
+      title: 'Base exploitable — plusieurs améliorations sont mesurables.',
       body:
-        'Le site dispose de fondations utiles, mais plusieurs écarts vérifiés méritent d’être corrigés et priorisés pour améliorer sa visibilité web et IA.',
+        'Le site dispose de fondations utiles, mais plusieurs écarts vérifiés méritent d’être corrigés et priorisés.',
     }
   }
 
   return {
-    title: 'Votre site dispose d’une base à renforcer.',
+    title: 'Le périmètre contrôlé présente plusieurs points à renforcer.',
     body:
-      'Le pré-audit a identifié plusieurs corrections prioritaires. Elles donnent un plan de départ concret pour renforcer progressivement la visibilité du site.',
+      'Le pré-audit a identifié des corrections prioritaires et documentées qui donnent un plan de départ concret.',
   }
 }
 
@@ -166,8 +176,9 @@ export function AuditExperience() {
 
       setResult(payload)
       trackAuditEvent('AuditCompleted', {
-        opportunity_index: payload.opportunity_index,
-        visibility_score: visibilityScore(payload),
+        public_audit_score: payload.public_audit_score,
+        coverage: payload.coverage,
+        score_version: payload.score_version,
         findings_count: payload.total_findings,
         pages_collected: payload.pages_collected,
       })
@@ -209,8 +220,9 @@ export function AuditExperience() {
 
       setReportSent(true)
       trackAuditEvent('EmailSubmitted', {
-        opportunity_index: result.opportunity_index,
-        visibility_score: visibilityScore(result),
+        public_audit_score: result.public_audit_score,
+        coverage: result.coverage,
+        score_version: result.score_version,
       })
     } catch (error) {
       setReportError(
@@ -235,7 +247,6 @@ export function AuditExperience() {
   }
 
   const currentVerdict = result ? verdict(result) : null
-  const currentVisibilityScore = result ? visibilityScore(result) : null
 
   return (
     <div className="mx-auto w-full max-w-5xl">
@@ -247,13 +258,13 @@ export function AuditExperience() {
               Pré-audit public Novekia
             </div>
             <h1 className="mt-7 max-w-3xl text-balance text-4xl font-semibold leading-[0.98] tracking-[-0.045em] sm:text-6xl">
-              Votre site est-il vraiment visible par{' '}
+              Votre site est-il correctement compris par{' '}
               <span className="text-primary">Google et les moteurs IA&nbsp;?</span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-              Entrez simplement votre URL. Novekia analyse un échantillon public
-              de votre site et recherche des opportunités SEO, GEO, de réponse
-              structurée et de conversion.
+              Entrez votre URL. Le moteur Novekia contrôle un échantillon public,
+              mesure des fondamentaux SEO, l’indexabilité, les données structurées
+              et des signaux d’entité, puis restitue les preuves disponibles.
             </p>
 
             <ul className="mt-7 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
@@ -263,7 +274,7 @@ export function AuditExperience() {
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 aria-hidden="true" className="size-4 text-primary" />
-                Valeur visible avant l’email
+                Score visible avant l’email
               </li>
               <li className="flex items-center gap-2">
                 <ShieldCheck aria-hidden="true" className="size-4 text-primary" />
@@ -341,9 +352,9 @@ export function AuditExperience() {
                   <div>
                     <p className="font-medium">Le moteur examine le site réel.</p>
                     <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                      Collecte bornée, robots.txt, sitemap, structure des pages,
-                      signaux SEO/GEO, réponses structurées, confiance et conversion.
-                      Cela peut prendre quelques dizaines de secondes.
+                      Collecte bornée, robots.txt, sitemap, indexabilité, structure
+                      des pages et données structurées. Cela peut prendre quelques
+                      dizaines de secondes.
                     </p>
                   </div>
                 </div>
@@ -361,14 +372,17 @@ export function AuditExperience() {
 
             <p className="mt-5 text-xs leading-5 text-muted-foreground">
               Pré-audit borné fondé sur les seules informations accessibles
-              publiquement. Il ne constitue ni une certification ni un audit
-              exhaustif et ne garantit aucun classement.
+              publiquement. Il ne constitue ni une certification, ni un audit
+              exhaustif, ni une garantie de classement.
             </p>
           </div>
         </div>
       ) : (
         <div className="space-y-8">
-          <section className="border border-border bg-background p-5 sm:p-8" aria-labelledby="audit-verdict-title">
+          <section
+            className="border border-border bg-background p-5 sm:p-8"
+            aria-labelledby="audit-verdict-title"
+          >
             <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
               <div className="max-w-3xl">
                 <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
@@ -376,20 +390,25 @@ export function AuditExperience() {
                 </p>
                 <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2">
                   <p className="text-5xl font-semibold tracking-tight text-primary sm:text-6xl">
-                    {currentVisibilityScore}/100
+                    {result.public_audit_score}/100
                   </p>
                   <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-                    Score de visibilité observée
+                    Score du pré-audit public
                   </p>
                 </div>
-                <h2 id="audit-verdict-title" className="mt-5 text-2xl font-semibold tracking-tight sm:text-3xl">
+                <h2
+                  id="audit-verdict-title"
+                  className="mt-5 text-2xl font-semibold tracking-tight sm:text-3xl"
+                >
                   {currentVerdict?.title}
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">
                   {currentVerdict?.body}
                 </p>
                 <p className="mt-3 text-xs leading-5 text-muted-foreground">
-                  100/100 signifie qu’aucun écart pondéré n’a été retenu dans l’échantillon analysé. Ce score n’est pas une certification ni une note exhaustive du site.
+                  Le score est calculé uniquement sur les contrôles réellement
+                  évalués. Un contrôle non mesuré ou à revoir réduit la couverture
+                  sans devenir artificiellement un zéro. Méthode&nbsp;: {result.score_version}.
                 </p>
               </div>
               <button
@@ -405,16 +424,16 @@ export function AuditExperience() {
             <div className="mt-7 h-2 overflow-hidden bg-secondary" aria-hidden="true">
               <div
                 className="h-full bg-primary transition-[width] duration-700"
-                style={{ width: `${currentVisibilityScore ?? 0}%` }}
+                style={{ width: `${result.public_audit_score}%` }}
               />
             </div>
 
             <div className="mt-7 grid gap-px bg-border sm:grid-cols-3">
               <div className="bg-background p-5">
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Couverture
+                  Couverture du référentiel V1
                 </p>
-                <p className="mt-2 text-2xl font-semibold">{result.coverage_score}/100</p>
+                <p className="mt-2 text-2xl font-semibold">{result.coverage}/100</p>
               </div>
               <div className="bg-background p-5">
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">
@@ -433,8 +452,42 @@ export function AuditExperience() {
                 <p className="mt-2 text-2xl font-semibold">
                   {result.pages_collected}/{result.pages_planned}
                 </p>
-                <p className="mt-2 text-xs leading-5 text-muted-foreground">pages analysées</p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">pages collectées</p>
               </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="audit-categories-title">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
+                Lecture du score
+              </p>
+              <h2 id="audit-categories-title" className="mt-2 text-2xl font-semibold">
+                Sous-scores réellement mesurés
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+                Ces sous-scores décrivent uniquement le référentiel public V1. Ils
+                ne doivent pas être lus comme des scores Google, GEO ou AEO officiels.
+              </p>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {Object.entries(result.category_scores).map(([category, score]) => (
+                <article key={category} className="border border-border bg-background p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-semibold">{scoreCategoryLabel(category)}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Couverture {result.category_coverage[category] ?? 0}/100
+                      </p>
+                    </div>
+                    <p className="text-2xl font-semibold text-primary">{score}/100</p>
+                  </div>
+                  <div className="mt-4 h-1.5 overflow-hidden bg-secondary" aria-hidden="true">
+                    <div className="h-full bg-primary" style={{ width: `${score}%` }} />
+                  </div>
+                </article>
+              ))}
             </div>
           </section>
 
@@ -442,15 +495,15 @@ export function AuditExperience() {
             <div className="flex items-end justify-between gap-4">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
-                  Pour gagner encore des points
+                  Constats vérifiés
                 </p>
                 <h2 id="audit-findings-title" className="mt-2 text-2xl font-semibold">
                   Corrections prioritaires et preuves
                 </h2>
               </div>
               <p className="hidden text-right text-xs text-muted-foreground sm:block">
-                {result.total_findings} correction{result.total_findings > 1 ? 's' : ''}{' '}
-                prioritaire{result.total_findings > 1 ? 's' : ''}
+                {result.total_findings} constat{result.total_findings > 1 ? 's' : ''}{' '}
+                exploitable{result.total_findings > 1 ? 's' : ''}
               </p>
             </div>
 
@@ -465,7 +518,8 @@ export function AuditExperience() {
                     >
                       <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em]">
                         <span className="text-primary">
-                          Priorité {String(index + 1).padStart(2, '0')} · {categoryLabel(finding.category)}
+                          Priorité {String(index + 1).padStart(2, '0')} ·{' '}
+                          {findingCategoryLabel(finding.category)}
                         </span>
                         <span className="text-muted-foreground">·</span>
                         <span className="text-muted-foreground">
@@ -489,7 +543,7 @@ export function AuditExperience() {
                             Pourquoi corriger ce point
                           </p>
                           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                            {categoryImpact(finding.category)}
+                            {findingImpact(finding.category)}
                           </p>
                         </div>
                       </div>
@@ -525,7 +579,9 @@ export function AuditExperience() {
                     Aucun écart prioritaire n’a été retenu dans cet échantillon.
                   </p>
                   <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-                    C’est favorable sur les pages analysées. Le pré-audit reste toutefois volontairement borné : l’audit complet permet d’élargir la couverture et de rechercher des optimisations plus fines.
+                    C’est favorable sur les contrôles couverts. Le pré-audit reste
+                    toutefois volontairement borné&nbsp;: un audit plus large peut
+                    rechercher des optimisations supplémentaires.
                   </p>
                 </div>
               )}
@@ -543,18 +599,20 @@ export function AuditExperience() {
                   Rapport envoyé.
                 </h2>
                 <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
-                  Vérifiez votre boîte de réception. Vous y trouverez votre score observé, les preuves et les recommandations associées aux corrections retenues.
+                  Vérifiez votre boîte de réception. Vous y trouverez la note du
+                  pré-audit, sa couverture, les preuves et les recommandations disponibles.
                 </p>
                 <div className="mt-6 border-t border-primary/20 pt-6">
-                  <p className="font-semibold">Vous voulez améliorer ce score&nbsp;?</p>
+                  <p className="font-semibold">Vous voulez améliorer les points mesurés&nbsp;?</p>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                    L’audit complet Novekia élargit le périmètre, priorise les corrections puis permet de vérifier le résultat après remédiation.
+                    Novekia peut élargir le périmètre, confirmer les priorités puis
+                    vérifier le résultat après correction.
                   </p>
                   <a
                     href="/#contact"
                     className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90"
                   >
-                    Améliorer ma visibilité avec Novekia
+                    Améliorer mon site avec Novekia
                     <ArrowRight aria-hidden="true" className="size-5" />
                   </a>
                 </div>
@@ -569,13 +627,15 @@ export function AuditExperience() {
                     </span>
                   </div>
                   <h2 id="free-report-title" className="mt-4 text-2xl font-semibold">
-                    Recevez le compte rendu et les pistes pour gagner des points.
+                    Recevez le compte rendu détaillé du pré-audit.
                   </h2>
                   <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                    Vous avez vu votre score et les premiers constats avant de donner votre email. Le rapport reprend les preuves et les recommandations disponibles pour ce pré-audit.
+                    Vous avez vu la note et les premiers constats avant de donner
+                    votre email. Le rapport reprend les preuves et recommandations disponibles.
                   </p>
                   <p className="mt-4 text-xs leading-5 text-muted-foreground">
-                    Le pré-audit reste borné. L’audit complet sert à élargir la couverture, confirmer les priorités et préparer la remédiation.
+                    La note reste liée à la méthode {result.score_version} et au
+                    périmètre effectivement couvert.
                   </p>
                 </div>
 
@@ -615,7 +675,10 @@ export function AuditExperience() {
                     </button>
                   </div>
 
-                  <div className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                  <div
+                    className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden"
+                    aria-hidden="true"
+                  >
                     <label htmlFor="audit-website">Site web</label>
                     <input
                       id="audit-website"
@@ -636,7 +699,9 @@ export function AuditExperience() {
                       required
                     />
                     <span>
-                      J’accepte de recevoir ce rapport par email et que Novekia puisse me recontacter au sujet de cet audit. Données traitées selon la politique de confidentialité.
+                      J’accepte de recevoir ce rapport par email et que Novekia
+                      puisse me recontacter au sujet de cet audit. Données traitées
+                      selon la politique de confidentialité.
                     </span>
                   </label>
 
@@ -651,7 +716,9 @@ export function AuditExperience() {
           </section>
 
           <p className="text-center text-xs leading-5 text-muted-foreground">
-            Le score de visibilité observée est dérivé des écarts pondérés retenus sur un échantillon de données publiques. L’audit complet Novekia approfondit le SEO, le GEO, les signaux utiles à l’AEO, les preuves par page, la remédiation et la vérification après correction.
+            Le score du pré-audit est calculé par une méthode déterministe et
+            versionnée à partir des contrôles réellement évalués. Il ne constitue
+            ni un score Google, ni une certification, ni un score GEO/AEO officiel.
           </p>
         </div>
       )}
