@@ -22,6 +22,39 @@ export const metadata: Metadata = {
   },
 }
 
+const auditComparison = [
+  {
+    label: 'Périmètre',
+    free: 'Échantillon limité de pages publiques.',
+    deep: 'Analyse élargie, rendu JavaScript et contrôles plus profonds.',
+  },
+  {
+    label: 'SEO',
+    free: 'Fondamentaux techniques et on-page réellement observables.',
+    deep: 'SEO technique, architecture, contenu, performance et priorisation page par page.',
+  },
+  {
+    label: 'GEO, AEO & entités',
+    free: 'Signaux publics d’indexabilité, données structurées et compréhension d’entité.',
+    deep: 'Tests GEO/AEO approfondis, cohérence d’entité, citations et visibilité multi-moteurs.',
+  },
+  {
+    label: 'Brand SERP & autorité',
+    free: 'Quelques signaux publics de confiance et d’identité.',
+    deep: 'Brand SERP, sources officielles et tierces, réputation, corroboration et concurrents.',
+  },
+  {
+    label: 'Restitution',
+    free: 'Score, couverture, sous-scores et jusqu’à 3 constats prioritaires.',
+    deep: 'Tous les constats, preuves, URLs, impact / effort, plan d’action et retest.',
+  },
+  {
+    label: 'Points non mesurables',
+    free: 'Signalés comme non conclus, sans pénaliser la note.',
+    deep: 'Vérifiés avec des méthodes supplémentaires et, si autorisé, des données authentifiées.',
+  },
+]
+
 export default function AuditPage() {
   const pageUrl = `${siteConfig.url}/audit`
 
@@ -79,33 +112,54 @@ export default function AuditPage() {
             className="mb-12 border border-primary/30 bg-primary/5 p-6 sm:p-8 lg:p-10"
             aria-labelledby="audit-complet-title"
           >
-            <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-center">
-              <div>
-                <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
-                  Audit approfondi · prestation payante
-                </p>
-                <h2 id="audit-complet-title" className="mt-3 text-2xl font-semibold sm:text-3xl">
-                  Le pré-audit montre les priorités. L’audit complet explique tout le reste.
-                </h2>
-                <p className="mt-4 max-w-3xl text-sm leading-7 text-muted-foreground sm:text-base">
-                  Le pré-audit public est volontairement borné et ne restitue qu’un aperçu des constats prioritaires. L’audit approfondi Novekia élargit le périmètre, documente les preuves et transforme les écarts confirmés en plan d’action exploitable.
-                </p>
-              </div>
+            <div className="max-w-4xl">
+              <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
+                Gratuit vs audit approfondi
+              </p>
+              <h2 id="audit-complet-title" className="mt-3 text-2xl font-semibold sm:text-3xl">
+                Ce que le pré-audit vérifie — et ce que l’audit approfondi débloque.
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
+                Le pré-audit public ne conclut que sur ce qu’il peut prouver. Les contrôles non mesurables publiquement ne pénalisent pas la note : ils deviennent des points à vérifier dans l’audit approfondi.
+              </p>
+            </div>
 
-              <div className="border border-border bg-background/80 p-5 sm:p-6">
-                <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
-                  <li>• Analyse élargie des pages et signaux stratégiques.</li>
-                  <li>• SEO technique, entité, AEO/GEO et visibilité approfondis.</li>
-                  <li>• Constats complets, preuves par page et priorisation impact / effort.</li>
-                  <li>• Recommandations de remédiation détaillées et retest après correction.</li>
-                </ul>
-                <Link
-                  href="/#contact"
-                  className="mt-6 inline-flex min-h-12 w-full items-center justify-center bg-primary px-5 text-center font-semibold text-primary-foreground transition hover:opacity-90 sm:w-auto"
-                >
-                  Demander mon audit complet
-                </Link>
+            <div className="mt-7 overflow-x-auto border border-border bg-background/75">
+              <div className="min-w-[760px]">
+                <div className="grid grid-cols-[0.72fr_1fr_1fr] border-b border-border bg-background/90 text-sm font-semibold">
+                  <div className="p-4 text-muted-foreground">Domaine</div>
+                  <div className="border-l border-border p-4">Pré-audit gratuit</div>
+                  <div className="border-l border-border p-4 text-primary">
+                    Audit approfondi · payant
+                  </div>
+                </div>
+                {auditComparison.map((row) => (
+                  <div
+                    key={row.label}
+                    className="grid grid-cols-[0.72fr_1fr_1fr] border-b border-border/70 text-sm leading-6 last:border-b-0"
+                  >
+                    <div className="p-4 font-medium">{row.label}</div>
+                    <div className="border-l border-border/70 p-4 text-muted-foreground">
+                      {row.free}
+                    </div>
+                    <div className="border-l border-border/70 p-4 text-muted-foreground">
+                      {row.deep}
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
+
+            <div className="mt-7 flex flex-col gap-4 border-t border-border/70 pt-6 sm:flex-row sm:items-center sm:justify-between">
+              <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+                L’audit approfondi ajoute de la profondeur SEO, GEO, AEO, Entity SEO et Brand SERP, sans transformer une absence de mesure en défaut supposé.
+              </p>
+              <Link
+                href="/#contact"
+                className="inline-flex min-h-12 shrink-0 items-center justify-center bg-primary px-5 text-center font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                Demander mon audit approfondi
+              </Link>
             </div>
           </section>
 
