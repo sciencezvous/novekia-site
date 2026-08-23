@@ -53,6 +53,15 @@ function isV1ScoreMap(value: unknown) {
   )
 }
 
+function hasMeasuredV1Categories(value: unknown) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const coverage = value as Record<string, unknown>
+  return PUBLIC_AUDIT_SCORE_CATEGORIES.every((category) => {
+    const measured = coverage[category]
+    return isBoundedScore(measured) && measured > 0
+  })
+}
+
 function isNonNegativeInteger(value: unknown) {
   return typeof value === 'number' && Number.isInteger(value) && value >= 0
 }
@@ -69,11 +78,15 @@ export function isPublicAuditResult(value: unknown): value is PublicAuditResult 
     isBoundedScore(data.public_audit_score) &&
     isV1ScoreMap(data.category_scores) &&
     isV1ScoreMap(data.category_coverage) &&
+    hasMeasuredV1Categories(data.category_coverage) &&
     isBoundedScore(data.coverage) &&
+    data.coverage > 0 &&
     data.score_version === PUBLIC_AUDIT_SCORE_VERSION &&
     isBoundedScore(data.confidence_score) &&
     isNonNegativeInteger(data.pages_collected) &&
+    data.pages_collected > 0 &&
     isNonNegativeInteger(data.pages_planned) &&
+    data.pages_planned >= data.pages_collected &&
     isNonNegativeInteger(data.total_findings) &&
     typeof data.summary === 'string' &&
     Array.isArray(data.positive_observations) &&
