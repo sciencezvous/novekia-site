@@ -1,4 +1,4 @@
-name: Audit result actionability one-shot
+name: Audit public score semantics one-shot
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  calibrate-and-build:
+  patch-and-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,52 +26,58 @@ jobs:
       - name: Enable pnpm
         run: corepack enable
 
-      - name: Apply fail-closed product copy patch
+      - name: Remove misleading public opportunity score
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          path = Path("app/audit/audit-experience.tsx")
-          text = path.read_text(encoding="utf-8")
-
-          old = '''function severityLabel(value: string) {\n  return SEVERITY_LABELS[value] ?? value\n}\n\nfunction safeEvidenceUrl'''
-          new = '''function severityLabel(value: string) {\n  return SEVERITY_LABELS[value] ?? value\n}\n\nfunction resultVerdict(result: PublicAuditResult) {\n  if (result.total_findings === 0) {\n    return {\n      title: 'Aucun point prioritaire retenu dans cet échantillon.',\n      detail:\n        'C’est un signal favorable sur les pages contrôlées, pas une validation complète du site. Un audit approfondi reste nécessaire pour vérifier l’ensemble du SEO, du GEO, de l’AEO et des parcours de conversion.',\n    }\n  }\n  if (result.opportunity_index >= 15) {\n    return {\n      title: 'Des opportunités prioritaires sont visibles.',\n      detail:\n        'Le moteur a retenu des constats suffisamment étayés pour justifier une analyse et une correction priorisées.',\n    }\n  }\n  return {\n    title: 'Quelques améliorations méritent d’être examinées.',\n    detail:\n      'Le pré-audit a retenu des signaux exploitables. Le rapport gratuit précise les priorités avant de décider d’un audit complet ou d’une remédiation.',\n  }\n}\n\nfunction safeEvidenceUrl'''
+          ui = Path("app/audit/audit-experience.tsx")
+          text = ui.read_text(encoding="utf-8")
+          old = '''              <div className="bg-background p-5">\n                <p className="text-xs uppercase tracking-wide text-muted-foreground">\n                  Opportunité détectée\n                </p>\n                <p className="mt-2 text-2xl font-semibold text-primary">\n                  {result.opportunity_index}/100\n                </p>\n                <p className="mt-2 text-xs leading-5 text-muted-foreground">\n                  Marge d’amélioration retenue, pas une note globale du site.\n                </p>\n              </div>'''
+          new = '''              <div className="bg-background p-5">\n                <p className="text-xs uppercase tracking-wide text-muted-foreground">\n                  Niveau d’opportunité\n                </p>\n                <p className="mt-2 text-xl font-semibold text-primary">\n                  {result.total_findings === 0\n                    ? 'Aucun point prioritaire'\n                    : result.opportunity_index <= 20\n                      ? 'Opportunités limitées'\n                      : result.opportunity_index <= 50\n                        ? 'Opportunités modérées'\n                        : 'Opportunités importantes'}\n                </p>\n                <p className="mt-2 text-xs leading-5 text-muted-foreground">\n                  Lecture qualitative des points retenus dans l’échantillon.\n                </p>\n              </div>'''
           if old not in text:
-              raise SystemExit("severity helper insertion point not found")
+              raise SystemExit("public opportunity tile not found; refusing approximate patch")
+          ui.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          report = Path("app/api/audit/report/route.ts")
+          text = report.read_text(encoding="utf-8")
+          old = '''  const hasFindings = result.findings.length > 0\n  const verdict = hasFindings'''
+          new = '''  const hasFindings = result.findings.length > 0\n  const opportunityLevel = !hasFindings\n    ? 'Aucun point prioritaire'\n    : result.opportunity_index <= 20\n      ? 'Opportunités limitées'\n      : result.opportunity_index <= 50\n        ? 'Opportunités modérées'\n        : 'Opportunités importantes'\n  const verdict = hasFindings'''
+          if old not in text:
+              raise SystemExit("report HTML insertion point not found")
           text = text.replace(old, new, 1)
 
-          old = '''                <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">\n                  Indice d’opportunité{' '}\n                  <span className="text-primary">{result.opportunity_index}/100</span>\n                </h2>\n                <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">\n                  Plus cet indice est élevé, plus le moteur a identifié de marge\n                  d’amélioration dans l’échantillon public analysé. Ce n’est pas\n                  une note de qualité globale du site.\n                </p>'''
-          new = '''                <h2 className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl">\n                  {resultVerdict(result).title}\n                </h2>\n                <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">\n                  {resultVerdict(result).detail}\n                </p>\n                <p className="mt-4 font-mono text-xs uppercase tracking-[0.1em] text-primary">\n                  Indice d’opportunité · {result.opportunity_index}/100\n                </p>'''
+          old = '''        <div style="padding:14px 16px;border:1px solid #e7e5e4;border-radius:8px"><div style="font-size:12px;color:#78716c">Indice d’opportunité</div><strong style="font-size:24px">${result.opportunity_index}/100</strong></div>'''
+          new = '''        <div style="padding:14px 16px;border:1px solid #e7e5e4;border-radius:8px"><div style="font-size:12px;color:#78716c">Niveau d’opportunité</div><strong style="font-size:18px">${escapeHtml(opportunityLevel)}</strong></div>'''
           if old not in text:
-              raise SystemExit("result hero block not found")
+              raise SystemExit("report opportunity card not found")
           text = text.replace(old, new, 1)
 
-          old = '''              <div className="bg-background p-5">\n                <p className="text-xs uppercase tracking-wide text-muted-foreground">\n                  Confiance\n                </p>\n                <p className="mt-2 text-2xl font-semibold">{result.confidence_score}/100</p>\n              </div>'''
-          new = '''              <div className="bg-background p-5">\n                <p className="text-xs uppercase tracking-wide text-muted-foreground">\n                  {result.total_findings === 0 ? 'Qualification' : 'Confiance des constats'}\n                </p>\n                <p className="mt-2 text-2xl font-semibold">\n                  {result.total_findings === 0\n                    ? 'Aucun constat à qualifier'\n                    : `${result.confidence_score}/100`}\n                </p>\n              </div>'''
+          old = '''      <p style="font-size:13px;line-height:1.55;color:#57534e"><strong>Comment lire ces chiffres :</strong> l’indice d’opportunité mesure la marge d’amélioration détectée dans l’échantillon, pas la qualité globale de votre site. Pages collectées : ${result.pages_collected}/${result.pages_planned}.</p>'''
+          new = '''      <p style="font-size:13px;line-height:1.55;color:#57534e"><strong>Lecture :</strong> le niveau d’opportunité résume uniquement les points retenus dans l’échantillon public ; il ne s’agit pas d’une note globale de votre site. Pages collectées : ${result.pages_collected}/${result.pages_planned}.</p>'''
           if old not in text:
-              raise SystemExit("confidence tile not found")
+              raise SystemExit("report score explanation not found")
           text = text.replace(old, new, 1)
 
-          marker = '''          <section\n            className="border border-primary/30 bg-primary/5 p-5 sm:p-8"\n            aria-labelledby="free-report-title"\n          >'''
-          action_block = '''          <section className="border border-border bg-background p-5 sm:p-7" aria-labelledby="audit-next-action">\n            <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">\n              Prochaine étape\n            </p>\n            <h2 id="audit-next-action" className="mt-3 text-2xl font-semibold">\n              Transformez ce constat en plan d’action.\n            </h2>\n            <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">\n              Le pré-audit montre uniquement les premiers signaux vérifiés sur un échantillon public.\n              Recevez maintenant la restitution gratuite pour comprendre les priorités disponibles.\n              L’audit complet Novekia sert ensuite à approfondir les causes, prioriser les corrections,\n              les mettre en œuvre si nécessaire et vérifier le résultat après remédiation.\n            </p>\n          </section>\n\n'''
-          if marker not in text:
-              raise SystemExit("free report section insertion point not found")
-          text = text.replace(marker, action_block + marker, 1)
-
-          old = '''                  <h2 id="free-report-title" className="mt-4 text-2xl font-semibold">\n                    Recevez le détail par email.\n                  </h2>\n                  <p className="mt-3 text-sm leading-6 text-muted-foreground">\n                    L’email n’était pas nécessaire pour voir votre résultat.\n                    Il sert maintenant à vous remettre la restitution plus\n                    complète disponible pour cet audit.\n                  </p>'''
-          new = '''                  <h2 id="free-report-title" className="mt-4 text-2xl font-semibold">\n                    Recevez vos priorités et les prochaines actions.\n                  </h2>\n                  <p className="mt-3 text-sm leading-6 text-muted-foreground">\n                    Vous avez déjà vu la valeur principale sans laisser votre email.\n                    La restitution gratuite reprend les constats disponibles, leur preuve,\n                    leur impact et la première action recommandée.\n                  </p>'''
+          old = '''function reportText(result: Awaited<ReturnType<typeof callAuditIngress>>) {\n  const hasFindings = result.findings.length > 0\n  const lines = ['''
+          new = '''function reportText(result: Awaited<ReturnType<typeof callAuditIngress>>) {\n  const hasFindings = result.findings.length > 0\n  const opportunityLevel = !hasFindings\n    ? 'Aucun point prioritaire'\n    : result.opportunity_index <= 20\n      ? 'Opportunités limitées'\n      : result.opportunity_index <= 50\n        ? 'Opportunités modérées'\n        : 'Opportunités importantes'\n  const lines = ['''
           if old not in text:
-              raise SystemExit("free report copy block not found")
+              raise SystemExit("report text insertion point not found")
           text = text.replace(old, new, 1)
 
-          old = '''                      Recevoir le rapport'''
-          new = '''                      Recevoir mon rapport gratuit'''
+          old = '''    `Indice d'opportunité : ${result.opportunity_index}/100`,'''
+          new = '''    `Niveau d'opportunité : ${opportunityLevel}`,'''
           if old not in text:
-              raise SystemExit("report CTA not found")
+              raise SystemExit("report text opportunity line not found")
           text = text.replace(old, new, 1)
 
-          path.write_text(text, encoding="utf-8")
+          old = '''    "L'indice d'opportunité mesure la marge d'amélioration détectée dans l'échantillon ; ce n'est pas une note de qualité globale du site.",'''
+          new = '''    "Le niveau d'opportunité résume uniquement les points retenus dans l'échantillon public ; ce n'est pas une note globale du site.",'''
+          if old not in text:
+              raise SystemExit("report text score explanation not found")
+          text = text.replace(old, new, 1)
+          report.write_text(text, encoding="utf-8")
           PY
 
       - name: Install dependencies
@@ -80,14 +86,12 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Commit verified product calibration
+      - name: Commit verified semantics
         shell: bash
         run: |
           git config user.name "novekia-ci"
           git config user.email "actions@users.noreply.github.com"
-          git add app/audit/audit-experience.tsx
+          git add app/audit/audit-experience.tsx app/api/audit/report/route.ts
           git rm .github/workflows/audit-result-actionability-once.yml
-          git commit -m "feat(audit): make pre-audit results actionable"
+          git commit -m "fix(audit): make public opportunity result unambiguous"
           git push origin HEAD:codex/public-audit-funnel-v1
-
-# retrigger 2026-08-23
