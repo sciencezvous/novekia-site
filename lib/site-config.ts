@@ -94,6 +94,7 @@ export const mainNavigation: NavItem[] = [
     ],
   },
   { label: 'Méthode', href: '/#methode' },
+  { label: 'Preuves', href: '/preuves' },
   { label: 'À propos', href: '/a-propos' },
   {
     label: 'Ressources',
@@ -103,6 +104,11 @@ export const mainNavigation: NavItem[] = [
         label: 'Centre de ressources',
         href: '/ressources',
         description: 'Guides, preuves et outils de cadrage.',
+      },
+      {
+        label: 'Preuves Novekia',
+        href: '/preuves',
+        description: 'Validations techniques, démonstrations et retours terrain.',
       },
       {
         label: 'Actualités & analyses IA',
@@ -151,6 +157,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
       { label: 'Fondateur et auteur', href: '/auteurs/andy-legrand' },
       { label: 'Vision du fondateur', href: '/a-propos#vision' },
       { label: 'Méthode', href: '/#methode' },
+      { label: 'Preuves Novekia', href: '/preuves' },
       { label: 'Contact', href: '/#contact' },
     ],
   },
@@ -158,6 +165,7 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     title: 'Ressources',
     links: [
       { label: 'Centre de ressources', href: '/ressources' },
+      { label: 'Preuves propriétaires', href: '/preuves' },
       { label: 'Actualités & analyses IA', href: '/actualites-ia' },
       { label: 'Calculateur IA local', href: '/outils/dimensionnement-ia' },
       { label: 'Démonstrateur RAG local', href: '/ressources/demonstrateur-rag-local' },
