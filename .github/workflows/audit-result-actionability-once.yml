@@ -1,0 +1,96 @@
+name: Audit result actionability one-shot
+
+on:
+  push:
+    branches:
+      - codex/public-audit-funnel-v1
+    paths:
+      - ".github/workflows/audit-result-actionability-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  calibrate-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/public-audit-funnel-v1
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Apply fail-closed product copy patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("app/audit/audit-experience.tsx")
+          text = path.read_text(encoding="utf-8")
+
+          old = '''function severityLabel(value: string) {\n  return SEVERITY_LABELS[value] ?? value\n}\n\nfunction safeEvidenceUrl'''
+          new = '''function severityLabel(value: string) {\n  return SEVERITY_LABELS[value] ?? value\n}\n\nfunction resultVerdict(result: PublicAuditResult) {\n  if (result.total_findings === 0) {\n    return {\n      title: 'Aucun point prioritaire retenu dans cet échantillon.',\n      detail:\n        'C’est un signal favorable sur les pages contrôlées, pas une validation complète du site. Un audit approfondi reste nécessaire pour vérifier l’ensemble du SEO, du GEO, de l’AEO et des parcours de conversion.',\n    }\n  }\n  if (result.opportunity_index >= 15) {\n    return {\n      title: 'Des opportunités prioritaires sont visibles.',\n      detail:\n        'Le moteur a retenu des constats suffisamment étayés pour justifier une analyse et une correction priorisées.',\n    }\n  }\n  return {\n    title: 'Quelques améliorations méritent d’être examinées.',\n    detail:\n      'Le pré-audit a retenu des signaux exploitables. Le rapport gratuit précise les priorités avant de décider d’un audit complet ou d’une remédiation.',\n  }\n}\n\nfunction safeEvidenceUrl'''
+          if old not in text:
+              raise SystemExit("severity helper insertion point not found")
+          text = text.replace(old, new, 1)
+
+          old = '''export function AuditExperience() {\n  const [url, setUrl] = useState('')'''
+          new = '''export function AuditExperience() {\n  const [url, setUrl] = useState('')'''
+          if old not in text:
+              raise SystemExit("component start not found")
+
+          old = '''                <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">\n                  Indice d’opportunité{' '}\n                  <span className="text-primary">{result.opportunity_index}/100</span>\n                </h2>\n                <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">\n                  Plus cet indice est élevé, plus le moteur a identifié de marge\n                  d’amélioration dans l’échantillon public analysé. Ce n’est pas\n                  une note de qualité globale du site.\n                </p>'''
+          new = '''                <h2 className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl">\n                  {resultVerdict(result).title}\n                </h2>\n                <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">\n                  {resultVerdict(result).detail}\n                </p>\n                <p className="mt-4 font-mono text-xs uppercase tracking-[0.1em] text-primary">\n                  Indice d’opportunité · {result.opportunity_index}/100\n                </p>'''
+          if old not in text:
+              raise SystemExit("result hero block not found")
+          text = text.replace(old, new, 1)
+
+          old = '''              <div className="bg-background p-5">\n                <p className="text-xs uppercase tracking-wide text-muted-foreground">\n                  Confiance\n                </p>\n                <p className="mt-2 text-2xl font-semibold">{result.confidence_score}/100</p>\n              </div>'''
+          new = '''              <div className="bg-background p-5">\n                <p className="text-xs uppercase tracking-wide text-muted-foreground">\n                  {result.total_findings === 0 ? 'Qualification' : 'Confiance des constats'}\n                </p>\n                <p className="mt-2 text-2xl font-semibold">\n                  {result.total_findings === 0\n                    ? 'Aucun constat à qualifier'\n                    : `${result.confidence_score}/100`}\n                </p>\n              </div>'''
+          if old not in text:
+              raise SystemExit("confidence tile not found")
+          text = text.replace(old, new, 1)
+
+          marker = '''          <section\n            className="border border-primary/30 bg-primary/5 p-5 sm:p-8"\n            aria-labelledby="free-report-title"\n          >'''
+          action_block = '''          <section className="border border-border bg-background p-5 sm:p-7" aria-labelledby="audit-next-action">\n            <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">\n              Prochaine étape\n            </p>\n            <h2 id="audit-next-action" className="mt-3 text-2xl font-semibold">\n              Transformez ce constat en plan d’action.\n            </h2>\n            <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">\n              Le pré-audit montre uniquement les premiers signaux vérifiés sur un échantillon public.\n              Recevez maintenant la restitution gratuite pour comprendre les priorités disponibles.\n              L’audit complet Novekia sert ensuite à approfondir les causes, prioriser les corrections,\n              les mettre en œuvre si nécessaire et vérifier le résultat après remédiation.\n            </p>\n          </section>\n\n'''
+          if marker not in text:
+              raise SystemExit("free report section insertion point not found")
+          text = text.replace(marker, action_block + marker, 1)
+
+          old = '''                  <h2 id="free-report-title" className="mt-4 text-2xl font-semibold">\n                    Recevez le détail par email.\n                  </h2>\n                  <p className="mt-3 text-sm leading-6 text-muted-foreground">\n                    L’email n’était pas nécessaire pour voir votre résultat.\n                    Il sert maintenant à vous remettre la restitution plus\n                    complète disponible pour cet audit.\n                  </p>'''
+          new = '''                  <h2 id="free-report-title" className="mt-4 text-2xl font-semibold">\n                    Recevez vos priorités et les prochaines actions.\n                  </h2>\n                  <p className="mt-3 text-sm leading-6 text-muted-foreground">\n                    Vous avez déjà vu la valeur principale sans laisser votre email.\n                    La restitution gratuite reprend les constats disponibles, leur preuve,\n                    leur impact et la première action recommandée.\n                  </p>'''
+          if old not in text:
+              raise SystemExit("free report copy block not found")
+          text = text.replace(old, new, 1)
+
+          old = '''                      Recevoir le rapport'''
+          new = '''                      Recevoir mon rapport gratuit'''
+          if old not in text:
+              raise SystemExit("report CTA not found")
+          text = text.replace(old, new, 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Commit verified product calibration
+        shell: bash
+        run: |
+          git config user.name "novekia-ci"
+          git config user.email "actions@users.noreply.github.com"
+          git add app/audit/audit-experience.tsx
+          git rm .github/workflows/audit-result-actionability-once.yml
+          git commit -m "feat(audit): make pre-audit results actionable"
+          git push origin HEAD:codex/public-audit-funnel-v1
