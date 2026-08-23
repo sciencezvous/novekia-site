@@ -117,10 +117,10 @@ export default function AuditPage() {
                 Gratuit vs audit approfondi
               </p>
               <h2 id="audit-complet-title" className="mt-3 text-2xl font-semibold sm:text-3xl">
-                Ce que le pré-audit vérifie — et ce que l’audit approfondi débloque.
+                Le pré-audit utilise un périmètre borné. Le payant active l’analyse complète de Novekia Visibility.
               </h2>
               <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
-                Le pré-audit public ne conclut que sur ce qu’il peut prouver. Les contrôles non mesurables publiquement ne pénalisent pas la note : ils deviennent des points à vérifier dans l’audit approfondi.
+                Les deux niveaux reposent sur le même moteur Novekia Visibility et la même logique Evidence-First. Le pré-audit public ne conclut que sur ce qu’il peut prouver avec un périmètre limité. L’audit approfondi est réalisé par Novekia avec le profil complet du moteur, des méthodes supplémentaires et, lorsque le client l’autorise, des sources authentifiées.
               </p>
             </div>
 
@@ -130,7 +130,7 @@ export default function AuditPage() {
                   <div className="p-4 text-muted-foreground">Domaine</div>
                   <div className="border-l border-border p-4">Pré-audit gratuit</div>
                   <div className="border-l border-border p-4 text-primary">
-                    Audit approfondi · payant
+                    Novekia Visibility complet · payant
                   </div>
                 </div>
                 {auditComparison.map((row) => (
@@ -152,7 +152,7 @@ export default function AuditPage() {
 
             <div className="mt-7 flex flex-col gap-4 border-t border-border/70 pt-6 sm:flex-row sm:items-center sm:justify-between">
               <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-                L’audit approfondi ajoute de la profondeur SEO, GEO, AEO, Entity SEO et Brand SERP, sans transformer une absence de mesure en défaut supposé.
+                L’audit approfondi est une prestation Novekia réalisée avec Novekia Visibility en profil complet : SEO, GEO, AEO, Entity SEO, Brand SERP, preuves, priorisation et retest. Le client reçoit les résultats et recommandations, pas l’accès au moteur interne.
               </p>
               <Link
                 href="/#contact"
