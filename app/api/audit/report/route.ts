@@ -83,14 +83,35 @@ function severityLabel(value: string) {
   return SEVERITY_LABELS[value] ?? value
 }
 
+function visibilityScore(result: Awaited<ReturnType<typeof callAuditIngress>>) {
+  return Math.max(0, Math.min(100, 100 - result.opportunity_index))
+}
+
+function scoreVerdict(
+  result: Awaited<ReturnType<typeof callAuditIngress>>
+) {
+  const score = visibilityScore(result)
+  if (score >= 90) {
+    return result.total_findings > 0
+      ? 'Très bon niveau observé — quelques corrections ciblées peuvent encore améliorer votre visibilité.'
+      : 'Très bon niveau observé sur l’échantillon analysé.'
+  }
+  if (score >= 75) {
+    return 'Bon niveau observé — quelques corrections restent utiles.'
+  }
+  if (score >= 55) {
+    return 'Base exploitable — plusieurs améliorations peuvent renforcer votre visibilité.'
+  }
+  return 'Votre site dispose d’une base à renforcer avec des corrections prioritaires.'
+}
+
 function reportHtml(result: Awaited<ReturnType<typeof callAuditIngress>>) {
   const hasFindings = result.findings.length > 0
-  const verdict = hasFindings
-    ? `${result.total_findings} point${result.total_findings > 1 ? 's' : ''} prioritaire${result.total_findings > 1 ? 's' : ''} détecté${result.total_findings > 1 ? 's' : ''} dans l’échantillon.`
-    : 'Aucun point prioritaire n’a été retenu dans cet échantillon public.'
+  const score = visibilityScore(result)
+  const verdict = scoreVerdict(result)
   const verdictDetail = hasFindings
-    ? 'Commencez par les constats ci-dessous : chacun est associé à une observation vérifiable et à une prochaine action.'
-    : 'C’est un signal favorable sur les pages contrôlées, mais pas une validation globale du SEO, du GEO, de l’AEO, de la performance ou de la conversion du site.'
+    ? 'Les corrections ci-dessous sont les points les plus utiles retenus dans l’échantillon. Chacune est associée à une observation et, lorsqu’elle est disponible, à une preuve vérifiable.'
+    : 'Aucun écart prioritaire n’a été retenu sur les pages contrôlées. Ce résultat est favorable, mais il ne constitue pas une validation exhaustive du site.'
   const confidenceCard = hasFindings
     ? `<div style="padding:14px 16px;border:1px solid #e7e5e4;border-radius:8px"><div style="font-size:12px;color:#78716c">Confiance des constats</div><strong style="font-size:24px">${result.confidence_score}/100</strong></div>`
     : `<div style="padding:14px 16px;border:1px solid #e7e5e4;border-radius:8px"><div style="font-size:12px;color:#78716c">Qualification</div><strong style="font-size:17px">Aucun constat à qualifier</strong></div>`
@@ -111,7 +132,7 @@ function reportHtml(result: Awaited<ReturnType<typeof callAuditIngress>>) {
         <p style="margin:0 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#2563eb">${String(index + 1).padStart(2, '0')} · ${escapeHtml(categoryLabel(finding.category))} · ${escapeHtml(severityLabel(finding.severity))}</p>
         <h3 style="margin:0;font-size:19px;color:#111827">${escapeHtml(finding.title)}</h3>
         <p style="margin:12px 0 0;line-height:1.65;color:#374151"><strong>Ce que nous avons observé :</strong> ${escapeHtml(finding.finding)}</p>
-        <p style="margin:12px 0 0;line-height:1.65;color:#374151"><strong>Pourquoi c’est important :</strong> ${escapeHtml(categoryImpact(finding.category))}</p>
+        <p style="margin:12px 0 0;line-height:1.65;color:#374151"><strong>Pourquoi corriger ce point :</strong> ${escapeHtml(categoryImpact(finding.category))}</p>
         ${recommendation}${proof}${source}
       </div>`
     })
@@ -122,11 +143,11 @@ function reportHtml(result: Awaited<ReturnType<typeof callAuditIngress>>) {
     : ''
 
   const nextStepTitle = hasFindings
-    ? 'Transformer ces constats en plan de correction priorisé'
-    : 'Valider ce résultat sur l’ensemble du site'
+    ? 'Gagner des points en corrigeant les priorités détectées'
+    : 'Confirmer ce bon résultat sur un périmètre plus large'
   const nextStepText = hasFindings
-    ? 'L’audit complet Novekia étend la collecte, confirme les causes, priorise les corrections SEO/GEO/AEO, documente les preuves par page et permet de vérifier le résultat après remédiation.'
-    : 'Le pré-audit ne couvre qu’un échantillon public. L’audit complet Novekia étend l’analyse SEO/GEO/AEO, vérifie les signaux d’autorité et de conversion et produit un plan d’action priorisé avec preuves.'
+    ? 'L’audit complet Novekia étend la collecte, confirme les causes, priorise les corrections SEO/GEO/AEO, documente les preuves par page et permet de mesurer le résultat après remédiation.'
+    : 'Le pré-audit ne couvre qu’un échantillon public. L’audit complet Novekia étend l’analyse SEO/GEO/AEO, vérifie les signaux d’autorité et de conversion et recherche des optimisations plus fines.'
 
   return `<!doctype html>
 <html lang="fr"><body style="margin:0;background:#f5f5f4;font-family:Arial,sans-serif;color:#1c1917">
@@ -136,28 +157,29 @@ function reportHtml(result: Awaited<ReturnType<typeof callAuditIngress>>) {
       <h1 style="margin:0;font-size:26px">Votre visibilité web & IA — ${escapeHtml(result.target_domain)}</h1>
     </div>
     <div style="background:white;padding:28px;border-radius:0 0 10px 10px">
-      <div style="padding:18px 20px;background:#f8fafc;border-left:4px solid #2563eb">
-        <p style="margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#1d4ed8">Verdict du pré-audit</p>
-        <h2 style="margin:8px 0 0;font-size:22px;color:#111827">${escapeHtml(verdict)}</h2>
+      <div style="padding:20px;background:#eff6ff;border-left:4px solid #2563eb">
+        <p style="margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#1d4ed8">Score de visibilité observée</p>
+        <div style="margin-top:6px;font-size:42px;font-weight:800;color:#1d4ed8">${score}/100</div>
+        <h2 style="margin:10px 0 0;font-size:22px;color:#111827">${escapeHtml(verdict)}</h2>
         <p style="margin:9px 0 0;line-height:1.65;color:#475569">${escapeHtml(verdictDetail)}</p>
       </div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin:24px 0">
-        <div style="padding:14px 16px;border:1px solid #e7e5e4;border-radius:8px"><div style="font-size:12px;color:#78716c">Indice d’opportunité</div><strong style="font-size:24px">${result.opportunity_index}/100</strong></div>
         <div style="padding:14px 16px;border:1px solid #e7e5e4;border-radius:8px"><div style="font-size:12px;color:#78716c">Couverture de l’échantillon</div><strong style="font-size:24px">${result.coverage_score}/100</strong></div>
         ${confidenceCard}
+        <div style="padding:14px 16px;border:1px solid #e7e5e4;border-radius:8px"><div style="font-size:12px;color:#78716c">Pages analysées</div><strong style="font-size:24px">${result.pages_collected}/${result.pages_planned}</strong></div>
       </div>
-      <p style="font-size:13px;line-height:1.55;color:#57534e"><strong>Comment lire ces chiffres :</strong> l’indice d’opportunité mesure la marge d’amélioration détectée dans l’échantillon, pas la qualité globale de votre site. Pages collectées : ${result.pages_collected}/${result.pages_planned}.</p>
+      <p style="font-size:13px;line-height:1.55;color:#57534e"><strong>Comment lire le score :</strong> 100/100 signifie qu’aucun écart pondéré n’a été retenu dans l’échantillon analysé. Ce score n’est ni une certification ni une note exhaustive de l’ensemble du site.</p>
 
       ${positives}
-      <h2 style="margin:30px 0 8px;font-size:21px">Ce qui mérite votre attention</h2>
-      ${findings || '<div style="padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px"><strong>Aucun constat prioritaire retenu.</strong><p style="margin:7px 0 0;line-height:1.6;color:#475569">Le moteur n’a pas retenu de défaut suffisamment étayé pour être présenté comme action prioritaire sur cet échantillon.</p></div>'}
+      <h2 style="margin:30px 0 8px;font-size:21px">Pour gagner encore des points</h2>
+      ${findings || '<div style="padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px"><strong>Aucun écart prioritaire retenu.</strong><p style="margin:7px 0 0;line-height:1.6;color:#475569">C’est favorable sur les pages analysées. L’audit complet permet toutefois d’élargir la couverture et de rechercher des optimisations plus fines.</p></div>'}
 
       <div style="margin-top:30px;padding:22px;background:#111827;color:white;border-radius:10px">
         <p style="margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#93c5fd">Prochaine étape recommandée</p>
         <h2 style="margin:8px 0 0;font-size:21px">${escapeHtml(nextStepTitle)}</h2>
         <p style="margin:10px 0 0;line-height:1.65;color:#dbeafe">${escapeHtml(nextStepText)}</p>
-        <p style="margin:18px 0 0"><a href="${siteConfig.url}/#contact" style="display:inline-block;background:#2563eb;color:white;text-decoration:none;padding:12px 16px;border-radius:6px;font-weight:700">Demander l’audit complet Novekia</a></p>
+        <p style="margin:18px 0 0"><a href="${siteConfig.url}/#contact" style="display:inline-block;background:#2563eb;color:white;text-decoration:none;padding:12px 16px;border-radius:6px;font-weight:700">Améliorer ma visibilité avec Novekia</a></p>
       </div>
 
       <p style="margin:24px 0 0;font-size:11px;line-height:1.55;color:#78716c">Pré-audit public borné fondé sur des informations accessibles publiquement. Il ne constitue ni une certification, ni un audit exhaustif, ni une garantie de positionnement. Audit ID : ${escapeHtml(result.audit_id)} · <a href="${siteConfig.url}/politique-de-confidentialite" style="color:#57534e">Politique de confidentialité</a></p>
@@ -168,34 +190,32 @@ function reportHtml(result: Awaited<ReturnType<typeof callAuditIngress>>) {
 
 function reportText(result: Awaited<ReturnType<typeof callAuditIngress>>) {
   const hasFindings = result.findings.length > 0
+  const score = visibilityScore(result)
   const lines = [
     'NOVEKIA — PRÉ-AUDIT PUBLIC',
     `Site : ${result.target_domain}`,
     '',
-    'VERDICT',
-    hasFindings
-      ? `${result.total_findings} point${result.total_findings > 1 ? 's' : ''} prioritaire${result.total_findings > 1 ? 's' : ''} détecté${result.total_findings > 1 ? 's' : ''} dans l’échantillon.`
-      : 'Aucun point prioritaire n’a été retenu dans cet échantillon public.',
+    `SCORE DE VISIBILITÉ OBSERVÉE : ${score}/100`,
+    scoreVerdict(result),
     '',
-    `Indice d'opportunité : ${result.opportunity_index}/100`,
     `Couverture de l'échantillon : ${result.coverage_score}/100`,
     hasFindings
       ? `Confiance des constats : ${result.confidence_score}/100`
       : 'Qualification : aucun constat à qualifier',
-    `Pages collectées : ${result.pages_collected}/${result.pages_planned}`,
+    `Pages analysées : ${result.pages_collected}/${result.pages_planned}`,
     '',
-    "L'indice d'opportunité mesure la marge d'amélioration détectée dans l'échantillon ; ce n'est pas une note de qualité globale du site.",
+    "100/100 signifie qu'aucun écart pondéré n'a été retenu dans l'échantillon analysé. Ce score n'est pas une certification ni une note exhaustive de l'ensemble du site.",
     '',
   ]
 
   if (result.findings.length) {
-    lines.push('CE QUI MÉRITE VOTRE ATTENTION', '')
+    lines.push('POUR GAGNER ENCORE DES POINTS', '')
     result.findings.forEach((finding, index) => {
       lines.push(
         `${index + 1}. ${finding.title}`,
         `Domaine : ${categoryLabel(finding.category)} — ${severityLabel(finding.severity)}`,
         `Observation : ${finding.finding}`,
-        `Pourquoi c'est important : ${categoryImpact(finding.category)}`
+        `Pourquoi corriger ce point : ${categoryImpact(finding.category)}`
       )
       if (finding.recommendation) {
         lines.push(`Ce que vous pouvez faire maintenant : ${finding.recommendation}`)
@@ -206,9 +226,8 @@ function reportText(result: Awaited<ReturnType<typeof callAuditIngress>>) {
     })
   } else {
     lines.push(
-      'AUCUN CONSTAT PRIORITAIRE RETENU',
-      "Le moteur n'a pas retenu de défaut suffisamment étayé pour être présenté comme action prioritaire sur cet échantillon.",
-      "Cela ne valide pas l'ensemble du site : le pré-audit reste volontairement borné.",
+      'AUCUN ÉCART PRIORITAIRE RETENU',
+      "C'est favorable sur les pages analysées. Le pré-audit reste volontairement borné et ne valide pas l'ensemble du site.",
       ''
     )
   }
@@ -216,8 +235,8 @@ function reportText(result: Awaited<ReturnType<typeof callAuditIngress>>) {
   lines.push(
     'PROCHAINE ÉTAPE RECOMMANDÉE',
     hasFindings
-      ? 'Transformer ces constats en plan de correction priorisé avec un audit complet Novekia.'
-      : "Valider ce résultat sur l'ensemble du site avec un audit complet Novekia.",
+      ? 'Améliorer ce score en corrigeant les priorités détectées avec un audit complet Novekia.'
+      : "Confirmer ce bon résultat sur l'ensemble du site avec un audit complet Novekia.",
     "L'audit complet étend l'analyse SEO/GEO/AEO, confirme les causes, priorise les corrections, documente les preuves par page et permet de vérifier le résultat après remédiation.",
     `Contact : ${siteConfig.contact.email}`,
     '',
@@ -265,22 +284,18 @@ export async function POST(request: NextRequest) {
       throw new AuditFacadeError(503, 'L’envoi du rapport est momentanément indisponible.')
     }
 
-    // Canonical data is fetched again server-to-server. No finding, score or
-    // recommendation supplied by the browser is trusted for email delivery.
     const report = await callAuditIngress({
       method: 'GET',
       path: `/${auditId}/report`,
     })
+    const score = visibilityScore(report)
 
     const resend = new Resend(resendKey)
     const visitorSend = await resend.emails.send({
       from,
       to: email,
       replyTo: siteConfig.contact.email,
-      subject:
-        report.total_findings > 0
-          ? `Pré-audit Novekia : ${report.total_findings} point${report.total_findings > 1 ? 's' : ''} à traiter — ${report.target_domain}`
-          : `Pré-audit Novekia : résultat à confirmer — ${report.target_domain}`,
+      subject: `Votre score de visibilité Novekia : ${score}/100 — ${report.target_domain}`,
       html: reportHtml(report),
       text: reportText(report),
     })
@@ -297,8 +312,6 @@ export async function POST(request: NextRequest) {
         attribution.referrer && `Referrer: ${attribution.referrer}`,
       ].filter(Boolean)
 
-      // Best effort only: a notification failure must never invalidate a report
-      // that was already delivered to the visitor.
       await resend.emails.send({
         from,
         to: internalTo,
@@ -309,7 +322,8 @@ export async function POST(request: NextRequest) {
           `Email: ${email}`,
           `Domaine: ${report.target_domain}`,
           `Audit ID: ${report.audit_id}`,
-          `Indice d'opportunité: ${report.opportunity_index}/100`,
+          `Score de visibilité observée: ${score}/100`,
+          `Indice d'opportunité interne: ${report.opportunity_index}/100`,
           `Constats exploitables: ${report.total_findings}`,
           ...attributionLines,
         ].join('\n'),
