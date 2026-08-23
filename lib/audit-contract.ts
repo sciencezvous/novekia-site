@@ -17,8 +17,11 @@ export type PublicAuditResult = {
   target_url: string
   target_domain: string
   status: 'completed'
-  opportunity_index: number
-  coverage_score: number
+  public_audit_score: number
+  category_scores: Record<string, number>
+  category_coverage: Record<string, number>
+  coverage: number
+  score_version: string
   confidence_score: number
   pages_collected: number
   pages_planned: number
@@ -26,6 +29,15 @@ export type PublicAuditResult = {
   summary: string
   positive_observations: string[]
   findings: PublicAuditFinding[]
+}
+
+function isBoundedScore(value: unknown) {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 100
+}
+
+function isScoreMap(value: unknown) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  return Object.values(value as Record<string, unknown>).every(isBoundedScore)
 }
 
 export function isPublicAuditResult(value: unknown): value is PublicAuditResult {
@@ -37,11 +49,13 @@ export function isPublicAuditResult(value: unknown): value is PublicAuditResult 
     typeof data.target_url === 'string' &&
     typeof data.target_domain === 'string' &&
     data.status === 'completed' &&
-    typeof data.opportunity_index === 'number' &&
-    data.opportunity_index >= 0 &&
-    data.opportunity_index <= 100 &&
-    typeof data.coverage_score === 'number' &&
-    typeof data.confidence_score === 'number' &&
+    isBoundedScore(data.public_audit_score) &&
+    isScoreMap(data.category_scores) &&
+    isScoreMap(data.category_coverage) &&
+    isBoundedScore(data.coverage) &&
+    typeof data.score_version === 'string' &&
+    data.score_version.length > 0 &&
+    isBoundedScore(data.confidence_score) &&
     typeof data.pages_collected === 'number' &&
     typeof data.pages_planned === 'number' &&
     typeof data.total_findings === 'number' &&
