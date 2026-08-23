@@ -75,6 +75,40 @@ export default function AuditPage() {
             <AuditExperience />
           </section>
 
+          <section
+            className="mb-12 border border-primary/30 bg-primary/5 p-6 sm:p-8 lg:p-10"
+            aria-labelledby="audit-complet-title"
+          >
+            <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-center">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
+                  Audit approfondi · prestation payante
+                </p>
+                <h2 id="audit-complet-title" className="mt-3 text-2xl font-semibold sm:text-3xl">
+                  Le pré-audit montre les priorités. L’audit complet explique tout le reste.
+                </h2>
+                <p className="mt-4 max-w-3xl text-sm leading-7 text-muted-foreground sm:text-base">
+                  Le pré-audit public est volontairement borné et ne restitue qu’un aperçu des constats prioritaires. L’audit approfondi Novekia élargit le périmètre, documente les preuves et transforme les écarts confirmés en plan d’action exploitable.
+                </p>
+              </div>
+
+              <div className="border border-border bg-background/80 p-5 sm:p-6">
+                <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
+                  <li>• Analyse élargie des pages et signaux stratégiques.</li>
+                  <li>• SEO technique, entité, AEO/GEO et visibilité approfondis.</li>
+                  <li>• Constats complets, preuves par page et priorisation impact / effort.</li>
+                  <li>• Recommandations de remédiation détaillées et retest après correction.</li>
+                </ul>
+                <Link
+                  href="/#contact"
+                  className="mt-6 inline-flex min-h-12 w-full items-center justify-center bg-primary px-5 text-center font-semibold text-primary-foreground transition hover:opacity-90 sm:w-auto"
+                >
+                  Demander mon audit complet
+                </Link>
+              </div>
+            </div>
+          </section>
+
           <footer className="flex flex-col gap-3 border-t border-border/70 pt-6 text-xs leading-5 text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p>© {new Date().getFullYear()} Novekia · Pré-audit public borné.</p>
             <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Informations légales">
