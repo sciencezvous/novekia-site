@@ -27,9 +27,17 @@ try {
 
   const payload = await response.json().catch(() => null)
   if (!response.ok || !payload || typeof payload !== 'object') {
+    const safeError =
+      payload && typeof payload === 'object'
+        ? {
+            error: typeof payload.error === 'string' ? payload.error.slice(0, 300) : undefined,
+            detail: typeof payload.detail === 'string' ? payload.detail.slice(0, 300) : undefined,
+            message: typeof payload.message === 'string' ? payload.message.slice(0, 300) : undefined,
+          }
+        : undefined
     console.log(
       'INSTANT_DEVIS_CALIBRATION_RESULT',
-      JSON.stringify({ ok: false, status: response.status })
+      JSON.stringify({ ok: false, status: response.status, safe_error: safeError })
     )
     process.exit(0)
   }
