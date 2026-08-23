@@ -8,6 +8,8 @@ import {
 const MAX_TARGET_LENGTH = 1000
 const AUDIT_TIMEOUT_MS = 55_000
 const RATE_WINDOW_MS = 60 * 60 * 1000
+const PUBLIC_FINDING_PREVIEW_LIMIT = 3
+const PUBLIC_POSITIVE_PREVIEW_LIMIT = 3
 const DEFAULT_AUDIT_INGRESS_URL =
   'https://novekia-lead-engine-studio-production.up.railway.app/api/public/website-audit'
 
@@ -140,6 +142,17 @@ function readIngressConfig() {
   }
 }
 
+export function toPublicAuditPreview(result: PublicAuditResult): PublicAuditResult {
+  return {
+    ...result,
+    positive_observations: result.positive_observations.slice(
+      0,
+      PUBLIC_POSITIVE_PREVIEW_LIMIT
+    ),
+    findings: result.findings.slice(0, PUBLIC_FINDING_PREVIEW_LIMIT),
+  }
+}
+
 export async function callAuditIngress(options: {
   method: 'GET' | 'POST'
   path?: string
@@ -186,7 +199,7 @@ export async function callAuditIngress(options: {
     if (!isPublicAuditResult(payload)) {
       throw new AuditFacadeError(502, 'Réponse du moteur invalide.')
     }
-    return payload
+    return toPublicAuditPreview(payload)
   } catch (error) {
     if (error instanceof AuditFacadeError) throw error
     if (error instanceof Error && error.name === 'AbortError') {
