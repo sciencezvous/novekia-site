@@ -93,6 +93,22 @@ export const mainNavigation: NavItem[] = [
       },
     ],
   },
+  {
+    label: 'Audit',
+    href: '/audit',
+    children: [
+      {
+        label: 'Pré-audit gratuit',
+        href: '/audit',
+        description: 'Score public, couverture et premières preuves vérifiables.',
+      },
+      {
+        label: 'Audit approfondi',
+        href: '/audit-approfondi',
+        description: 'SEO, GEO, AEO, entités, Brand SERP et plan de remédiation.',
+      },
+    ],
+  },
   { label: 'Méthode', href: '/#methode' },
   { label: 'Preuves', href: '/preuves' },
   { label: 'À propos', href: '/a-propos' },
@@ -144,6 +160,8 @@ export const footerNavigation: { title: string; links: { label: string; href: st
     title: 'Novekia Solutions',
     links: [
       { label: 'Vue d’ensemble', href: '/solutions' },
+      { label: 'Pré-audit SEO & visibilité IA', href: '/audit' },
+      { label: 'Audit approfondi Visibility', href: '/audit-approfondi' },
       { label: 'Sites web SEO & GEO', href: '/creation-site-web-seo-geo' },
       { label: 'Logiciels métiers', href: '/logiciels-metiers-sur-mesure' },
       { label: 'IA locale', href: '/intelligence-artificielle-locale' },
