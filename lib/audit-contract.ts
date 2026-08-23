@@ -40,7 +40,7 @@ export type PublicAuditResult = {
   findings: PublicAuditFinding[]
 }
 
-function isBoundedScore(value: unknown) {
+function isBoundedScore(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 100
 }
 
@@ -62,7 +62,7 @@ function hasMeasuredV1Categories(value: unknown) {
   })
 }
 
-function isNonNegativeInteger(value: unknown) {
+function isNonNegativeInteger(value: unknown): value is number {
   return typeof value === 'number' && Number.isInteger(value) && value >= 0
 }
 
