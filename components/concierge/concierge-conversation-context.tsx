@@ -3,12 +3,21 @@
 import { getFlowByPath, getStepById } from '@/lib/concierge/flows'
 import type { ConciergeRuntimeState } from '@/lib/concierge/runtime'
 import type { ConciergeAnswer, ConciergeQuestion } from '@/lib/concierge/types'
+import type { ConfirmedConciergeIntent } from './concierge-intent-assistance'
 import { ConciergeAvatar } from './concierge-avatar'
 
 type ConciergeConversationContextProps = {
   runtime: ConciergeRuntimeState
   currentSection: string
+  confirmedIntent?: ConfirmedConciergeIntent | null
 }
+
+const pathAcknowledgements = {
+  lead_engine: 'J’ai compris que votre besoin concerne le développement commercial. Je vais maintenant confirmer le contexte utile.',
+  solutions: 'J’ai compris que votre besoin concerne un projet numérique. Je vais maintenant confirmer le contexte utile.',
+  information: 'J’ai compris que vous souhaitez mieux identifier les services pertinents. Je vais vous orienter prudemment.',
+  direct_contact: 'J’ai compris que vous souhaitez préparer un échange humain. Je vais recueillir uniquement les éléments utiles.',
+} as const
 
 function optionLabel(question: ConciergeQuestion, value: string): string {
   return question.options?.find((option) => option.value === value)?.label ?? value
@@ -35,6 +44,7 @@ function acknowledgement(section: string): string {
 export function ConciergeConversationContext({
   runtime,
   currentSection,
+  confirmedIntent = null,
 }: ConciergeConversationContextProps) {
   const flow = getFlowByPath(runtime.session.activePath)
   if (!flow) return null
@@ -47,6 +57,29 @@ export function ConciergeConversationContext({
       step.id !== runtime.session.currentStepId &&
       runtime.session.answers[step.id] !== undefined
     ))
+
+  if (!previousQuestion && confirmedIntent) {
+    return (
+      <section className="mb-5 space-y-3 border-b border-border/70 pb-5" aria-label="Orientation confirmée avec Nova">
+        <div className="flex justify-end">
+          <div className="max-w-[86%] rounded-lg rounded-tr-sm bg-action px-4 py-3 text-primary-foreground shadow-[0_8px_28px_rgba(8,124,255,0.15)]">
+            <p className="text-[0.65rem] font-medium uppercase tracking-[0.12em] text-primary-foreground/70">
+              Votre besoin
+            </p>
+            <p className="mt-1 whitespace-pre-wrap text-sm leading-5">
+              {confirmedIntent.description}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-2.5">
+          <ConciergeAvatar size="sm" state="speaking" className="mt-0.5" />
+          <p className="max-w-[82%] rounded-lg rounded-tl-sm border border-primary/15 bg-primary/[0.045] px-3.5 py-2.5 text-xs leading-5 text-muted-foreground">
+            {pathAcknowledgements[confirmedIntent.suggestion.path]}
+          </p>
+        </div>
+      </section>
+    )
+  }
 
   if (!previousQuestion) return null
   const answer = runtime.session.answers[previousQuestion.id]
