@@ -7,6 +7,8 @@ import {
 
 const MAX_TARGET_LENGTH = 1000
 const AUDIT_TIMEOUT_MS = 55_000
+const PDF_TIMEOUT_MS = 20_000
+const MAX_PDF_BYTES = 8 * 1024 * 1024
 const TRANSIENT_RETRY_DELAY_MS = 750
 const RATE_WINDOW_MS = 60 * 60 * 1000
 const PUBLIC_FINDING_PREVIEW_LIMIT = 3
@@ -156,6 +158,104 @@ export function toPublicAuditPreview(result: PublicAuditResult): PublicAuditResu
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function safePdfFilename(contentDisposition: string | null) {
+  if (!contentDisposition) return null
+  const match = /filename="?([^";]+)"?/i.exec(contentDisposition)
+  if (!match) return null
+  const filename = match[1]
+    .trim()
+    .replace(/[^a-zA-Z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 180)
+  if (!filename || !filename.toLowerCase().endsWith('.pdf')) return null
+  return filename
+}
+
+export async function callAuditPdfIngress(auditId: string): Promise<{
+  bytes: Buffer
+  filename: string | null
+  reportVersion: string | null
+}> {
+  const { baseUrl, token } = readIngressConfig()
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), PDF_TIMEOUT_MS)
+
+  try {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const response = await fetch(
+          `${baseUrl}/${encodeURIComponent(auditId)}/report.pdf`,
+          {
+            method: 'GET',
+            headers: {
+              Accept: 'application/pdf',
+              'X-Novekia-Audit-Key': token,
+            },
+            cache: 'no-store',
+            signal: controller.signal,
+          }
+        )
+
+        if (!response.ok) {
+          if (response.status >= 500 && attempt === 0) {
+            await delay(TRANSIENT_RETRY_DELAY_MS)
+            continue
+          }
+          throw new AuditFacadeError(
+            502,
+            'Le PDF du pré-audit n’a pas pu être préparé. Réessayez dans quelques instants.'
+          )
+        }
+
+        const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
+        if (!contentType.includes('application/pdf')) {
+          throw new AuditFacadeError(502, 'Le moteur a renvoyé un rapport PDF invalide.')
+        }
+
+        const declaredLength = Number(response.headers.get('content-length') || 0)
+        if (declaredLength > MAX_PDF_BYTES) {
+          throw new AuditFacadeError(502, 'Le rapport PDF généré est trop volumineux.')
+        }
+
+        const bytes = Buffer.from(await response.arrayBuffer())
+        if (
+          bytes.length < 5 ||
+          bytes.length > MAX_PDF_BYTES ||
+          bytes.subarray(0, 5).toString('ascii') !== '%PDF-'
+        ) {
+          throw new AuditFacadeError(502, 'Le moteur a renvoyé un rapport PDF invalide.')
+        }
+
+        return {
+          bytes,
+          filename: safePdfFilename(response.headers.get('content-disposition')),
+          reportVersion: response.headers.get('x-novekia-report-version'),
+        }
+      } catch (error) {
+        if (error instanceof AuditFacadeError) throw error
+        if (error instanceof Error && error.name === 'AbortError') {
+          throw new AuditFacadeError(
+            504,
+            'La génération du PDF a dépassé le temps disponible. Réessayez dans quelques instants.'
+          )
+        }
+        if (attempt === 0) {
+          await delay(TRANSIENT_RETRY_DELAY_MS)
+          continue
+        }
+        throw new AuditFacadeError(
+          502,
+          'Le PDF du pré-audit est momentanément indisponible.'
+        )
+      }
+    }
+
+    throw new AuditFacadeError(502, 'Le PDF du pré-audit est momentanément indisponible.')
+  } finally {
+    clearTimeout(timeout)
+  }
 }
 
 export async function callAuditIngress(options: {
