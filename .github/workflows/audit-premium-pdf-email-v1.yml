@@ -1,0 +1,44 @@
+name: Audit Premium PDF Email V1
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "lib/audit-server.ts"
+      - "app/api/audit/report/route.ts"
+      - "scripts/audit-pdf-delivery-contract.mjs"
+      - "docs/audit-premium-pdf-email-v1.md"
+      - ".github/workflows/audit-premium-pdf-email-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate PDF delivery contract
+        run: node scripts/audit-pdf-delivery-contract.mjs
+
+      - name: Lint changed server files
+        run: pnpm exec eslint lib/audit-server.ts app/api/audit/report/route.ts
+
+      - name: Build
+        run: pnpm build

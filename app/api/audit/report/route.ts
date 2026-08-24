@@ -3,6 +3,7 @@ import { Resend } from 'resend'
 import {
   AuditFacadeError,
   callAuditIngress,
+  callAuditPdfIngress,
   clientAddress,
   enforceRateLimit,
   enforceSameOrigin,
@@ -168,6 +169,7 @@ function reportHtml(result: Awaited<ReturnType<typeof callAuditIngress>>) {
     <div style="background:#111827;color:white;padding:28px;border-radius:10px 10px 0 0">
       <p style="margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#93c5fd">NOVEKIA · Pré-audit public</p>
       <h1 style="margin:0;font-size:26px">Pré-audit de ${escapeHtml(result.target_domain)}</h1>
+      <p style="margin:12px 0 0;font-size:13px;color:#dbeafe">Votre rapport Novekia au format PDF est joint à cet email.</p>
     </div>
     <div style="background:white;padding:28px;border-radius:0 0 10px 10px">
       <div style="padding:20px;background:#eff6ff;border-left:4px solid #2563eb">
@@ -210,6 +212,8 @@ function reportText(result: Awaited<ReturnType<typeof callAuditIngress>>) {
   const lines = [
     'NOVEKIA — PRÉ-AUDIT PUBLIC',
     `Site : ${result.target_domain}`,
+    '',
+    'Votre rapport Novekia au format PDF est joint à cet email.',
     '',
     `SCORE DU PRÉ-AUDIT : ${result.public_audit_score}/100`,
     scoreVerdict(result),
@@ -264,6 +268,14 @@ function reportText(result: Awaited<ReturnType<typeof callAuditIngress>>) {
   return lines.join('\n')
 }
 
+function fallbackPdfFilename(targetDomain: string) {
+  const safeDomain = targetDomain
+    .replace(/[^a-zA-Z0-9.-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120)
+  return `novekia-pre-audit-${safeDomain || 'site'}.pdf`
+}
+
 export async function POST(request: NextRequest) {
   try {
     enforceSameOrigin(request)
@@ -307,6 +319,10 @@ export async function POST(request: NextRequest) {
       method: 'GET',
       path: `/${auditId}/report`,
     })
+    // Premium delivery is fail-closed: never claim the report was delivered if
+    // the canonical PDF cannot be fetched and validated server-to-server.
+    const pdf = await callAuditPdfIngress(auditId)
+    const pdfFilename = pdf.filename ?? fallbackPdfFilename(report.target_domain)
 
     const resend = new Resend(resendKey)
     const visitorSend = await resend.emails.send({
@@ -316,6 +332,12 @@ export async function POST(request: NextRequest) {
       subject: `Votre pré-audit Novekia : ${report.public_audit_score}/100 — ${report.target_domain}`,
       html: reportHtml(report),
       text: reportText(report),
+      attachments: [
+        {
+          filename: pdfFilename,
+          content: pdf.bytes,
+        },
+      ],
     })
     if (visitorSend.error) {
       throw new AuditFacadeError(502, 'Le rapport n’a pas pu être envoyé. Réessayez.')
@@ -344,8 +366,9 @@ export async function POST(request: NextRequest) {
           `Couverture publique: ${report.coverage}/100`,
           `Méthode: ${report.score_version}`,
           `Constats exploitables: ${report.total_findings}`,
+          pdf.reportVersion && `PDF version: ${pdf.reportVersion}`,
           ...attributionLines,
-        ].join('\n'),
+        ].filter(Boolean).join('\n'),
       })
     }
 
