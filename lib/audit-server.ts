@@ -7,6 +7,7 @@ import {
 
 const MAX_TARGET_LENGTH = 1000
 const AUDIT_TIMEOUT_MS = 55_000
+const TRANSIENT_RETRY_DELAY_MS = 750
 const RATE_WINDOW_MS = 60 * 60 * 1000
 const PUBLIC_FINDING_PREVIEW_LIMIT = 3
 const PUBLIC_POSITIVE_PREVIEW_LIMIT = 3
@@ -153,6 +154,10 @@ export function toPublicAuditPreview(result: PublicAuditResult): PublicAuditResu
   }
 }
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export async function callAuditIngress(options: {
   method: 'GET' | 'POST'
   path?: string
@@ -164,50 +169,67 @@ export async function callAuditIngress(options: {
   const timeout = setTimeout(() => controller.abort(), AUDIT_TIMEOUT_MS)
 
   try {
-    const response = await fetch(`${baseUrl}${options.path ?? ''}`, {
-      method: options.method,
-      headers: {
-        Accept: 'application/json',
-        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
-        'X-Novekia-Audit-Key': token,
-        ...(options.idempotencyKey
-          ? { 'Idempotency-Key': options.idempotencyKey }
-          : {}),
-      },
-      body: options.body ? JSON.stringify(options.body) : undefined,
-      cache: 'no-store',
-      signal: controller.signal,
-    })
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const response = await fetch(`${baseUrl}${options.path ?? ''}`, {
+          method: options.method,
+          headers: {
+            Accept: 'application/json',
+            ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+            'X-Novekia-Audit-Key': token,
+            ...(options.idempotencyKey
+              ? { 'Idempotency-Key': options.idempotencyKey }
+              : {}),
+          },
+          body: options.body ? JSON.stringify(options.body) : undefined,
+          cache: 'no-store',
+          signal: controller.signal,
+        })
 
-    if (!response.ok) {
-      if (response.status === 400 || response.status === 422) {
+        if (!response.ok) {
+          if (response.status === 400 || response.status === 422) {
+            throw new AuditFacadeError(
+              400,
+              'Cette adresse ne peut pas être pré-auditée. Vérifiez le site puis réessayez.'
+            )
+          }
+          if (response.status === 429) {
+            throw new AuditFacadeError(429, 'Le moteur est temporairement très sollicité.')
+          }
+          if (response.status >= 500 && attempt === 0) {
+            await delay(TRANSIENT_RETRY_DELAY_MS)
+            continue
+          }
+          throw new AuditFacadeError(
+            502,
+            'Le moteur n’a pas pu terminer ce pré-audit. Réessayez dans quelques instants.'
+          )
+        }
+
+        const payload: unknown = await response.json()
+        if (!isPublicAuditResult(payload)) {
+          throw new AuditFacadeError(502, 'Réponse du moteur invalide.')
+        }
+        return toPublicAuditPreview(payload)
+      } catch (error) {
+        if (error instanceof AuditFacadeError) throw error
+        if (error instanceof Error && error.name === 'AbortError') {
+          throw new AuditFacadeError(
+            504,
+            'Le pré-audit a dépassé le temps disponible. Réessayez dans quelques instants.'
+          )
+        }
+        if (attempt === 0) {
+          await delay(TRANSIENT_RETRY_DELAY_MS)
+          continue
+        }
         throw new AuditFacadeError(
-          400,
-          'Cette adresse ne peut pas être pré-auditée. Vérifiez le site puis réessayez.'
+          502,
+          'Le moteur de pré-audit est momentanément inaccessible.'
         )
       }
-      if (response.status === 429) {
-        throw new AuditFacadeError(429, 'Le moteur est temporairement très sollicité.')
-      }
-      throw new AuditFacadeError(
-        502,
-        'Le moteur n’a pas pu terminer ce pré-audit. Réessayez dans quelques instants.'
-      )
     }
 
-    const payload: unknown = await response.json()
-    if (!isPublicAuditResult(payload)) {
-      throw new AuditFacadeError(502, 'Réponse du moteur invalide.')
-    }
-    return toPublicAuditPreview(payload)
-  } catch (error) {
-    if (error instanceof AuditFacadeError) throw error
-    if (error instanceof Error && error.name === 'AbortError') {
-      throw new AuditFacadeError(
-        504,
-        'Le pré-audit a dépassé le temps disponible. Réessayez dans quelques instants.'
-      )
-    }
     throw new AuditFacadeError(
       502,
       'Le moteur de pré-audit est momentanément inaccessible.'

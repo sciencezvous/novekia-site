@@ -1,16 +1,16 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import {
   ArrowRight,
   CheckCircle2,
-  ExternalLink,
   FileText,
   LoaderCircle,
   Mail,
   RotateCcw,
   Search,
   ShieldCheck,
+  X,
 } from 'lucide-react'
 import { trackAuditEvent } from '@/lib/audit-events'
 import {
@@ -18,119 +18,6 @@ import {
   type PublicAuditResult,
 } from '@/lib/audit-contract'
 import { getStoredAttribution } from '@/lib/lead-attribution'
-
-const FINDING_CATEGORY_LABELS: Record<string, string> = {
-  technical_seo: 'SEO technique',
-  on_page_seo: 'SEO on-page',
-  geo_readiness: 'GEO / signaux AEO',
-  trust_authority: 'Confiance & autorité',
-  conversion: 'Conversion',
-  performance_observation: 'Performance observée',
-  local_visibility: 'Visibilité locale',
-  public_hygiene: 'Hygiène publique',
-  accessibility_observation: 'Accessibilité observée',
-}
-
-const SCORE_CATEGORY_LABELS: Record<string, string> = {
-  accessibility_indexability: 'Accessibilité & indexabilité',
-  on_page_seo: 'SEO on-page',
-  structured_data_entity: 'Données structurées & entité',
-  technical_integrity: 'Intégrité technique',
-}
-
-const SEVERITY_LABELS: Record<string, string> = {
-  critical: 'Critique',
-  high: 'Élevée',
-  medium: 'Moyenne',
-  low: 'Faible',
-  info: 'Information',
-}
-
-const FINDING_IMPACTS: Record<string, string> = {
-  technical_seo:
-    'Ce point peut compliquer l’exploration, l’indexation ou l’interprétation technique du site.',
-  on_page_seo:
-    'Ce point peut réduire la clarté de la page pour les moteurs de recherche et les visiteurs.',
-  geo_readiness:
-    'Ce point peut limiter la capacité des moteurs génératifs à comprendre, reprendre ou citer correctement l’information.',
-  trust_authority:
-    'Ce point peut affaiblir les signaux publics de confiance et d’autorité disponibles pour les visiteurs et les moteurs.',
-  conversion:
-    'Ce point peut créer une friction entre la visite du site et la prise de contact ou l’action attendue.',
-  performance_observation:
-    'Ce signal mérite une mesure plus approfondie avant de conclure sur son impact réel sur l’expérience.',
-  local_visibility:
-    'Ce point peut limiter la compréhension locale de l’activité ou de sa zone de service.',
-  public_hygiene:
-    'Ce point indique une configuration publique perfectible qui mérite une vérification ciblée.',
-  accessibility_observation:
-    'Ce point peut rendre certains contenus plus difficiles à utiliser ou à interpréter pour une partie des visiteurs.',
-}
-
-function findingCategoryLabel(value: string) {
-  return FINDING_CATEGORY_LABELS[value] ?? value.replaceAll('_', ' ')
-}
-
-function scoreCategoryLabel(value: string) {
-  return SCORE_CATEGORY_LABELS[value] ?? value.replaceAll('_', ' ')
-}
-
-function severityLabel(value: string) {
-  return SEVERITY_LABELS[value] ?? value
-}
-
-function findingImpact(value: string) {
-  return (
-    FINDING_IMPACTS[value] ??
-    'Ce constat mérite une vérification ciblée afin d’en mesurer l’impact et de prioriser la correction.'
-  )
-}
-
-function safeEvidenceUrl(value: string | null) {
-  if (!value) return null
-  try {
-    const parsed = new URL(value)
-    return ['http:', 'https:'].includes(parsed.protocol) ? parsed.toString() : null
-  } catch {
-    return null
-  }
-}
-
-function verdict(result: PublicAuditResult) {
-  const score = result.public_audit_score
-
-  if (score >= 90) {
-    return {
-      title: 'Très bon niveau observé sur le périmètre vérifié.',
-      body:
-        result.total_findings > 0
-          ? 'La base mesurée est solide. Quelques corrections ciblées peuvent encore améliorer les signaux contrôlés.'
-          : 'Aucun écart prioritaire n’a été retenu sur les contrôles effectivement couverts. Le pré-audit reste borné et ne valide pas l’ensemble du site.',
-    }
-  }
-
-  if (score >= 75) {
-    return {
-      title: 'Bon niveau observé — quelques corrections restent utiles.',
-      body:
-        'La base est saine sur les contrôles couverts. Les constats ci-dessous indiquent les corrections les plus utiles à traiter en priorité.',
-    }
-  }
-
-  if (score >= 55) {
-    return {
-      title: 'Base exploitable — plusieurs améliorations sont mesurables.',
-      body:
-        'Le site dispose de fondations utiles, mais plusieurs écarts vérifiés méritent d’être corrigés et priorisés.',
-    }
-  }
-
-  return {
-    title: 'Le périmètre contrôlé présente plusieurs points à renforcer.',
-    body:
-      'Le pré-audit a identifié des corrections prioritaires et documentées qui donnent un plan de départ concret.',
-  }
-}
 
 export function AuditExperience() {
   const [url, setUrl] = useState('')
@@ -143,6 +30,26 @@ export function AuditExperience() {
   const [reportLoading, setReportLoading] = useState(false)
   const [reportSent, setReportSent] = useState(false)
   const [reportError, setReportError] = useState('')
+  const [reportModalOpen, setReportModalOpen] = useState(false)
+
+  useEffect(() => {
+    if (!reportModalOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !reportLoading) {
+        setReportModalOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [reportModalOpen, reportLoading])
 
   async function startAudit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -151,6 +58,7 @@ export function AuditExperience() {
     setAuditError('')
     setReportError('')
     setReportSent(false)
+    setReportModalOpen(false)
     setResult(null)
     setAuditLoading(true)
     trackAuditEvent('AuditStarted', { source: 'public_audit_v1' })
@@ -175,6 +83,7 @@ export function AuditExperience() {
       }
 
       setResult(payload)
+      setReportModalOpen(true)
       trackAuditEvent('AuditCompleted', {
         public_audit_score: payload.public_audit_score,
         coverage: payload.coverage,
@@ -240,13 +149,13 @@ export function AuditExperience() {
     setAuditError('')
     setReportError('')
     setReportSent(false)
+    setReportModalOpen(false)
     setEmail('')
     setConsent(false)
+    setWebsite('')
     setUrl('')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
-
-  const currentVerdict = result ? verdict(result) : null
 
   return (
     <div className="mx-auto w-full max-w-5xl">
@@ -264,7 +173,8 @@ export function AuditExperience() {
             <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
               Entrez votre URL. Le moteur Novekia contrôle un échantillon public,
               mesure des fondamentaux SEO, l’indexabilité, les données structurées
-              et des signaux d’entité, puis restitue les preuves disponibles.
+              et des signaux d’entité, puis prépare un compte rendu fondé sur les
+              preuves disponibles.
             </p>
 
             <ul className="mt-7 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
@@ -378,48 +288,31 @@ export function AuditExperience() {
           </div>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="mx-auto max-w-3xl">
           <section
-            className="border border-border bg-background p-5 sm:p-8"
-            aria-labelledby="audit-verdict-title"
+            className="border border-border bg-background p-5 shadow-2xl shadow-black/10 sm:p-8"
+            aria-labelledby="audit-score-title"
           >
-            <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-              <div className="max-w-3xl">
-                <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
-                  Pré-audit terminé · {result.target_domain}
-                </p>
-                <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2">
-                  <p className="text-5xl font-semibold tracking-tight text-primary sm:text-6xl">
-                    {result.public_audit_score}/100
-                  </p>
-                  <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-                    Score du pré-audit public
-                  </p>
-                </div>
-                <h2
-                  id="audit-verdict-title"
-                  className="mt-5 text-2xl font-semibold tracking-tight sm:text-3xl"
-                >
-                  {currentVerdict?.title}
-                </h2>
-                <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">
-                  {currentVerdict?.body}
-                </p>
-                <p className="mt-3 text-xs leading-5 text-muted-foreground">
-                  Le score est calculé uniquement sur les contrôles réellement
-                  évalués. Un contrôle non mesuré ou à revoir réduit la couverture
-                  sans devenir artificiellement un zéro. Méthode&nbsp;: {result.score_version}.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={resetAudit}
-                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 border border-border px-4 text-sm font-medium transition hover:border-primary/60"
-              >
-                <RotateCcw aria-hidden="true" className="size-4" />
-                Auditer un autre site
-              </button>
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
+              Pré-audit terminé · {result.target_domain}
+            </p>
+
+            <div className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+              <p className="text-6xl font-semibold tracking-tight text-primary sm:text-7xl">
+                {result.public_audit_score}/100
+              </p>
+              <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+                Score du pré-audit public
+              </p>
             </div>
+
+            <h1 id="audit-score-title" className="mt-6 text-2xl font-semibold sm:text-3xl">
+              Votre compte rendu détaillé est prêt.
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+              Les constats, preuves disponibles et recommandations ne sont pas
+              affichés publiquement sur cette page. Recevez-les directement par email.
+            </p>
 
             <div className="mt-7 h-2 overflow-hidden bg-secondary" aria-hidden="true">
               <div
@@ -428,189 +321,91 @@ export function AuditExperience() {
               />
             </div>
 
-            <div className="mt-7 grid gap-px bg-border sm:grid-cols-3">
-              <div className="bg-background p-5">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Couverture du référentiel V1
-                </p>
-                <p className="mt-2 text-2xl font-semibold">{result.coverage}/100</p>
-              </div>
-              <div className="bg-background p-5">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Confiance des constats
-                </p>
-                {result.total_findings > 0 ? (
-                  <p className="mt-2 text-2xl font-semibold">{result.confidence_score}/100</p>
-                ) : (
-                  <p className="mt-2 text-base font-semibold">Aucun constat à qualifier</p>
-                )}
-              </div>
-              <div className="bg-background p-5">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Échantillon
-                </p>
-                <p className="mt-2 text-2xl font-semibold">
-                  {result.pages_collected}/{result.pages_planned}
-                </p>
-                <p className="mt-2 text-xs leading-5 text-muted-foreground">pages collectées</p>
-              </div>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => setReportModalOpen(true)}
+                className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                <Mail aria-hidden="true" className="size-5" />
+                {reportSent ? 'Rapport envoyé' : 'Recevoir mon rapport par email'}
+              </button>
+              <button
+                type="button"
+                onClick={resetAudit}
+                className="inline-flex min-h-14 items-center justify-center gap-2 border border-border px-5 font-medium transition hover:border-primary/60"
+              >
+                <RotateCcw aria-hidden="true" className="size-4" />
+                Auditer un autre site
+              </button>
             </div>
+
+            <p className="mt-6 text-xs leading-5 text-muted-foreground">
+              Score calculé uniquement sur les contrôles réellement évalués selon
+              la méthode {result.score_version}. Il ne constitue ni un score Google,
+              ni une certification, ni un score GEO/AEO officiel.
+            </p>
           </section>
+        </div>
+      )}
 
-          <section aria-labelledby="audit-categories-title">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
-                Lecture du score
-              </p>
-              <h2 id="audit-categories-title" className="mt-2 text-2xl font-semibold">
-                Sous-scores réellement mesurés
-              </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-                Ces sous-scores décrivent uniquement le référentiel public V1. Ils
-                ne doivent pas être lus comme des scores Google, GEO ou AEO officiels.
-              </p>
-            </div>
-
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              {Object.entries(result.category_scores).map(([category, score]) => (
-                <article key={category} className="border border-border bg-background p-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-sm font-semibold">{scoreCategoryLabel(category)}</p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        Couverture {result.category_coverage[category] ?? 0}/100
-                      </p>
-                    </div>
-                    <p className="text-2xl font-semibold text-primary">{score}/100</p>
-                  </div>
-                  <div className="mt-4 h-1.5 overflow-hidden bg-secondary" aria-hidden="true">
-                    <div className="h-full bg-primary" style={{ width: `${score}%` }} />
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section aria-labelledby="audit-findings-title">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
-                  Constats vérifiés
-                </p>
-                <h2 id="audit-findings-title" className="mt-2 text-2xl font-semibold">
-                  Corrections prioritaires et preuves
-                </h2>
-              </div>
-              <p className="hidden text-right text-xs text-muted-foreground sm:block">
-                {result.total_findings} constat{result.total_findings > 1 ? 's' : ''}{' '}
-                exploitable{result.total_findings > 1 ? 's' : ''}
-              </p>
-            </div>
-
-            <div className="mt-5 grid gap-4">
-              {result.findings.length ? (
-                result.findings.map((finding, index) => {
-                  const evidenceUrl = safeEvidenceUrl(finding.evidence_source_url)
-                  return (
-                    <article
-                      key={finding.id}
-                      className="border border-border bg-background p-5 sm:p-7"
-                    >
-                      <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em]">
-                        <span className="text-primary">
-                          Priorité {String(index + 1).padStart(2, '0')} ·{' '}
-                          {findingCategoryLabel(finding.category)}
-                        </span>
-                        <span className="text-muted-foreground">·</span>
-                        <span className="text-muted-foreground">
-                          Sévérité {severityLabel(finding.severity)}
-                        </span>
-                      </div>
-
-                      <h3 className="mt-4 text-xl font-semibold">{finding.title}</h3>
-
-                      <div className="mt-5 grid gap-4 md:grid-cols-2">
-                        <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Ce que le moteur a observé
-                          </p>
-                          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                            {finding.finding}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Pourquoi corriger ce point
-                          </p>
-                          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                            {findingImpact(finding.category)}
-                          </p>
-                        </div>
-                      </div>
-
-                      {finding.evidence_excerpt && (
-                        <div className="mt-5 border-l-2 border-primary bg-secondary/60 p-4">
-                          <p className="text-xs font-semibold uppercase tracking-wide">
-                            Preuve observée
-                          </p>
-                          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                            {finding.evidence_excerpt}
-                          </p>
-                          {evidenceUrl && (
-                            <a
-                              href={evidenceUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="mt-3 inline-flex max-w-full items-center gap-1.5 break-all text-xs text-primary underline-offset-4 hover:underline"
-                            >
-                              Voir la source
-                              <ExternalLink aria-hidden="true" className="size-3.5 shrink-0" />
-                            </a>
-                          )}
-                        </div>
-                      )}
-                    </article>
-                  )
-                })
-              ) : (
-                <div className="border border-border bg-background p-6 sm:p-7">
-                  <CheckCircle2 aria-hidden="true" className="size-6 text-primary" />
-                  <p className="mt-3 text-lg font-semibold">
-                    Aucun écart prioritaire n’a été retenu dans cet échantillon.
-                  </p>
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-                    C’est favorable sur les contrôles couverts. Le pré-audit reste
-                    toutefois volontairement borné&nbsp;: un audit plus large peut
-                    rechercher des optimisations supplémentaires.
-                  </p>
-                </div>
-              )}
-            </div>
-          </section>
-
+      {result && reportModalOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-6"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && !reportLoading) {
+              setReportModalOpen(false)
+            }
+          }}
+        >
           <section
-            className="border border-primary/30 bg-primary/5 p-5 sm:p-8"
-            aria-labelledby="free-report-title"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="audit-report-dialog-title"
+            className="max-h-[92dvh] w-full max-w-xl overflow-y-auto border border-border bg-background p-5 shadow-2xl sm:p-7"
           >
-            {reportSent ? (
-              <div role="status" aria-live="polite">
-                <CheckCircle2 aria-hidden="true" className="size-8 text-primary" />
-                <h2 id="free-report-title" className="mt-4 text-2xl font-semibold">
-                  Rapport envoyé.
+            <div className="flex items-start justify-between gap-5">
+              <div>
+                <div className="flex items-center gap-2 text-primary">
+                  <FileText aria-hidden="true" className="size-5" />
+                  <span className="font-mono text-xs uppercase tracking-[0.12em]">
+                    Rapport de pré-audit
+                  </span>
+                </div>
+                <h2 id="audit-report-dialog-title" className="mt-3 text-2xl font-semibold">
+                  {reportSent ? 'Rapport envoyé.' : 'Recevez le détail de votre pré-audit.'}
                 </h2>
-                <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
-                  Vérifiez votre boîte de réception. Vous y trouverez la note du
-                  pré-audit, sa couverture, les preuves et les recommandations disponibles.
+              </div>
+              <button
+                type="button"
+                onClick={() => setReportModalOpen(false)}
+                disabled={reportLoading}
+                aria-label="Fermer"
+                className="inline-flex size-11 shrink-0 items-center justify-center border border-border transition hover:border-primary/60 disabled:opacity-50"
+              >
+                <X aria-hidden="true" className="size-5" />
+              </button>
+            </div>
+
+            {reportSent ? (
+              <div className="mt-7" role="status" aria-live="polite">
+                <CheckCircle2 aria-hidden="true" className="size-9 text-primary" />
+                <p className="mt-4 leading-7 text-muted-foreground">
+                  Vérifiez votre boîte de réception. Le compte rendu contient la note,
+                  les preuves disponibles et les recommandations du pré-audit.
                 </p>
-                <div className="mt-6 border-t border-primary/20 pt-6">
-                  <p className="font-semibold">Vous voulez améliorer les points mesurés&nbsp;?</p>
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                    Novekia peut élargir le périmètre, confirmer les priorités puis
-                    vérifier le résultat après correction.
-                  </p>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={() => setReportModalOpen(false)}
+                    className="inline-flex min-h-12 items-center justify-center border border-border px-5 font-medium transition hover:border-primary/60"
+                  >
+                    Fermer
+                  </button>
                   <a
                     href="/#contact"
-                    className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90"
+                    className="inline-flex min-h-12 items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90"
                   >
                     Améliorer mon site avec Novekia
                     <ArrowRight aria-hidden="true" className="size-5" />
@@ -618,108 +413,90 @@ export function AuditExperience() {
                 </div>
               </div>
             ) : (
-              <div className="grid gap-7 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-                <div>
-                  <div className="flex items-center gap-2 text-primary">
-                    <FileText aria-hidden="true" className="size-5" />
-                    <span className="font-mono text-xs uppercase tracking-[0.12em]">
-                      Prochaine étape
-                    </span>
-                  </div>
-                  <h2 id="free-report-title" className="mt-4 text-2xl font-semibold">
-                    Recevez le compte rendu détaillé du pré-audit.
-                  </h2>
-                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                    Vous avez vu la note et les premiers constats avant de donner
-                    votre email. Le rapport reprend les preuves et recommandations disponibles.
-                  </p>
-                  <p className="mt-4 text-xs leading-5 text-muted-foreground">
-                    La note reste liée à la méthode {result.score_version} et au
-                    périmètre effectivement couvert.
-                  </p>
+              <form onSubmit={requestReport} className="mt-7">
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Score observé&nbsp;: <strong className="text-foreground">{result.public_audit_score}/100</strong>.
+                  Saisissez votre email pour recevoir le compte rendu détaillé.
+                </p>
+
+                <label htmlFor="audit-email" className="mt-6 block text-sm font-medium">
+                  Email professionnel
+                </label>
+                <div className="relative mt-2">
+                  <Mail
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                  />
+                  <input
+                    id="audit-email"
+                    type="email"
+                    autoComplete="email"
+                    autoFocus
+                    required
+                    maxLength={254}
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    className="min-h-14 w-full border border-border bg-background pl-11 pr-4 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    placeholder="vous@entreprise.fr"
+                  />
                 </div>
 
-                <form onSubmit={requestReport}>
-                  <label htmlFor="audit-email" className="text-sm font-medium">
-                    Email professionnel
-                  </label>
-                  <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-                    <div className="relative min-w-0 flex-1">
-                      <Mail
-                        aria-hidden="true"
-                        className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                      />
-                      <input
-                        id="audit-email"
-                        type="email"
-                        autoComplete="email"
-                        required
-                        maxLength={254}
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        className="min-h-14 w-full border border-border bg-background pl-11 pr-4 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                        placeholder="vous@entreprise.fr"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      disabled={reportLoading || !email.trim() || !consent}
-                      className="inline-flex min-h-14 items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {reportLoading ? (
-                        <LoaderCircle aria-hidden="true" className="size-5 animate-spin" />
-                      ) : (
-                        <ArrowRight aria-hidden="true" className="size-5" />
-                      )}
-                      Recevoir mon compte rendu
-                    </button>
-                  </div>
+                <div
+                  className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden"
+                  aria-hidden="true"
+                >
+                  <label htmlFor="audit-website">Site web</label>
+                  <input
+                    id="audit-website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={website}
+                    onChange={(event) => setWebsite(event.target.value)}
+                  />
+                </div>
 
-                  <div
-                    className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden"
-                    aria-hidden="true"
-                  >
-                    <label htmlFor="audit-website">Site web</label>
-                    <input
-                      id="audit-website"
-                      type="text"
-                      tabIndex={-1}
-                      autoComplete="off"
-                      value={website}
-                      onChange={(event) => setWebsite(event.target.value)}
-                    />
-                  </div>
+                <label className="mt-4 flex cursor-pointer items-start gap-3 text-xs leading-5 text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(event) => setConsent(event.target.checked)}
+                    className="mt-1 size-4 shrink-0 accent-current"
+                    required
+                  />
+                  <span>
+                    J’accepte de recevoir ce rapport par email et que Novekia puisse
+                    me recontacter au sujet de cet audit. Données traitées selon la
+                    politique de confidentialité.
+                  </span>
+                </label>
 
-                  <label className="mt-4 flex cursor-pointer items-start gap-3 text-xs leading-5 text-muted-foreground">
-                    <input
-                      type="checkbox"
-                      checked={consent}
-                      onChange={(event) => setConsent(event.target.checked)}
-                      className="mt-1 size-4 shrink-0 accent-current"
-                      required
-                    />
-                    <span>
-                      J’accepte de recevoir ce rapport par email et que Novekia
-                      puisse me recontacter au sujet de cet audit. Données traitées
-                      selon la politique de confidentialité.
-                    </span>
-                  </label>
+                {reportError && (
+                  <p className="mt-4 text-sm text-destructive" role="alert">
+                    {reportError}
+                  </p>
+                )}
 
-                  {reportError && (
-                    <p className="mt-4 text-sm text-destructive" role="alert">
-                      {reportError}
-                    </p>
+                <button
+                  type="submit"
+                  disabled={reportLoading || !email.trim() || !consent}
+                  className="mt-6 inline-flex min-h-14 w-full items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {reportLoading ? (
+                    <LoaderCircle aria-hidden="true" className="size-5 animate-spin" />
+                  ) : (
+                    <ArrowRight aria-hidden="true" className="size-5" />
                   )}
-                </form>
-              </div>
+                  Recevoir mon compte rendu
+                </button>
+
+                <p className="mt-4 text-center text-[11px] leading-5 text-muted-foreground">
+                  Aucun compte à créer. Le rapport est lié au site audité et à la
+                  méthode {result.score_version}.
+                </p>
+              </form>
             )}
           </section>
-
-          <p className="text-center text-xs leading-5 text-muted-foreground">
-            Le score du pré-audit est calculé par une méthode déterministe et
-            versionnée à partir des contrôles réellement évalués. Il ne constitue
-            ni un score Google, ni une certification, ni un score GEO/AEO officiel.
-          </p>
         </div>
       )}
     </div>
