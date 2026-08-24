@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import './audit-engagement.css'
 import { AuditExperience } from './audit-experience'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
 import { JsonLd } from '@/components/brand/json-ld'
@@ -60,7 +61,7 @@ export default function AuditPage() {
             ]}
           />
 
-          <section className="py-10 sm:py-14 lg:py-16" aria-label="Pré-audit de visibilité">
+          <section className="audit-engagement-surface py-10 sm:py-14 lg:py-16" aria-label="Pré-audit de visibilité">
             <AuditExperience />
           </section>
 
