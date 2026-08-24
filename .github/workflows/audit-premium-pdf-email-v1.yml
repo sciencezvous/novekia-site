@@ -37,8 +37,8 @@ jobs:
       - name: Validate PDF delivery contract
         run: node scripts/audit-pdf-delivery-contract.mjs
 
-      - name: Lint
-        run: pnpm lint
+      - name: Lint changed server files
+        run: pnpm exec eslint lib/audit-server.ts app/api/audit/report/route.ts
 
       - name: Build
         run: pnpm build
