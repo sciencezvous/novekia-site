@@ -2,10 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import './audit-engagement.css'
 import { AuditExperience } from './audit-experience'
-import { Breadcrumbs } from '@/components/brand/breadcrumbs'
 import { JsonLd } from '@/components/brand/json-ld'
-import { SiteFooter } from '@/components/layout/site-footer'
-import { SiteHeader } from '@/components/layout/site-header'
 import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
@@ -48,48 +45,54 @@ export default function AuditPage() {
         }}
       />
 
-      <SiteHeader />
-      <main id="contenu" className="section-dark relative min-h-screen overflow-hidden text-foreground">
+      <main id="contenu" className="section-dark relative min-h-dvh overflow-hidden text-foreground">
         <div aria-hidden="true" className="technical-grid-pattern absolute inset-0 opacity-20" />
         <div aria-hidden="true" className="novekia-glow -left-48 top-0" />
 
-        <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-8 sm:px-6 sm:pb-20 md:px-8">
-          <Breadcrumbs
-            items={[
-              { label: 'Accueil', href: '/' },
-              { label: 'Pré-audit gratuit' },
-            ]}
-          />
+        <div className="relative mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-5 sm:px-6 md:px-8">
+          <header className="flex min-h-20 items-center justify-between gap-4 border-b border-border/70 py-4">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-3 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Retour à Novekia"
+            >
+              <img src="/novekia-icon.svg" alt="" className="size-10 shrink-0" />
+              <span className="flex flex-col leading-none">
+                <span className="text-lg font-semibold tracking-tight">Novekia</span>
+                <span className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-primary">
+                  Visibility
+                </span>
+              </span>
+            </Link>
 
-          <section className="audit-engagement-surface py-10 sm:py-14 lg:py-16" aria-label="Pré-audit de visibilité">
+            <Link
+              href="/"
+              className="inline-flex min-h-11 items-center justify-center border border-border px-3 text-xs font-medium text-muted-foreground transition hover:border-primary/60 hover:text-foreground sm:px-4 sm:text-sm"
+            >
+              Retour au site
+            </Link>
+          </header>
+
+          <section
+            className="audit-engagement-surface flex flex-1 items-center py-8 sm:py-10 lg:py-12"
+            aria-label="Application de pré-audit de visibilité"
+          >
             <AuditExperience />
           </section>
 
-          <section
-            className="border border-primary/30 bg-primary/5 p-6 sm:p-8 lg:flex lg:items-center lg:justify-between lg:gap-12 lg:p-10"
-            aria-labelledby="audit-deep-bridge-title"
-          >
-            <div className="max-w-3xl">
-              <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
-                Aller plus loin
-              </p>
-              <h2 id="audit-deep-bridge-title" className="mt-3 text-2xl font-semibold sm:text-3xl">
-                Le pré-audit montre ce qui est publiquement vérifiable. L’audit approfondi analyse le reste.
-              </h2>
-              <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
-                Le pré-audit est volontairement borné. Les contrôles non mesurables ne sont pas transformés en défauts. Pour une analyse plus profonde — SEO, GEO, AEO, entités, Brand SERP, preuves complètes et plan de remédiation — consultez la prestation dédiée.
-              </p>
+          <footer className="flex flex-col gap-3 border-t border-border/70 py-5 font-mono text-[0.68rem] leading-5 text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+            <p>Pré-audit public Novekia Visibility · Evidence-First</p>
+            <div className="flex flex-wrap gap-x-4 gap-y-2">
+              <Link href="/politique-de-confidentialite" className="transition hover:text-foreground">
+                Confidentialité
+              </Link>
+              <Link href="/mentions-legales" className="transition hover:text-foreground">
+                Mentions légales
+              </Link>
             </div>
-            <Link
-              href="/audit-approfondi"
-              className="mt-6 inline-flex min-h-12 shrink-0 items-center justify-center bg-primary px-5 text-center font-semibold text-primary-foreground transition hover:opacity-90 lg:mt-0"
-            >
-              Découvrir l’audit approfondi
-            </Link>
-          </section>
+          </footer>
         </div>
       </main>
-      <SiteFooter />
     </>
   )
 }
