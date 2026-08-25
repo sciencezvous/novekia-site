@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import './audit-engagement.css'
+import './audit-radar-v3.css'
+import { AuditAutoReport } from './audit-auto-report'
 import { AuditExperience } from './audit-experience'
 import { JsonLd } from '@/components/brand/json-ld'
 import { siteConfig } from '@/lib/site-config'
@@ -45,6 +47,7 @@ export default function AuditPage() {
             'Pré-audit public borné de signaux SEO, de données structurées, d’entité et de préparation à la visibilité dans les moteurs de recherche et de réponse.',
         }}
       />
+      <AuditAutoReport />
 
       <main id="contenu" className="section-dark relative min-h-dvh overflow-hidden text-foreground">
         <div aria-hidden="true" className="technical-grid-pattern absolute inset-0 opacity-20" />
