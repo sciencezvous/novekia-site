@@ -30,6 +30,47 @@ function campaignFromRequest(request: NextRequest) {
   }
 }
 
+function alternateAuditTarget(targetUrl: string) {
+  const parsed = new URL(targetUrl)
+  const hostname = parsed.hostname.toLowerCase()
+  const alternateHostname = hostname.startsWith('www.')
+    ? hostname.slice(4)
+    : `www.${hostname}`
+
+  if (!alternateHostname || !alternateHostname.includes('.')) return null
+  return `https://${alternateHostname}/`
+}
+
+async function runAuditWithSameDomainHostFallback(targetUrl: string) {
+  const alternate = alternateAuditTarget(targetUrl)
+  const targets = alternate && alternate !== targetUrl
+    ? [targetUrl, alternate]
+    : [targetUrl]
+  let lastError: unknown
+
+  for (let index = 0; index < targets.length; index += 1) {
+    try {
+      const result = await callAuditIngress({
+        method: 'POST',
+        idempotencyKey: randomUUID(),
+        body: { target_url: targets[index] },
+      })
+      return { result, hostFallbackUsed: index > 0 }
+    } catch (error) {
+      lastError = error
+      const canTryAlternate =
+        index === 0 &&
+        targets.length > 1 &&
+        error instanceof AuditFacadeError &&
+        (error.status === 502 || error.status === 504)
+
+      if (!canTryAlternate) throw error
+    }
+  }
+
+  throw lastError
+}
+
 function logAuditFunnel(
   event: 'audit_completed' | 'audit_failed',
   data: Record<string, string | number | boolean>
@@ -59,17 +100,14 @@ export async function POST(request: NextRequest) {
     }
 
     const targetUrl = normalizeAuditTarget(body.url)
-    const result = await callAuditIngress({
-      method: 'POST',
-      idempotencyKey: randomUUID(),
-      body: { target_url: targetUrl },
-    })
+    const { result, hostFallbackUsed } = await runAuditWithSameDomainHostFallback(targetUrl)
 
     logAuditFunnel('audit_completed', {
       score: result.public_audit_score,
       coverage: result.coverage,
       pagesCollected: result.pages_collected,
       scoreVersion: result.score_version,
+      hostFallbackUsed,
       utmSource: campaign.utmSource,
       utmMedium: campaign.utmMedium,
       utmCampaign: campaign.utmCampaign,
