@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import './audit-engagement.css'
 import { AuditExperience } from './audit-experience'
@@ -56,7 +57,7 @@ export default function AuditPage() {
               className="inline-flex items-center gap-3 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Retour à Novekia"
             >
-              <img src="/novekia-icon.svg" alt="" className="size-10 shrink-0" />
+              <Image src="/novekia-icon.svg" alt="" width={40} height={40} className="size-10 shrink-0" />
               <span className="flex flex-col leading-none">
                 <span className="text-lg font-semibold tracking-tight">Novekia</span>
                 <span className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-primary">
