@@ -1,0 +1,139 @@
+.audit-live-scanner {
+  isolation: isolate;
+}
+
+.audit-live-scanner::before {
+  content: '';
+  position: absolute;
+  inset: 9%;
+  z-index: 1;
+  border: 1px solid rgba(8, 124, 255, 0.1);
+  border-radius: 999px;
+  pointer-events: none;
+  animation: audit-radar-breathe-v3 4.6s ease-in-out infinite;
+}
+
+.audit-live-scanner::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #65adff;
+  box-shadow: 0 0 0 0 rgba(8, 124, 255, 0.34), 0 0 18px rgba(8, 124, 255, 0.8);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: audit-radar-center-v3 2.8s ease-out infinite;
+}
+
+.audit-radar-grid,
+.audit-radar-ring,
+.audit-radar-beam,
+.audit-radar-core,
+.audit-radar-label {
+  z-index: 2;
+}
+
+.audit-radar-beam {
+  z-index: 3;
+  opacity: 0.42;
+  animation: audit-radar-sweep-v3 5.6s linear infinite;
+  will-change: transform;
+}
+
+.audit-live-scanner.is-active .audit-radar-beam {
+  opacity: 1;
+  animation: audit-radar-sweep-v3 2.4s linear infinite;
+}
+
+.audit-radar-ring-one {
+  animation: audit-radar-ring-v3 3.2s ease-in-out infinite;
+}
+
+.audit-radar-ring-two {
+  animation: audit-radar-ring-v3 3.2s ease-in-out 0.34s infinite;
+}
+
+.audit-radar-ring-three {
+  animation: audit-radar-ring-v3 3.2s ease-in-out 0.68s infinite;
+}
+
+.audit-radar-label {
+  z-index: 6;
+  transition: border-color 180ms ease, color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.audit-live-scanner:not(.is-active) .audit-radar-label {
+  animation: audit-radar-label-idle-v3 5.6s ease-in-out infinite;
+}
+
+.audit-live-scanner:not(.is-active) .audit-radar-label-b { animation-delay: 1.4s; }
+.audit-live-scanner:not(.is-active) .audit-radar-label-d { animation-delay: 2.8s; }
+.audit-live-scanner:not(.is-active) .audit-radar-label-c { animation-delay: 4.2s; }
+
+.audit-live-scanner.is-active .audit-radar-label {
+  animation: audit-radar-hit-v3 2.4s ease-in-out infinite;
+}
+
+.audit-live-scanner.is-active .audit-radar-label-a { animation-delay: 0.16s; }
+.audit-live-scanner.is-active .audit-radar-label-b { animation-delay: 0.72s; }
+.audit-live-scanner.is-active .audit-radar-label-d { animation-delay: 1.28s; }
+.audit-live-scanner.is-active .audit-radar-label-c { animation-delay: 1.84s; }
+
+.audit-live-scanner.is-active .audit-radar-core {
+  animation: audit-core-pulse 1.35s ease-in-out infinite, audit-radar-core-glow-v3 2.4s ease-in-out infinite;
+}
+
+@keyframes audit-radar-sweep-v3 {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes audit-radar-ring-v3 {
+  0%, 100% { border-color: rgba(77, 161, 255, 0.2); box-shadow: 0 0 0 rgba(8, 124, 255, 0); }
+  50% { border-color: rgba(77, 161, 255, 0.42); box-shadow: 0 0 20px rgba(8, 124, 255, 0.08); }
+}
+
+@keyframes audit-radar-breathe-v3 {
+  0%, 100% { opacity: 0.38; transform: scale(0.985); }
+  50% { opacity: 0.8; transform: scale(1.015); }
+}
+
+@keyframes audit-radar-center-v3 {
+  0% { box-shadow: 0 0 0 0 rgba(8, 124, 255, 0.3), 0 0 18px rgba(8, 124, 255, 0.8); }
+  75%, 100% { box-shadow: 0 0 0 1.9rem rgba(8, 124, 255, 0), 0 0 18px rgba(8, 124, 255, 0.48); }
+}
+
+@keyframes audit-radar-label-idle-v3 {
+  0%, 72%, 100% { color: #7bb7ff; border-color: rgba(8, 124, 255, 0.2); background: rgba(2, 8, 23, 0.76); box-shadow: none; }
+  82% { color: #eaf5ff; border-color: rgba(8, 124, 255, 0.62); background: rgba(8, 124, 255, 0.12); box-shadow: 0 0 16px rgba(8, 124, 255, 0.18); }
+}
+
+@keyframes audit-radar-hit-v3 {
+  0%, 62%, 100% { color: #7bb7ff; border-color: rgba(8, 124, 255, 0.22); background: rgba(2, 8, 23, 0.76); box-shadow: none; }
+  72% { color: #ffffff; border-color: rgba(86, 177, 255, 0.95); background: rgba(8, 124, 255, 0.2); box-shadow: 0 0 20px rgba(8, 124, 255, 0.42); }
+}
+
+@keyframes audit-radar-core-glow-v3 {
+  0%, 100% { box-shadow: 0 0 0 8px rgba(8, 124, 255, 0.05), 0 0 30px rgba(8, 124, 255, 0.22), inset 0 0 22px rgba(8, 124, 255, 0.11); }
+  50% { box-shadow: 0 0 0 11px rgba(8, 124, 255, 0.075), 0 0 50px rgba(8, 124, 255, 0.38), inset 0 0 28px rgba(8, 124, 255, 0.16); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audit-live-scanner::before,
+  .audit-live-scanner::after,
+  .audit-radar-ring,
+  .audit-radar-beam,
+  .audit-radar-label,
+  .audit-live-scanner.is-active .audit-radar-core {
+    animation: none !important;
+  }
+
+  .audit-radar-beam {
+    transform: rotate(42deg);
+    opacity: 0.62;
+  }
+}
