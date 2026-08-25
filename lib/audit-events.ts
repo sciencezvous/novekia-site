@@ -22,9 +22,14 @@ export function trackAuditEvent(
   const trackingWindow = window as TrackingWindow
   trackingWindow.dataLayer?.push({ event: name, ...payload })
 
-  // Meta-ready without installing or exposing a Pixel ID here. If a Pixel is
-  // configured later, the same funnel events become available automatically.
+  // Meta-ready without installing or exposing a Pixel ID here. If a consented
+  // Meta Pixel is configured later, the detailed funnel remains available as
+  // custom events and the final email conversion is also emitted as Lead.
   if (typeof trackingWindow.fbq === 'function') {
     trackingWindow.fbq('trackCustom', name, payload)
+
+    if (name === 'EmailSubmitted') {
+      trackingWindow.fbq('track', 'Lead', payload)
+    }
   }
 }
