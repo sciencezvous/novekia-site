@@ -3,21 +3,70 @@
 import { FormEvent, useEffect, useState } from 'react'
 import {
   ArrowRight,
+  BadgeCheck,
   CheckCircle2,
   FileText,
+  Gauge,
   LoaderCircle,
   Mail,
   RotateCcw,
   Search,
   ShieldCheck,
+  Sparkles,
   X,
 } from 'lucide-react'
 import { trackAuditEvent } from '@/lib/audit-events'
 import {
   isPublicAuditResult,
+  type PublicAuditFinding,
   type PublicAuditResult,
 } from '@/lib/audit-contract'
 import { getStoredAttribution } from '@/lib/lead-attribution'
+
+const CATEGORY_CARDS = [
+  {
+    key: 'accessibility_indexability',
+    label: 'Accès & indexabilité',
+    description: 'Robots, accès public et capacité d’indexation.',
+  },
+  {
+    key: 'on_page_seo',
+    label: 'SEO on-page',
+    description: 'Signaux éditoriaux et fondamentaux visibles dans les pages.',
+  },
+  {
+    key: 'structured_data_entity',
+    label: 'Entité & données structurées',
+    description: 'Balisage, identité de marque et signaux structurés.',
+  },
+  {
+    key: 'technical_integrity',
+    label: 'Intégrité technique',
+    description: 'Cohérence technique des ressources publiques contrôlées.',
+  },
+] as const
+
+const SEVERITY_LABELS: Record<string, string> = {
+  critical: 'Critique',
+  high: 'Élevée',
+  medium: 'Moyenne',
+  low: 'Faible',
+  info: 'Information',
+}
+
+const CONFIDENCE_LABELS: Record<string, string> = {
+  high: 'Confiance élevée',
+  medium: 'Confiance moyenne',
+  low: 'Confiance faible',
+}
+
+function findingSeverityLabel(finding: PublicAuditFinding) {
+  return SEVERITY_LABELS[finding.severity.toLowerCase()] || finding.severity
+}
+
+function findingConfidenceLabel(finding: PublicAuditFinding) {
+  return CONFIDENCE_LABELS[finding.confidence.toLowerCase()] || finding.confidence
+}
 
 export function AuditExperience() {
   const [url, setUrl] = useState('')
@@ -83,7 +132,6 @@ export function AuditExperience() {
       }
 
       setResult(payload)
-      setReportModalOpen(true)
       trackAuditEvent('AuditCompleted', {
         public_audit_score: payload.public_audit_score,
         coverage: payload.coverage,
@@ -167,15 +215,20 @@ export function AuditExperience() {
               Pré-audit public Novekia
             </div>
             <h1 className="mt-7 max-w-3xl text-balance text-4xl font-semibold leading-[0.98] tracking-[-0.045em] sm:text-6xl">
-              Votre site est-il correctement compris par{' '}
-              <span className="text-primary">Google et les moteurs IA&nbsp;?</span>
+              Découvrez ce que votre site permet réellement de comprendre à{' '}
+              <span className="text-primary">Google et aux moteurs de réponse.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-              Entrez votre URL. Le moteur Novekia contrôle un échantillon public,
-              mesure des fondamentaux SEO, l’indexabilité, les données structurées
-              et des signaux d’entité, puis prépare un compte rendu fondé sur les
-              preuves disponibles.
+              Entrez votre URL. Novekia analyse uniquement des informations publiques,
+              mesure des fondamentaux SEO, l’indexabilité, les données structurées et
+              les signaux d’entité, puis restitue des constats reliés à des preuves.
             </p>
+
+            <div className="mt-7 border-l-2 border-primary bg-primary/5 px-4 py-3 text-sm leading-6 text-muted-foreground">
+              <strong className="text-foreground">Principe Evidence-First :</strong>{' '}
+              un défaut n’est jamais affirmé sans observation exploitable. Ce qui ne
+              peut pas être vérifié publiquement est indiqué comme non mesuré.
+            </div>
 
             <ul className="mt-7 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
               <li className="flex items-center gap-2">
@@ -184,15 +237,15 @@ export function AuditExperience() {
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 aria-hidden="true" className="size-4 text-primary" />
-                Score visible avant l’email
+                Score et aperçu avant l’email
               </li>
               <li className="flex items-center gap-2">
                 <ShieldCheck aria-hidden="true" className="size-4 text-primary" />
                 Pages publiques uniquement
               </li>
               <li className="flex items-center gap-2">
-                <ShieldCheck aria-hidden="true" className="size-4 text-primary" />
-                Aucun accès à votre CMS
+                <BadgeCheck aria-hidden="true" className="size-4 text-primary" />
+                Constats reliés aux preuves disponibles
               </li>
             </ul>
           </div>
@@ -263,10 +316,16 @@ export function AuditExperience() {
                     <p className="font-medium">Le moteur examine le site réel.</p>
                     <p className="mt-1 text-sm leading-6 text-muted-foreground">
                       Collecte bornée, robots.txt, sitemap, indexabilité, structure
-                      des pages et données structurées. Cela peut prendre quelques
-                      dizaines de secondes.
+                      des pages, données structurées et signaux d’entité. Le résultat
+                      peut prendre quelques dizaines de secondes.
                     </p>
                   </div>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                  <span className="border border-border bg-background/60 px-3 py-2">SEO public</span>
+                  <span className="border border-border bg-background/60 px-3 py-2">Indexabilité</span>
+                  <span className="border border-border bg-background/60 px-3 py-2">Données structurées</span>
+                  <span className="border border-border bg-background/60 px-3 py-2">Entité & cohérence</span>
                 </div>
               </div>
             )}
@@ -288,62 +347,155 @@ export function AuditExperience() {
           </div>
         </div>
       ) : (
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-4xl">
           <section
             className="border border-border bg-background p-5 shadow-2xl shadow-black/10 sm:p-8"
             aria-labelledby="audit-score-title"
           >
-            <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
-              Pré-audit terminé · {result.target_domain}
-            </p>
-
-            <div className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2">
-              <p className="text-6xl font-semibold tracking-tight text-primary sm:text-7xl">
-                {result.public_audit_score}/100
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="font-mono text-xs uppercase tracking-[0.12em] text-primary">
+                Pré-audit terminé · {result.target_domain}
               </p>
-              <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-                Score du pré-audit public
-              </p>
+              <div className="inline-flex items-center gap-2 border border-primary/25 bg-primary/5 px-3 py-1.5 text-xs text-muted-foreground">
+                <BadgeCheck aria-hidden="true" className="size-4 text-primary" />
+                {result.pages_collected} page{result.pages_collected > 1 ? 's' : ''} contrôlée{result.pages_collected > 1 ? 's' : ''} · couverture {result.coverage}%
+              </div>
             </div>
 
-            <h1 id="audit-score-title" className="mt-6 text-2xl font-semibold sm:text-3xl">
-              Votre compte rendu détaillé est prêt.
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-              Les constats, preuves disponibles et recommandations ne sont pas
-              affichés publiquement sur cette page. Recevez-les directement par email.
-            </p>
+            <div className="mt-6 grid gap-7 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
+              <div className="border border-primary/25 bg-primary/5 p-5 sm:p-6">
+                <div className="flex items-center gap-2 text-primary">
+                  <Gauge aria-hidden="true" className="size-5" />
+                  <span className="font-mono text-xs uppercase tracking-[0.12em]">Score mesuré</span>
+                </div>
+                <p className="mt-4 text-6xl font-semibold tracking-tight text-primary sm:text-7xl">
+                  {result.public_audit_score}
+                  <span className="text-2xl text-muted-foreground">/100</span>
+                </p>
+                <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                  Calculé uniquement sur les contrôles effectivement évalués avec la méthode {result.score_version}.
+                </p>
+              </div>
 
-            <div className="mt-7 h-2 overflow-hidden bg-secondary" aria-hidden="true">
-              <div
-                className="h-full bg-primary transition-[width] duration-700"
-                style={{ width: `${result.public_audit_score}%` }}
-              />
+              <div>
+                <h1 id="audit-score-title" className="text-2xl font-semibold sm:text-3xl">
+                  Voici un premier aperçu vérifiable de votre site.
+                </h1>
+                <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
+                  {result.summary}
+                </p>
+                <div className="mt-5 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                  <span className="border border-border px-3 py-2">Confiance globale {result.confidence_score}%</span>
+                  <span className="border border-border px-3 py-2">{result.total_findings} constat{result.total_findings > 1 ? 's' : ''}</span>
+                  <span className="border border-border px-3 py-2">Aucune donnée privée requise</span>
+                </div>
+              </div>
             </div>
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => setReportModalOpen(true)}
-                className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90"
-              >
-                <Mail aria-hidden="true" className="size-5" />
-                {reportSent ? 'Rapport envoyé' : 'Recevoir mon rapport par email'}
-              </button>
-              <button
-                type="button"
-                onClick={resetAudit}
-                className="inline-flex min-h-14 items-center justify-center gap-2 border border-border px-5 font-medium transition hover:border-primary/60"
-              >
-                <RotateCcw aria-hidden="true" className="size-4" />
-                Auditer un autre site
-              </button>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {CATEGORY_CARDS.map((category) => {
+                const score = result.category_scores[category.key] ?? 0
+                const coverage = result.category_coverage[category.key] ?? 0
+                return (
+                  <div key={category.key} className="border border-border bg-secondary/20 p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-medium">{category.label}</p>
+                        <p className="mt-1 text-xs leading-5 text-muted-foreground">{category.description}</p>
+                      </div>
+                      <span className="shrink-0 font-mono text-lg font-semibold text-primary">{score}/100</span>
+                    </div>
+                    <div className="mt-4 h-1.5 overflow-hidden bg-secondary" aria-hidden="true">
+                      <div className="h-full bg-primary" style={{ width: `${score}%` }} />
+                    </div>
+                    <p className="mt-2 text-[11px] text-muted-foreground">Couverture mesurée : {coverage}%</p>
+                  </div>
+                )
+              })}
+            </div>
+
+            {result.positive_observations.length > 0 && (
+              <div className="mt-8">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 aria-hidden="true" className="size-5 text-primary" />
+                  <h2 className="text-lg font-semibold">Ce que le moteur peut déjà confirmer</h2>
+                </div>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {result.positive_observations.slice(0, 4).map((observation) => (
+                    <div key={observation} className="border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-muted-foreground">
+                      {observation}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-8 border-t border-border pt-8">
+              <div className="flex items-center gap-2">
+                <Sparkles aria-hidden="true" className="size-5 text-primary" />
+                <h2 className="text-lg font-semibold">Premiers points à examiner</h2>
+              </div>
+
+              {result.findings.length > 0 ? (
+                <div className="mt-4 grid gap-4">
+                  {result.findings.slice(0, 3).map((finding) => (
+                    <article key={finding.id} className="border border-border bg-secondary/20 p-4 sm:p-5">
+                      <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-muted-foreground">
+                        <span className="border border-border px-2 py-1">{findingSeverityLabel(finding)}</span>
+                        <span className="border border-border px-2 py-1">{findingConfidenceLabel(finding)}</span>
+                        <span className="border border-border px-2 py-1">{finding.verification_status.replaceAll('_', ' ')}</span>
+                      </div>
+                      <h3 className="mt-3 font-semibold">{finding.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{finding.finding}</p>
+                      {finding.evidence_excerpt && (
+                        <div className="mt-4 border-l-2 border-primary bg-background/60 px-4 py-3">
+                          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-primary">Preuve observée</p>
+                          <p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{finding.evidence_excerpt}</p>
+                        </div>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-4 border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-muted-foreground">
+                  Aucun constat négatif n’a été produit sur les contrôles effectivement mesurés dans cet échantillon public.
+                </p>
+              )}
+            </div>
+
+            <div className="mt-8 border border-primary/30 bg-primary/5 p-5 sm:p-6">
+              <div className="flex items-start gap-3">
+                <FileText aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-primary" />
+                <div>
+                  <h2 className="font-semibold">Recevez le rapport détaillé et les recommandations.</h2>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Le rapport reprend les constats, les preuves disponibles, les URLs concernées et les recommandations du pré-audit. Aucun compte n’est nécessaire.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={() => setReportModalOpen(true)}
+                  className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90"
+                >
+                  <Mail aria-hidden="true" className="size-5" />
+                  {reportSent ? 'Rapport envoyé' : 'Recevoir mon rapport par email'}
+                </button>
+                <button
+                  type="button"
+                  onClick={resetAudit}
+                  className="inline-flex min-h-14 items-center justify-center gap-2 border border-border px-5 font-medium transition hover:border-primary/60"
+                >
+                  <RotateCcw aria-hidden="true" className="size-4" />
+                  Auditer un autre site
+                </button>
+              </div>
             </div>
 
             <p className="mt-6 text-xs leading-5 text-muted-foreground">
-              Score calculé uniquement sur les contrôles réellement évalués selon
-              la méthode {result.score_version}. Il ne constitue ni un score Google,
-              ni une certification, ni un score GEO/AEO officiel.
+              Le score n’est ni un score Google, ni une certification, ni un score GEO/AEO officiel. Les éléments non observables publiquement ne sont pas transformés en défauts.
             </p>
           </section>
         </div>
