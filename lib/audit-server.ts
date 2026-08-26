@@ -74,6 +74,16 @@ export function enforceRateLimit(
   current.count += 1
 }
 
+export function releaseRateLimit(key: string, now = Date.now()) {
+  const current = rateBuckets.get(key)
+  if (!current) return
+  if (current.resetAt <= now || current.count <= 1) {
+    rateBuckets.delete(key)
+    return
+  }
+  current.count -= 1
+}
+
 export function normalizeAuditTarget(rawValue: unknown) {
   let value = String(rawValue ?? '').trim()
   if (!value || value.length > MAX_TARGET_LENGTH) {

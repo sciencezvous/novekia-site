@@ -7,10 +7,13 @@ import {
   enforceRateLimit,
   enforceSameOrigin,
   normalizeAuditTarget,
+  releaseRateLimit,
 } from '@/lib/audit-server'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
+
+const TRANSIENT_AUDIT_STATUSES = new Set([429, 502, 503, 504])
 
 function campaignFromRequest(request: NextRequest) {
   const referer = request.headers.get('referer')
@@ -81,12 +84,18 @@ function logAuditFunnel(
   )
 }
 
+function isTransientAuditFailure(error: AuditFacadeError) {
+  return TRANSIENT_AUDIT_STATUSES.has(error.status)
+}
+
 export async function POST(request: NextRequest) {
   const campaign = campaignFromRequest(request)
+  let scanQuotaKey: string | null = null
+  let scanQuotaReserved = false
+  let quotaRefunded = false
 
   try {
     enforceSameOrigin(request)
-    enforceRateLimit(`audit:start:${clientAddress(request)}`, 5)
 
     let body: Record<string, unknown>
     try {
@@ -100,6 +109,13 @@ export async function POST(request: NextRequest) {
     }
 
     const targetUrl = normalizeAuditTarget(body.url)
+
+    // Reserve the long-window quota only after local validation. Infrastructure
+    // failures are refunded below so they cannot lock a legitimate visitor out.
+    scanQuotaKey = `audit:start:${clientAddress(request)}`
+    enforceRateLimit(scanQuotaKey, 5)
+    scanQuotaReserved = true
+
     const { result, hostFallbackUsed } = await runAuditWithSameDomainHostFallback(targetUrl)
 
     logAuditFunnel('audit_completed', {
@@ -121,9 +137,21 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
+    if (
+      scanQuotaReserved &&
+      scanQuotaKey &&
+      error instanceof AuditFacadeError &&
+      isTransientAuditFailure(error)
+    ) {
+      releaseRateLimit(scanQuotaKey)
+      scanQuotaReserved = false
+      quotaRefunded = true
+    }
+
     if (error instanceof AuditFacadeError) {
       logAuditFunnel('audit_failed', {
         status: error.status,
+        quotaRefunded,
         utmSource: campaign.utmSource,
         utmMedium: campaign.utmMedium,
         utmCampaign: campaign.utmCampaign,
@@ -134,8 +162,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (scanQuotaReserved && scanQuotaKey) {
+      releaseRateLimit(scanQuotaKey)
+      quotaRefunded = true
+    }
+
     logAuditFunnel('audit_failed', {
       status: 502,
+      quotaRefunded,
       utmSource: campaign.utmSource,
       utmMedium: campaign.utmMedium,
       utmCampaign: campaign.utmCampaign,
