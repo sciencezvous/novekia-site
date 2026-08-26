@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
   const campaign = campaignFromRequest(request)
   let scanQuotaKey: string | null = null
   let scanQuotaReserved = false
+  let quotaRefunded = false
 
   try {
     enforceSameOrigin(request)
@@ -145,11 +146,13 @@ export async function POST(request: NextRequest) {
     ) {
       releaseRateLimit(scanQuotaKey)
       scanQuotaReserved = false
+      quotaRefunded = true
     }
 
     if (error instanceof AuditFacadeError) {
       logAuditFunnel('audit_failed', {
         status: error.status,
+        quotaRefunded,
         utmSource: campaign.utmSource,
         utmMedium: campaign.utmMedium,
         utmCampaign: campaign.utmCampaign,
@@ -163,10 +166,12 @@ export async function POST(request: NextRequest) {
     // Unexpected server failures must not consume a prospect's long-window quota.
     if (scanQuotaReserved && scanQuotaKey) {
       releaseRateLimit(scanQuotaKey)
+      quotaRefunded = true
     }
 
     logAuditFunnel('audit_failed', {
       status: 502,
+      quotaRefunded,
       utmSource: campaign.utmSource,
       utmMedium: campaign.utmMedium,
       utmCampaign: campaign.utmCampaign,
