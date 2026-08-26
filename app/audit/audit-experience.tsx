@@ -5,14 +5,13 @@ import {
   ArrowRight,
   BadgeCheck,
   CheckCircle2,
+  Download,
   FileText,
-  Gauge,
   LoaderCircle,
   Mail,
   RotateCcw,
   Search,
   ShieldCheck,
-  Sparkles,
   X,
 } from 'lucide-react'
 import { trackAuditEvent } from '@/lib/audit-events'
@@ -26,50 +25,61 @@ import { getStoredAttribution } from '@/lib/lead-attribution'
 const CATEGORY_CARDS = [
   {
     key: 'accessibility_indexability',
-    short: 'INDEX',
-    label: 'Accès & indexabilité',
-    description: 'Robots, accès public et capacité d’indexation.',
+    short: 'ACCÈS',
+    label: 'Google peut-il lire vos pages ?',
+    description: 'Accès public, règles d’exploration et capacité d’indexation.',
   },
   {
     key: 'on_page_seo',
-    short: 'SEO',
-    label: 'SEO on-page',
-    description: 'Signaux éditoriaux et fondamentaux visibles.',
+    short: 'CONTENU',
+    label: 'Vos pages expliquent-elles clairement leur sujet ?',
+    description: 'Titres, contenu visible et signaux utiles à la compréhension des pages.',
   },
   {
     key: 'structured_data_entity',
-    short: 'ENTITY',
-    label: 'Entité & données structurées',
-    description: 'Balisage, identité de marque et signaux structurés.',
+    short: 'ENTREPRISE',
+    label: 'Votre entreprise est-elle bien comprise ?',
+    description: 'Identité, données structurées et informations qui décrivent votre activité.',
   },
   {
     key: 'technical_integrity',
     short: 'TECH',
-    label: 'Intégrité technique',
-    description: 'Cohérence des ressources publiques contrôlées.',
+    label: 'Le site est-il techniquement cohérent ?',
+    description: 'Cohérence des ressources et protections publiques réellement contrôlées.',
   },
 ] as const
 
 const SCAN_STAGES = [
-  'Connexion au domaine',
-  'Lecture des signaux SEO',
-  'Vérification de l’indexabilité',
-  'Analyse des données structurées',
-  'Consolidation des preuves',
+  'Connexion au site',
+  'Lecture des pages publiques',
+  'Vérification de la visibilité Google',
+  'Compréhension de l’entreprise et du contenu',
+  'Vérification des preuves',
 ] as const
 
 const SEVERITY_LABELS: Record<string, string> = {
-  critical: 'Critique',
-  high: 'Élevée',
-  medium: 'Moyenne',
-  low: 'Faible',
+  critical: 'Priorité critique',
+  high: 'Priorité élevée',
+  medium: 'Priorité moyenne',
+  low: 'Priorité faible',
   info: 'Information',
 }
 
 const CONFIDENCE_LABELS: Record<string, string> = {
-  high: 'Confiance élevée',
-  medium: 'Confiance moyenne',
-  low: 'Confiance faible',
+  high: 'Preuve solide',
+  medium: 'Preuve moyenne',
+  low: 'Preuve limitée',
+}
+
+const VERIFICATION_LABELS: Record<string, string> = {
+  verified: 'Confirmé',
+  confirmed: 'Confirmé',
+  probable: 'À confirmer',
+  needs_review: 'À confirmer',
+  unverified: 'Non vérifié',
+  not_verified: 'Non vérifié',
+  not_measured: 'Non mesuré',
+  inconclusive: 'Non conclu',
 }
 
 function findingSeverityLabel(finding: PublicAuditFinding) {
@@ -78,6 +88,11 @@ function findingSeverityLabel(finding: PublicAuditFinding) {
 
 function findingConfidenceLabel(finding: PublicAuditFinding) {
   return CONFIDENCE_LABELS[finding.confidence.toLowerCase()] || finding.confidence
+}
+
+function findingVerificationLabel(finding: PublicAuditFinding) {
+  const status = finding.verification_status.toLowerCase()
+  return VERIFICATION_LABELS[status] || finding.verification_status.replaceAll('_', ' ')
 }
 
 export function AuditExperience() {
@@ -229,6 +244,16 @@ export function AuditExperience() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  function trackDeepAuditIntent() {
+    if (!result) return
+    trackAuditEvent('DeepAuditClicked', {
+      public_audit_score: result.public_audit_score,
+      coverage: result.coverage,
+      findings_count: result.total_findings,
+      source: 'audit_report_success',
+    })
+  }
+
   const confidenceDisplay = result
     ? result.confidence_score > 0
       ? `${result.confidence_score}%`
@@ -249,28 +274,28 @@ export function AuditExperience() {
           <section className="audit-welcome-copy" aria-labelledby="audit-main-title">
             <div className="audit-kicker">
               <span className="audit-kicker-dot" aria-hidden="true" />
-              VISIBILITY SCAN · SEO · ENTITY · AI READINESS
+              ANALYSE GRATUITE · GOOGLE · MOTEURS IA
             </div>
 
             <h1 id="audit-main-title" className="audit-main-title">
-              Votre site est-il vraiment <span>lisible par Google et les IA&nbsp;?</span>
+              Votre site est-il vraiment <span>compris par Google et les IA&nbsp;?</span>
             </h1>
 
             <p className="audit-lead">
-              Lancez une lecture publique de votre site. Novekia mesure ce qui est
-              observable, relie les constats à leurs preuves et signale clairement ce
-              qui ne peut pas être vérifié.
+              Entrez simplement l’adresse de votre site. Novekia analyse ce qui est
+              visible publiquement, montre les problèmes réellement observés et explique
+              ce qui mérite d’être corrigé en priorité.
             </p>
 
             <div className="audit-trust-row" aria-label="Garanties du pré-audit">
-              <span><ShieldCheck aria-hidden="true" /> Public uniquement</span>
-              <span><BadgeCheck aria-hidden="true" /> Preuves traçables</span>
-              <span><CheckCircle2 aria-hidden="true" /> Résultat avant email</span>
+              <span><ShieldCheck aria-hidden="true" /> Aucun accès privé</span>
+              <span><BadgeCheck aria-hidden="true" /> Preuves vérifiables</span>
+              <span><CheckCircle2 aria-hidden="true" /> Résultat immédiat</span>
             </div>
 
             <div className="audit-proof-note">
-              <strong>Evidence-First.</strong> Pas de métrique inventée, pas de défaut
-              affirmé sans observation exploitable.
+              <strong>Une règle simple :</strong> chaque alerte doit être reliée à ce que
+              le moteur a réellement observé. Ce qui n’est pas vérifiable est signalé comme tel.
             </div>
           </section>
 
@@ -292,12 +317,12 @@ export function AuditExperience() {
             </div>
 
             <div className="audit-command-copy">
-              <p className="audit-command-overline">NOVEKIA VISIBILITY · PUBLIC SCAN</p>
+              <p className="audit-command-overline">ANALYSE PUBLIQUE NOVEKIA</p>
               <h2>{auditLoading ? 'Analyse en cours…' : 'Analysez votre site maintenant.'}</h2>
               <p>
                 {auditLoading
                   ? SCAN_STAGES[auditStage]
-                  : 'Une URL suffit. Aucun compte, aucun accès CMS.'}
+                  : 'Une URL suffit. Aucun compte, aucun accès à votre site.'}
               </p>
             </div>
 
@@ -322,11 +347,11 @@ export function AuditExperience() {
                   {auditLoading ? (
                     <>
                       <LoaderCircle aria-hidden="true" className="size-5 animate-spin" />
-                      Scan en cours
+                      Analyse en cours
                     </>
                   ) : (
                     <>
-                      Lancer le scan
+                      Analyser mon site
                       <ArrowRight aria-hidden="true" className="size-5" />
                     </>
                   )}
@@ -354,8 +379,8 @@ export function AuditExperience() {
             )}
 
             <p className="audit-legal-note">
-              Pré-audit public borné. Il ne constitue ni une certification, ni une
-              garantie de classement.
+              Analyse d’un échantillon public du site. Ce résultat ne remplace pas un audit
+              complet et ne garantit aucun classement dans Google ou un moteur IA.
             </p>
           </section>
         </div>
@@ -386,27 +411,26 @@ export function AuditExperience() {
               </div>
 
               <div className="audit-result-summary">
-                <p className="audit-result-eyebrow">APERÇU VÉRIFIABLE</p>
+                <p className="audit-result-eyebrow">RÉSULTAT EN CLAIR</p>
                 <h1 id="audit-score-title">
                   {limitedResult
-                    ? 'Aucun défaut exploitable détecté sur cet échantillon.'
-                    : 'Votre empreinte publique vient d’être cartographiée.'}
+                    ? 'Aucun problème démontré sur cet échantillon.'
+                    : 'Voici ce que le moteur a réellement trouvé.'}
                 </h1>
                 <p>{result.summary}</p>
 
                 <div className="audit-result-metrics">
                   <span><strong>{result.coverage}%</strong> couverture</span>
-                  <span><strong>{confidenceDisplay}</strong> confiance</span>
-                  <span><strong>{result.total_findings}</strong> constat{result.total_findings > 1 ? 's' : ''}</span>
+                  <span><strong>{confidenceDisplay}</strong> fiabilité des preuves</span>
+                  <span><strong>{result.total_findings}</strong> point{result.total_findings > 1 ? 's' : ''} à examiner</span>
                 </div>
 
                 {limitedResult && (
                   <div className="audit-limit-note">
                     <ShieldCheck aria-hidden="true" />
                     <span>
-                      Le score concerne seulement les contrôles mesurés. La confiance
-                      globale n’a pas été calculée ; Novekia ne transforme pas cette
-                      absence de signal en promesse de conformité.
+                      Le score concerne seulement les contrôles réellement mesurés. Une
+                      absence de problème détecté ne signifie pas que tout le site est parfait.
                     </span>
                   </div>
                 )}
@@ -417,7 +441,7 @@ export function AuditExperience() {
           <section className="audit-signal-board" aria-labelledby="audit-signals-title">
             <div className="audit-section-heading">
               <div>
-                <p>SIGNAL MAP</p>
+                <p>4 QUESTIONS CLÉS</p>
                 <h2 id="audit-signals-title">Ce que le moteur a réellement mesuré</h2>
               </div>
               <span>méthode {result.score_version}</span>
@@ -438,7 +462,7 @@ export function AuditExperience() {
                     <div className="audit-signal-bar" aria-hidden="true">
                       <span style={{ width: `${score}%` }} />
                     </div>
-                    <div className="audit-signal-coverage">couverture mesurée {coverage}%</div>
+                    <div className="audit-signal-coverage">contrôles réalisés {coverage}%</div>
                   </article>
                 )
               })}
@@ -448,8 +472,8 @@ export function AuditExperience() {
           <section className="audit-evidence-zone" aria-labelledby="audit-evidence-title">
             <div className="audit-section-heading">
               <div>
-                <p>EVIDENCE FEED</p>
-                <h2 id="audit-evidence-title">Preuves et constats observés</h2>
+                <p>PREUVES</p>
+                <h2 id="audit-evidence-title">Ce qui est confirmé ou reste à vérifier</h2>
               </div>
               <span>aucune donnée privée requise</span>
             </div>
@@ -472,13 +496,13 @@ export function AuditExperience() {
                     <div className="audit-finding-meta">
                       <span>{findingSeverityLabel(finding)}</span>
                       <span>{findingConfidenceLabel(finding)}</span>
-                      <span>{finding.verification_status.replaceAll('_', ' ')}</span>
+                      <span>{findingVerificationLabel(finding)}</span>
                     </div>
                     <h3>{finding.title}</h3>
                     <p>{finding.finding}</p>
                     {finding.evidence_excerpt && (
                       <div className="audit-evidence-excerpt">
-                        <strong>PREUVE OBSERVÉE</strong>
+                        <strong>CE QUE NOUS AVONS OBSERVÉ</strong>
                         <code>{finding.evidence_excerpt}</code>
                       </div>
                     )}
@@ -489,10 +513,10 @@ export function AuditExperience() {
               <div className="audit-empty-finding">
                 <BadgeCheck aria-hidden="true" />
                 <div>
-                  <strong>Aucun constat négatif exploitable sur l’échantillon mesuré.</strong>
+                  <strong>Aucun problème démontré sur les contrôles réalisés.</strong>
                   <p>
-                    Cela signifie uniquement que les contrôles évalués n’ont pas produit
-                    de défaut démontré. Les contrôles non observables restent non conclusifs.
+                    Cela signifie uniquement que les points vérifiés n’ont pas produit de
+                    défaut démontré. Les éléments non mesurables restent sans conclusion.
                   </p>
                 </div>
               </div>
@@ -501,30 +525,29 @@ export function AuditExperience() {
 
           <section className="audit-conversion-panel">
             <div>
-              <p>RAPPORT COMPLET</p>
-              <h2>Transformez le scan en plan d’action vérifiable.</h2>
+              <p>VOTRE RAPPORT GRATUIT</p>
+              <h2>Recevez les priorités à corriger, expliquées simplement.</h2>
               <span>
-                Recevez les constats, preuves disponibles, URLs concernées et
-                recommandations du pré-audit.
+                Le PDF détaille le problème, son impact, le niveau de certitude,
+                les pages concernées et la correction recommandée.
               </span>
             </div>
             <div className="audit-conversion-actions">
               <button type="button" onClick={() => setReportModalOpen(true)}>
                 <Mail aria-hidden="true" />
-                {reportSent ? 'Rapport envoyé' : 'Recevoir mon rapport'}
+                {reportSent ? 'Rapport disponible' : 'Recevoir le rapport gratuit'}
                 <ArrowRight aria-hidden="true" />
               </button>
               <button type="button" className="secondary" onClick={resetAudit}>
                 <RotateCcw aria-hidden="true" />
-                Nouveau scan
+                Analyser un autre site
               </button>
             </div>
           </section>
 
           <p className="audit-result-disclaimer">
-            Le score n’est ni un score Google, ni une certification, ni un score GEO/AEO
-            officiel. Les éléments non observables publiquement ne sont jamais transformés
-            en défauts.
+            Le score résume uniquement les contrôles réellement effectués sur l’échantillon.
+            Il ne s’agit ni d’un score Google, ni d’une certification, ni d’une promesse de classement.
           </p>
         </div>
       )}
@@ -552,7 +575,7 @@ export function AuditExperience() {
                   RAPPORT DE PRÉ-AUDIT
                 </div>
                 <h2 id="audit-report-dialog-title">
-                  {reportSent ? 'Rapport envoyé.' : 'Recevez le détail de votre scan.'}
+                  {reportSent ? 'Votre rapport est prêt.' : 'Recevez le détail de votre analyse.'}
                 </h2>
               </div>
               <button
@@ -570,15 +593,19 @@ export function AuditExperience() {
               <div className="audit-report-success" role="status" aria-live="polite">
                 <CheckCircle2 aria-hidden="true" />
                 <p>
-                  Vérifiez votre boîte de réception. Le compte rendu contient la note,
-                  les preuves disponibles et les recommandations du pré-audit.
+                  Le rapport a été envoyé par email. Vous pouvez aussi le télécharger
+                  immédiatement ici, puis demander à Novekia de vérifier et prioriser les corrections.
                 </p>
                 <div>
                   <button type="button" onClick={() => setReportModalOpen(false)}>
                     Fermer
                   </button>
-                  <a href="/#contact">
-                    Améliorer mon site avec Novekia
+                  <a href={`/api/audit/report/${encodeURIComponent(result.audit_id)}`}>
+                    Télécharger le PDF
+                    <Download aria-hidden="true" />
+                  </a>
+                  <a href="/audit-approfondi" onClick={trackDeepAuditIntent}>
+                    Faire vérifier les corrections prioritaires
                     <ArrowRight aria-hidden="true" />
                   </a>
                 </div>
@@ -586,9 +613,9 @@ export function AuditExperience() {
             ) : (
               <form onSubmit={requestReport} className="audit-report-form">
                 <p>
-                  Score mesuré&nbsp;: <strong>{result.public_audit_score}/100</strong> ·
-                  couverture {result.coverage}%. Saisissez votre email professionnel pour
-                  recevoir le rapport détaillé.
+                  Résultat mesuré&nbsp;: <strong>{result.public_audit_score}/100</strong> ·
+                  couverture {result.coverage}%. Indiquez votre email professionnel pour
+                  recevoir le rapport détaillé et conserver les preuves de cette analyse.
                 </p>
 
                 <label htmlFor="audit-email">Email professionnel</label>
@@ -628,7 +655,7 @@ export function AuditExperience() {
                   />
                   <span>
                     J’accepte de recevoir ce rapport par email et que Novekia puisse me
-                    recontacter au sujet de cet audit. Données traitées selon la politique
+                    recontacter au sujet de cette analyse. Données traitées selon la politique
                     de confidentialité.
                   </span>
                 </label>
@@ -645,7 +672,7 @@ export function AuditExperience() {
                   ) : (
                     <ArrowRight aria-hidden="true" />
                   )}
-                  Recevoir mon compte rendu
+                  Recevoir mon rapport gratuit
                 </button>
 
                 <p className="audit-report-footnote">
