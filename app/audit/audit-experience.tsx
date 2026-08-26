@@ -5,7 +5,6 @@ import {
   ArrowRight,
   BadgeCheck,
   CheckCircle2,
-  Download,
   FileText,
   LoaderCircle,
   Mail,
@@ -584,7 +583,7 @@ export function AuditExperience() {
                   RAPPORT DE PRÉ-AUDIT
                 </div>
                 <h2 id="audit-report-dialog-title">
-                  {reportSent ? 'Votre rapport est prêt.' : 'Recevez le détail de votre analyse.'}
+                  {reportSent ? 'Votre pré-audit a été envoyé.' : 'Recevez le détail de votre analyse.'}
                 </h2>
               </div>
               <button
@@ -602,17 +601,13 @@ export function AuditExperience() {
               <div className="audit-report-success" role="status" aria-live="polite">
                 <CheckCircle2 aria-hidden="true" />
                 <p>
-                  Le rapport a été envoyé par email. Vous pouvez aussi le télécharger
-                  immédiatement ici, puis demander à Novekia de vérifier et prioriser les corrections.
+                  Le pré-audit a été envoyé par email à <strong>{email}</strong>. Le PDF est joint au
+                  message reçu. Vous pouvez ensuite demander à Novekia de vérifier et prioriser les corrections.
                 </p>
                 <div>
                   <button type="button" onClick={() => setReportModalOpen(false)}>
                     Fermer
                   </button>
-                  <a href={`/api/audit/report/${encodeURIComponent(result.audit_id)}`}>
-                    Télécharger le PDF
-                    <Download aria-hidden="true" />
-                  </a>
                   <a href="/audit-approfondi" onClick={trackDeepAuditIntent}>
                     Faire vérifier les corrections prioritaires
                     <ArrowRight aria-hidden="true" />
