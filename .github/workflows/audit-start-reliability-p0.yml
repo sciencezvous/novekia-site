@@ -1,0 +1,45 @@
+name: Audit start reliability P0
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "app/api/audit/start/route.ts"
+      - "lib/audit-server.ts"
+      - "scripts/audit-start-reliability-contract.mjs"
+      - ".github/workflows/audit-start-reliability-p0.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate scan quota contract
+        run: node scripts/audit-start-reliability-contract.mjs
+
+      - name: Lint audit start path
+        run: pnpm exec eslint lib/audit-server.ts app/api/audit/start/route.ts
+
+      - name: Type-check
+        run: pnpm exec tsc --noEmit
+
+      - name: Build
+        run: pnpm build
