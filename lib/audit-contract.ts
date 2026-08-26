@@ -32,6 +32,9 @@ export type PublicAuditResult = {
   coverage: number
   score_version: typeof PUBLIC_AUDIT_SCORE_VERSION
   confidence_score: number
+  result_state: 'conclusive' | 'partial'
+  resolved_findings: number
+  review_findings: number
   pages_collected: number
   pages_planned: number
   total_findings: number
@@ -83,11 +86,15 @@ export function isPublicAuditResult(value: unknown): value is PublicAuditResult 
     data.coverage > 0 &&
     data.score_version === PUBLIC_AUDIT_SCORE_VERSION &&
     isBoundedScore(data.confidence_score) &&
+    (data.result_state === 'conclusive' || data.result_state === 'partial') &&
+    isNonNegativeInteger(data.resolved_findings) &&
+    isNonNegativeInteger(data.review_findings) &&
     isNonNegativeInteger(data.pages_collected) &&
     data.pages_collected > 0 &&
     isNonNegativeInteger(data.pages_planned) &&
     data.pages_planned >= data.pages_collected &&
     isNonNegativeInteger(data.total_findings) &&
+    data.resolved_findings + data.review_findings === data.total_findings &&
     typeof data.summary === 'string' &&
     Array.isArray(data.positive_observations) &&
     Array.isArray(data.findings)
