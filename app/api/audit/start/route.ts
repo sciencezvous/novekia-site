@@ -7,6 +7,7 @@ import {
   enforceRateLimit,
   enforceSameOrigin,
   normalizeAuditTarget,
+  releaseRateLimit,
 } from '@/lib/audit-server'
 
 export const runtime = 'nodejs'
@@ -81,12 +82,17 @@ function logAuditFunnel(
   )
 }
 
+function isTransientAuditFailure(error: AuditFacadeError) {
+  return error.status === 429 || error.status === 502 || error.status === 503 || error.status === 504
+}
+
 export async function POST(request: NextRequest) {
   const campaign = campaignFromRequest(request)
+  let scanQuotaKey: string | null = null
+  let scanQuotaReserved = false
 
   try {
     enforceSameOrigin(request)
-    enforceRateLimit(`audit:start:${clientAddress(request)}`, 5)
 
     let body: Record<string, unknown>
     try {
@@ -100,6 +106,14 @@ export async function POST(request: NextRequest) {
     }
 
     const targetUrl = normalizeAuditTarget(body.url)
+
+    // Charge the long-window scan quota only after the request is locally valid.
+    // A transient engine outage is refunded below so retries do not lock a real
+    // prospect out for an hour after infrastructure failures.
+    scanQuotaKey = `audit:start:${clientAddress(request)}`
+    enforceRateLimit(scanQuotaKey, 5)
+    scanQuotaReserved = true
+
     const { result, hostFallbackUsed } = await runAuditWithSameDomainHostFallback(targetUrl)
 
     logAuditFunnel('audit_completed', {
@@ -121,6 +135,16 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
+    if (
+      scanQuotaReserved &&
+      scanQuotaKey &&
+      error instanceof AuditFacadeError &&
+      isTransientAuditFailure(error)
+    ) {
+      releaseRateLimit(scanQuotaKey)
+      scanQuotaReserved = false
+    }
+
     if (error instanceof AuditFacadeError) {
       logAuditFunnel('audit_failed', {
         status: error.status,
@@ -132,6 +156,11 @@ export async function POST(request: NextRequest) {
         { error: error.publicMessage },
         { status: error.status }
       )
+    }
+
+    // Unexpected server failures must not consume a prospect's long-window quota.
+    if (scanQuotaReserved && scanQuotaKey) {
+      releaseRateLimit(scanQuotaKey)
     }
 
     logAuditFunnel('audit_failed', {
