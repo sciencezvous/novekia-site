@@ -13,6 +13,8 @@ import {
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
+const TRANSIENT_AUDIT_STATUSES = new Set([429, 502, 503, 504])
+
 function campaignFromRequest(request: NextRequest) {
   const referer = request.headers.get('referer')
   if (!referer) {
@@ -83,7 +85,7 @@ function logAuditFunnel(
 }
 
 function isTransientAuditFailure(error: AuditFacadeError) {
-  return error.status === 429 || error.status === 502 || error.status === 503 || error.status === 504
+  return TRANSIENT_AUDIT_STATUSES.has(error.status)
 }
 
 export async function POST(request: NextRequest) {
