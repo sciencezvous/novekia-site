@@ -6,6 +6,7 @@ export type AuditEventName =
   | 'AuditStarted'
   | 'AuditCompleted'
   | 'EmailSubmitted'
+  | 'DeepAuditClicked'
   | 'AuditFailed'
 
 type AuditEventPayload = Record<string, string | number | boolean>

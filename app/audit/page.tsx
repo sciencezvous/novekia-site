@@ -10,19 +10,19 @@ import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Pré-audit SEO & visibilité IA gratuit | Novekia',
+    absolute: 'Audit gratuit de visibilité Google & IA | Novekia',
   },
   description:
-    'Analysez un échantillon public de votre site : SEO, données structurées, entité, signaux GEO/AEO et premières preuves vérifiables.',
+    'Entrez l’adresse de votre site et obtenez immédiatement un pré-audit gratuit : visibilité Google, compréhension par les moteurs IA, problèmes observés et preuves disponibles.',
   alternates: { canonical: '/audit' },
   robots: { index: true, follow: true },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
     url: `${siteConfig.url}/audit`,
-    title: 'Pré-audit SEO & visibilité IA gratuit | Novekia',
+    title: 'Audit gratuit de visibilité Google & IA | Novekia',
     description:
-      'Entrez votre URL. Novekia Visibility analyse un échantillon public et restitue un score, une couverture et des constats documentés.',
+      'Une URL suffit. Novekia analyse un échantillon public de votre site, affiche le résultat immédiatement et peut vous envoyer le rapport détaillé.',
   },
 }
 
@@ -36,7 +36,7 @@ export default function AuditPage() {
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
           '@id': `${pageUrl}#application`,
-          name: 'Pré-audit public Novekia',
+          name: 'Audit gratuit de visibilité Google & IA Novekia',
           url: pageUrl,
           applicationCategory: 'BusinessApplication',
           operatingSystem: 'Web',
@@ -44,7 +44,7 @@ export default function AuditPage() {
           isAccessibleForFree: true,
           provider: { '@id': `${siteConfig.url}/#organization` },
           description:
-            'Pré-audit public borné de signaux SEO, de données structurées, d’entité et de préparation à la visibilité dans les moteurs de recherche et de réponse.',
+            'Pré-audit public gratuit permettant d’observer la visibilité technique d’un site, sa compréhension par les moteurs de recherche et certains signaux utiles aux moteurs de réponse et d’IA.',
         }}
       />
       <AuditAutoReport />

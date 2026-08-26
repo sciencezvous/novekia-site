@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { ConciergeTrigger } from '@/components/concierge/concierge-trigger'
+import { PrimaryButton } from '@/components/brand/primary-button'
 import { SecondaryButton } from '@/components/brand/secondary-button'
 import { TechnicalLabel } from '@/components/brand/technical-label'
 import { Section } from '@/components/layout/section'
@@ -61,13 +62,15 @@ export function InstitutionalHero() {
           </h1>
 
           <p className="mt-8 max-w-2xl text-pretty text-base leading-relaxed text-[#b7c8e4] sm:text-lg">
-            Novekia développe Lead Engine pour la prospection B2B fondée sur
-            les signaux et NovekiAct pour la gouvernance des usages IA en PME.
-            L’entreprise conçoit aussi des logiciels, des systèmes d’IA locale
-            et des infrastructures numériques.
+            Novekia développe des moteurs et solutions numériques pour aider les
+            entreprises à mieux prospecter, mieux gouverner leurs usages IA et mieux
+            comprendre leur visibilité sur Google et les moteurs IA.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <PrimaryButton href="/audit" withArrow className="w-full sm:w-auto">
+              Analyser mon site gratuitement
+            </PrimaryButton>
             <ConciergeTrigger
               source="hero"
               className="w-full sm:w-auto"
@@ -75,14 +78,13 @@ export function InstitutionalHero() {
               Qualifier mon besoin
             </ConciergeTrigger>
             <SecondaryButton href="#poles" className="w-full sm:w-auto">
-              Voir les produits et expertises
+              Voir nos solutions
             </SecondaryButton>
           </div>
 
           <p className="mt-4 font-mono text-xs tracking-wide text-muted-foreground">
-            Réponse sous 48 h ouvrées <span aria-hidden="true">•</span>{' '}
-            Supervision humaine <span aria-hidden="true">•</span> Sans
-            engagement
+            Pré-audit immédiat <span aria-hidden="true">•</span> Résultat avant email{' '}
+            <span aria-hidden="true">•</span> Sans engagement
           </p>
         </div>
 
