@@ -174,6 +174,8 @@ export function AuditExperience() {
       trackAuditEvent('AuditCompleted', {
         public_audit_score: payload.public_audit_score,
         coverage: payload.coverage,
+        result_state: payload.result_state,
+        review_findings: payload.review_findings,
         score_version: payload.score_version,
         findings_count: payload.total_findings,
         pages_collected: payload.pages_collected,
@@ -218,6 +220,7 @@ export function AuditExperience() {
       trackAuditEvent('EmailSubmitted', {
         public_audit_score: result.public_audit_score,
         coverage: result.coverage,
+        result_state: result.result_state,
         score_version: result.score_version,
       })
     } catch (error) {
@@ -249,6 +252,7 @@ export function AuditExperience() {
     trackAuditEvent('DeepAuditClicked', {
       public_audit_score: result.public_audit_score,
       coverage: result.coverage,
+      result_state: result.result_state,
       findings_count: result.total_findings,
       source: 'audit_report_success',
     })
@@ -259,6 +263,9 @@ export function AuditExperience() {
       ? `${result.confidence_score}%`
       : 'non calculée'
     : ''
+
+  const resultStateLabel = result?.result_state === 'partial' ? 'PARTIEL' : 'CONCLUSIF'
+  const partialResult = result?.result_state === 'partial'
 
   const limitedResult = Boolean(
     result &&
@@ -389,7 +396,7 @@ export function AuditExperience() {
           <section className="audit-result-hero" aria-labelledby="audit-score-title">
             <div className="audit-result-topline">
               <div>
-                <span className="audit-result-status"><span /> ANALYSE TERMINÉE</span>
+                <span className="audit-result-status"><span /> ANALYSE TERMINÉE · {resultStateLabel}</span>
                 <p>{result.target_domain}</p>
               </div>
               <div className="audit-result-pages">
@@ -411,7 +418,7 @@ export function AuditExperience() {
               </div>
 
               <div className="audit-result-summary">
-                <p className="audit-result-eyebrow">RÉSULTAT EN CLAIR</p>
+                <p className="audit-result-eyebrow">RÉSULTAT EN CLAIR · {resultStateLabel}</p>
                 <h1 id="audit-score-title">
                   {limitedResult
                     ? 'Aucun problème démontré sur cet échantillon.'
@@ -420,17 +427,18 @@ export function AuditExperience() {
                 <p>{result.summary}</p>
 
                 <div className="audit-result-metrics">
-                  <span><strong>{result.coverage}%</strong> couverture</span>
-                  <span><strong>{confidenceDisplay}</strong> fiabilité des preuves</span>
-                  <span><strong>{result.total_findings}</strong> point{result.total_findings > 1 ? 's' : ''} à examiner</span>
+                  <span><strong>{resultStateLabel}</strong> état de conclusion</span>
+                  <span><strong>{confidenceDisplay}</strong> confiance des constats</span>
+                  <span><strong>{result.review_findings}</strong> signal{result.review_findings > 1 ? 'aux' : ''} à confirmer</span>
                 </div>
 
-                {limitedResult && (
+                {(partialResult || limitedResult) && (
                   <div className="audit-limit-note">
                     <ShieldCheck aria-hidden="true" />
                     <span>
-                      Le score concerne seulement les contrôles réellement mesurés. Une
-                      absence de problème détecté ne signifie pas que tout le site est parfait.
+                      {partialResult
+                        ? `Résultat PARTIEL : ${result.review_findings} signal(aux) restent à confirmer ou la couverture est incomplète. Le score reste limité aux contrôles effectivement évalués ; il n’exprime pas une certitude globale.`
+                        : 'Le score concerne seulement les contrôles réellement mesurés. Une absence de problème détecté ne signifie pas que tout le site est parfait.'}
                     </span>
                   </div>
                 )}
@@ -546,8 +554,9 @@ export function AuditExperience() {
           </section>
 
           <p className="audit-result-disclaimer">
-            Le score résume uniquement les contrôles réellement effectués sur l’échantillon.
-            Il ne s’agit ni d’un score Google, ni d’une certification, ni d’une promesse de classement.
+            État {resultStateLabel} sur le périmètre mesuré. Le score résume uniquement les contrôles réellement
+            effectués sur l’échantillon ; la confiance des constats est une métrique distincte. Il ne s’agit ni
+            d’un score Google, ni d’une certification, ni d’une promesse de classement.
           </p>
         </div>
       )}
@@ -613,9 +622,9 @@ export function AuditExperience() {
             ) : (
               <form onSubmit={requestReport} className="audit-report-form">
                 <p>
-                  Résultat mesuré&nbsp;: <strong>{result.public_audit_score}/100</strong> ·
-                  couverture {result.coverage}%. Indiquez votre email professionnel pour
-                  recevoir le rapport détaillé et conserver les preuves de cette analyse.
+                  Résultat mesuré&nbsp;: <strong>{result.public_audit_score}/100</strong> · état{' '}
+                  <strong>{resultStateLabel}</strong> · couverture {result.coverage}%. Indiquez votre email
+                  professionnel pour recevoir le rapport détaillé et conserver les preuves de cette analyse.
                 </p>
 
                 <label htmlFor="audit-email">Email professionnel</label>
