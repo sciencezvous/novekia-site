@@ -140,10 +140,6 @@ export const organizationJsonLd: Record<string, unknown> = {
     '@type': 'Country',
     name: 'France',
   },
-  owns: [
-    { '@id': `${siteConfig.url}/lead-engine-studio#product` },
-    { '@id': `${siteConfig.url}/novekiact#product` },
-  ],
   knowsAbout: [
     'Prospection B2B',
     'Qualification commerciale',
