@@ -43,38 +43,56 @@ export const founderIdentityJsonLd: Record<string, unknown> = {
   },
 }
 
+/**
+ * Entity-only description for Lead Engine.
+ *
+ * Deliberately avoid Product / SoftwareApplication here until Novekia publishes
+ * a real standalone commercial software offer with truthful offer/review data.
+ * Google treats those types as candidates for product/software rich results and
+ * can report missing offers/review/aggregateRating when they are used only for
+ * entity SEO.
+ */
 export const leadEngineIdentityJsonLd: Record<string, unknown> = {
-  '@type': ['SoftwareApplication', 'Product'],
+  '@type': 'CreativeWork',
   '@id': `${siteConfig.url}/lead-engine-studio#product`,
   name: 'Lead Engine',
   alternateName: 'Novekia Lead Engine Studio',
   url: `${siteConfig.url}/lead-engine-studio`,
   description:
-    'Produit de prospection B2B développé par Novekia pour détecter des entreprises, qualifier des opportunités à partir de signaux publics et préparer des approches sous supervision humaine.',
-  applicationCategory: 'BusinessApplication',
-  operatingSystem: 'Web',
-  owner: { '@id': `${siteConfig.url}/#organization` },
+    'Système de prospection B2B développé par Novekia pour détecter des entreprises, qualifier des opportunités à partir de signaux publics et préparer des approches sous supervision humaine.',
   creator: { '@id': `${siteConfig.url}/#organization` },
-  brand: { '@id': `${siteConfig.url}/#organization` },
-  manufacturer: { '@id': `${siteConfig.url}/#organization` },
+  publisher: { '@id': `${siteConfig.url}/#organization` },
+  about: [
+    'Prospection B2B',
+    'Qualification commerciale',
+    'Signaux publics',
+    'Supervision humaine',
+  ],
   mainEntityOfPage: { '@id': `${siteConfig.url}/lead-engine-studio#webpage` },
 }
 
+/**
+ * NovekiAct is still in development. Keep a truthful entity in the brand graph
+ * without declaring it as a merchant Product / SoftwareApplication rich-result
+ * candidate before a public commercial offer exists.
+ */
 export const novekiActIdentityJsonLd: Record<string, unknown> = {
-  '@type': ['SoftwareApplication', 'Product'],
+  '@type': 'CreativeWork',
   '@id': `${siteConfig.url}/novekiact#product`,
   name: 'NovekiAct',
   alternateName: 'NovekiAct by Novekia',
   url: `${siteConfig.url}/novekiact`,
   description:
-    'Produit en développement par Novekia pour aider les PME à structurer la gouvernance de leurs usages d’intelligence artificielle.',
-  applicationCategory: 'BusinessApplication',
-  operatingSystem: 'Web',
+    'Système en développement par Novekia pour aider les PME à structurer la gouvernance de leurs usages d’intelligence artificielle.',
   creativeWorkStatus: 'En développement',
-  owner: { '@id': `${siteConfig.url}/#organization` },
   creator: { '@id': `${siteConfig.url}/#organization` },
-  brand: { '@id': `${siteConfig.url}/#organization` },
-  manufacturer: { '@id': `${siteConfig.url}/#organization` },
+  publisher: { '@id': `${siteConfig.url}/#organization` },
+  about: [
+    'Gouvernance de l’intelligence artificielle',
+    'PME',
+    'Conformité',
+    'Supervision humaine',
+  ],
   mainEntityOfPage: { '@id': `${siteConfig.url}/novekiact#webpage` },
 }
 
@@ -122,10 +140,6 @@ export const organizationJsonLd: Record<string, unknown> = {
     '@type': 'Country',
     name: 'France',
   },
-  owns: [
-    { '@id': `${siteConfig.url}/lead-engine-studio#product` },
-    { '@id': `${siteConfig.url}/novekiact#product` },
-  ],
   knowsAbout: [
     'Prospection B2B',
     'Qualification commerciale',
