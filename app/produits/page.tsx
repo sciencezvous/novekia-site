@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowUpRight, Radar, ShieldCheck } from 'lucide-react'
+import { ArrowUpRight, Globe2, Radar, SearchCheck, ShieldCheck } from 'lucide-react'
 import { Breadcrumbs } from '@/components/brand/breadcrumbs'
 import {
   JsonLd,
@@ -16,18 +16,18 @@ const pageUrl = `${siteConfig.url}/produits`
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Produits Novekia — Lead Engine et NovekiAct',
+    absolute: 'Produits et offres Novekia — Lead Engine, Visibility, sites web et NovekiAct',
   },
   description:
-    'Les produits développés par Novekia : Lead Engine pour la prospection B2B fondée sur les signaux et NovekiAct pour la gouvernance des usages IA en PME.',
+    'Découvrez les produits et offres productisées Novekia : Lead Engine, Novekia Visibility, création de sites web SEO/GEO/AEO et NovekiAct.',
   alternates: { canonical: '/produits' },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
     url: pageUrl,
-    title: 'Produits Novekia — Lead Engine et NovekiAct',
+    title: 'Produits et offres Novekia',
     description:
-      'Deux produits développés par la même entreprise technologique française : Novekia.',
+      'Lead Engine, Novekia Visibility, sites web SEO/GEO/AEO et NovekiAct, réunis sous la même entité technologique française.',
   },
 }
 
@@ -41,6 +41,26 @@ const products = [
     cta: 'Découvrir Lead Engine',
     status: 'Produit en développement et validation',
     icon: Radar,
+  },
+  {
+    name: 'Novekia Visibility',
+    relation: 'Moteur & prestation Novekia',
+    description:
+      'Un moteur d’audit et de remédiation Evidence-First pour le SEO, le GEO, l’AEO, l’Entity SEO et l’autorité numérique. Le pré-audit gratuit mesure ce qui est réellement observable avant toute recommandation commerciale.',
+    href: '/audit',
+    cta: 'Tester Visibility',
+    status: 'Offre disponible',
+    icon: SearchCheck,
+  },
+  {
+    name: 'Sites Web + Visibility',
+    relation: 'Offre productisée par Novekia',
+    description:
+      'Création de sites web pour entreprises sans site ou en refonte, avec quatre niveaux de référencement clairement tarifés : présence locale, SEO, SEO + GEO/AEO et Authority.',
+    href: '/sites-web',
+    cta: 'Voir les tarifs sites web',
+    status: 'Offre disponible dès 990 € HT',
+    icon: Globe2,
   },
   {
     name: 'NovekiAct',
@@ -63,7 +83,7 @@ export default function ProductsPage() {
           '@type': 'CollectionPage',
           '@id': `${pageUrl}#webpage`,
           url: pageUrl,
-          name: 'Produits Novekia — Lead Engine et NovekiAct',
+          name: 'Produits et offres Novekia',
           description: metadata.description,
           inLanguage: 'fr-FR',
           isPartOf: { '@id': `${siteConfig.url}/#website` },
@@ -79,6 +99,30 @@ export default function ProductsPage() {
               {
                 '@type': 'ListItem',
                 position: 2,
+                item: {
+                  '@type': 'Service',
+                  '@id': `${siteConfig.url}/audit#visibility`,
+                  name: 'Novekia Visibility',
+                  url: `${siteConfig.url}/audit`,
+                  provider: { '@id': `${siteConfig.url}/#organization` },
+                  serviceType: 'Audit et remédiation SEO, GEO, AEO, Entity SEO et autorité numérique',
+                },
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                item: {
+                  '@type': 'Service',
+                  '@id': `${siteConfig.url}/sites-web#service`,
+                  name: 'Sites Web + Visibility',
+                  url: `${siteConfig.url}/sites-web`,
+                  provider: { '@id': `${siteConfig.url}/#organization` },
+                  serviceType: 'Création de sites web avec SEO, GEO, AEO et Entity SEO',
+                },
+              },
+              {
+                '@type': 'ListItem',
+                position: 4,
                 item: novekiActIdentityJsonLd,
               },
             ],
@@ -113,18 +157,18 @@ export default function ProductsPage() {
           <div className="relative mx-auto max-w-7xl">
             <Breadcrumbs items={[{ label: 'Accueil', href: '/' }, { label: 'Produits' }]} />
             <TechnicalLabel index="01" className="mt-12">
-              Produits développés par Novekia
+              Produits et offres productisées Novekia
             </TechnicalLabel>
             <h1 className="mt-6 max-w-5xl text-balance text-5xl font-semibold leading-[0.95] tracking-[-0.055em] sm:text-7xl">
-              Deux produits.
+              Des moteurs propriétaires.
               <br />
-              <span className="text-primary">Une même source technologique.</span>
+              <span className="text-primary">Des offres directement exploitables.</span>
             </h1>
             <p className="mt-7 max-w-3xl text-lg leading-8 text-muted-foreground">
-              Lead Engine et NovekiAct sont développés par Novekia. Ils ne sont
-              ni des sociétés distinctes ni des marques sans relation&nbsp;:
-              leurs pages, leurs méthodes et leurs données structurées renvoient
-              à l’entité Novekia.
+              Novekia développe ses propres moteurs et transforme certains d’entre eux en
+              prestations immédiatement commercialisables. Lead Engine, Visibility, Sites Web +
+              Visibility et NovekiAct restent reliés à une même entité, une même méthode et un
+              même socle technologique.
             </p>
           </div>
         </section>
@@ -140,7 +184,7 @@ export default function ProductsPage() {
                 >
                   <div className="flex items-start justify-between gap-6">
                     <Icon aria-hidden="true" className="size-8 text-primary" strokeWidth={1.4} />
-                    <span className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                    <span className="max-w-[15rem] text-right font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
                       {product.status}
                     </span>
                   </div>
