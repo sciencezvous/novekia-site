@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '', priority: 1, changeFrequency: 'monthly' as const },
     { path: '/produits', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/lead-engine-studio', priority: 0.95, changeFrequency: 'monthly' as const },
+    { path: '/sites-web', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/novekiact', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/solutions', priority: 0.95, changeFrequency: 'monthly' as const },
     { path: '/offres', priority: 0.9, changeFrequency: 'monthly' as const },
