@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   X,
 } from 'lucide-react'
+import { AuditOfferRecommendation } from '@/app/audit/audit-offer-recommendation'
 import { trackAuditEvent } from '@/lib/audit-events'
 import {
   isPublicAuditResult,
@@ -246,14 +247,14 @@ export function AuditExperience() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  function trackDeepAuditIntent() {
+  function trackDeepAuditIntent(source = 'audit_report_success') {
     if (!result) return
     trackAuditEvent('DeepAuditClicked', {
       public_audit_score: result.public_audit_score,
       coverage: result.coverage,
       result_state: result.result_state,
       findings_count: result.total_findings,
-      source: 'audit_report_success',
+      source,
     })
   }
 
@@ -530,6 +531,11 @@ export function AuditExperience() {
             )}
           </section>
 
+          <AuditOfferRecommendation
+            result={result}
+            onIntent={() => trackDeepAuditIntent('audit_offer_recommendation')}
+          />
+
           <section className="audit-conversion-panel">
             <div>
               <p>VOTRE RAPPORT GRATUIT</p>
@@ -608,7 +614,7 @@ export function AuditExperience() {
                   <button type="button" onClick={() => setReportModalOpen(false)}>
                     Fermer
                   </button>
-                  <a href="/audit-approfondi" onClick={trackDeepAuditIntent}>
+                  <a href="/audit-approfondi" onClick={() => trackDeepAuditIntent()}>
                     Faire vérifier les corrections prioritaires
                     <ArrowRight aria-hidden="true" />
                   </a>
