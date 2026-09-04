@@ -107,16 +107,17 @@ const recurringOffers = [
   {
     name: 'Hébergement + domaine',
     monthlyPrice: 24,
-    monthlyLabel: '24 € HT / mois',
+    monthlyLabel: 'À partir de 24 € HT / mois',
     annualPrice: 240,
-    annualLabel: '240 € HT / an',
+    annualLabel: 'à partir de 240 € HT / an',
     tag: 'Infrastructure',
     recommended: true,
     description:
-      'Pour confier à Novekia l’exploitation technique du site sans mélanger ce coût avec la maintenance ou le référencement continu.',
+      'Pour confier à Novekia l’exploitation technique du site sans mélanger ce coût avec la maintenance ou le référencement continu. Le tarif de base dépend notamment du coût réel du nom de domaine choisi.',
     features: [
       'Hébergement managé du site vitrine',
-      '1 nom de domaine standard avec renouvellement annuel ≤ 25 € HT',
+      '1 nom de domaine standard avec renouvellement annuel ≤ 25 € HT au tarif de base',
+      'Nom de domaine premium ou extension à coût élevé : supplément chiffré avant engagement',
       'Certificat SSL et configuration DNS',
       'Sauvegardes techniques',
       'Supervision de disponibilité',
