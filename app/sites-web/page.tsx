@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     absolute: 'Création de site web : tarifs SEO, GEO & AEO | Novekia',
   },
   description:
-    'Tarifs de création de site web Novekia : présence locale dès 990 € HT, site SEO dès 1 490 € HT, SEO + GEO + AEO dès 2 490 € HT et Authority à partir de 3 490 € HT.',
+    'Tarifs de création de site web Novekia : présence locale dès 990 € HT, site SEO dès 1 490 € HT, SEO + GEO + AEO dès 2 490 € HT. Hébergement, maintenance et suivi Visibility sont proposés séparément.',
   alternates: { canonical: '/sites-web' },
   openGraph: {
     type: 'website',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     url: pageUrl,
     title: 'Création de site web : tarifs SEO, GEO & AEO | Novekia',
     description:
-      'Des sites construits pour être rapides, compréhensibles, indexables et mesurables, avec un niveau de référencement choisi avant engagement.',
+      'Des sites construits pour être rapides, compréhensibles, indexables et mesurables, avec création, hébergement, maintenance et suivi clairement séparés.',
   },
 }
 
@@ -103,6 +103,66 @@ const offers = [
   },
 ] as const
 
+const recurringOffers = [
+  {
+    name: 'Hébergement + domaine',
+    monthlyPrice: 24,
+    monthlyLabel: '24 € HT / mois',
+    annualPrice: 240,
+    annualLabel: '240 € HT / an',
+    tag: 'Infrastructure',
+    recommended: true,
+    description:
+      'Pour confier à Novekia l’exploitation technique du site sans mélanger ce coût avec la maintenance ou le référencement continu.',
+    features: [
+      'Hébergement managé du site vitrine',
+      '1 nom de domaine standard avec renouvellement annuel ≤ 25 € HT',
+      'Certificat SSL et configuration DNS',
+      'Sauvegardes techniques',
+      'Supervision de disponibilité',
+      'Domaine enregistré au nom du client et transférable sur demande',
+    ],
+  },
+  {
+    name: 'Maintenance Essentielle',
+    monthlyPrice: 59,
+    monthlyLabel: '59 € HT / mois',
+    annualPrice: 590,
+    annualLabel: '590 € HT / an',
+    tag: 'Maintenance',
+    recommended: false,
+    description:
+      'Pour garder le site maintenu après sa mise en ligne. Cette offre est indépendante de l’hébergement.',
+    features: [
+      'Mises à jour techniques et de sécurité du socle livré',
+      'Maintenance corrective du site standard',
+      'Jusqu’à 30 minutes de petites modifications par mois, non cumulables',
+      'Contrôle technique trimestriel',
+      'Support par e-mail pour le site',
+      'Compte rendu des interventions significatives',
+    ],
+  },
+  {
+    name: 'Visibility Continue',
+    monthlyPrice: 149,
+    monthlyLabel: '149 € HT / mois',
+    annualPrice: 1490,
+    annualLabel: '1 490 € HT / an',
+    tag: 'SEO + GEO + AEO continu',
+    recommended: false,
+    description:
+      'Pour suivre la visibilité après lancement et corriger progressivement les priorités réellement observées, sans promettre de positionnement.',
+    features: [
+      'Maintenance Essentielle incluse',
+      'Audit Novekia Visibility mensuel',
+      'Suivi indexabilité, performance et signaux d’entité',
+      'Une optimisation prioritaire standard par mois',
+      'Suivi SEO, GEO et AEO fondé sur des observations vérifiables',
+      'Synthèse trimestrielle des évolutions et prochaines priorités',
+    ],
+  },
+] as const
+
 const comparison = [
   ['Site responsive et performant', true, true, true, true],
   ['SEO technique', 'Base', 'Complet', 'Complet', 'Complet'],
@@ -143,6 +203,41 @@ export default function SitesWebPage() {
                 ? `${offer.description} Tarif à partir de ${offer.price} € HT selon périmètre.`
                 : offer.description,
             })),
+          },
+        }}
+      />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          '@id': `${pageUrl}#services-recurrents`,
+          name: 'Hébergement, maintenance et suivi Visibility Novekia',
+          url: `${pageUrl}#abonnements`,
+          inLanguage: 'fr-FR',
+          provider: { '@id': `${siteConfig.url}/#organization` },
+          areaServed: { '@type': 'Country', name: 'France' },
+          serviceType: 'Hébergement web, maintenance de site et suivi SEO/GEO/AEO',
+          hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: 'Abonnements sites web Novekia',
+            itemListElement: recurringOffers.flatMap((offer) => [
+              {
+                '@type': 'Offer',
+                name: `${offer.name} — mensuel`,
+                price: offer.monthlyPrice,
+                priceCurrency: 'EUR',
+                url: `${pageUrl}#abonnements`,
+                description: `${offer.description} Facturation mensuelle.`,
+              },
+              {
+                '@type': 'Offer',
+                name: `${offer.name} — annuel`,
+                price: offer.annualPrice,
+                priceCurrency: 'EUR',
+                url: `${pageUrl}#abonnements`,
+                description: `${offer.description} Facturation annuelle.`,
+              },
+            ]),
           },
         }}
       />
@@ -198,12 +293,16 @@ export default function SitesWebPage() {
                 <p className="mt-7 max-w-3xl text-lg leading-8 text-muted-foreground">
                   Pour une entreprise sans site ou pour une refonte complète. Novekia construit
                   la présence web et applique le niveau de référencement réellement acheté :
-                  SEO, SEO + GEO/AEO ou travail d’autorité avancé.
+                  SEO, SEO + GEO/AEO ou travail d’autorité avancé. Hébergement, maintenance et
+                  suivi continu restent tarifés séparément.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <PrimaryButton href="#tarifs" withArrow>
                     Voir les tarifs
                   </PrimaryButton>
+                  <SecondaryButton href="#abonnements">
+                    Voir les abonnements
+                  </SecondaryButton>
                   <SecondaryButton href="/creation-site-web-seo-geo">
                     Voir la méthode SEO &amp; GEO
                   </SecondaryButton>
@@ -240,9 +339,8 @@ export default function SitesWebPage() {
               </div>
               <p className="max-w-2xl text-base leading-7 text-muted-foreground lg:justify-self-end">
                 Le niveau n’est pas un score marketing. Il correspond à une profondeur de
-                construction et de référencement différente. Le périmètre final est confirmé
-                avant démarrage lorsque le nombre de pages, les intégrations ou les contenus
-                sortent du cadre standard.
+                construction et de référencement différente. Le prix de création n’inclut pas
+                automatiquement l’hébergement, la maintenance ou le suivi Visibility continu.
               </p>
             </div>
 
@@ -313,14 +411,96 @@ export default function SitesWebPage() {
           </div>
         </section>
 
-        <section className="border-y border-border bg-secondary/25 px-5 py-16 sm:px-6 sm:py-24 md:px-8">
+        <section id="abonnements" className="border-y border-border bg-secondary/25 px-5 py-16 sm:px-6 sm:py-24 md:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end lg:gap-16">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.14em] text-primary">
+                  Coûts récurrents séparés
+                </p>
+                <h2 className="mt-4 text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
+                  Hébergement, maintenance et visibilité : chacun son abonnement.
+                </h2>
+              </div>
+              <p className="max-w-2xl text-base leading-7 text-muted-foreground lg:justify-self-end">
+                Le client choisit uniquement les services récurrents dont il a besoin. Il peut
+                héberger ailleurs, prendre uniquement la maintenance, ou ajouter un suivi
+                Visibility continu. Les formules annuelles correspondent à dix mois facturés.
+              </p>
+            </div>
+
+            <div className="mt-12 grid gap-4 lg:grid-cols-3">
+              {recurringOffers.map((offer) => (
+                <article
+                  key={offer.name}
+                  className={`flex h-full flex-col border p-7 ${
+                    offer.recommended
+                      ? 'border-primary bg-primary/5 shadow-[0_0_0_1px_hsl(var(--primary)/0.12)]'
+                      : 'border-border bg-background'
+                  }`}
+                >
+                  {offer.recommended ? (
+                    <span className="mb-5 w-fit bg-primary px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-primary-foreground">
+                      Pour un site hébergé par Novekia
+                    </span>
+                  ) : null}
+                  <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                    {offer.tag}
+                  </p>
+                  <h3 className="mt-3 text-2xl font-semibold">{offer.name}</h3>
+                  <div className="mt-5 text-3xl font-semibold tracking-[-0.04em] text-primary">
+                    {offer.monthlyLabel}
+                  </div>
+                  <p className="mt-2 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+                    ou {offer.annualLabel}
+                  </p>
+                  <p className="mt-5 text-sm leading-6 text-muted-foreground">
+                    {offer.description}
+                  </p>
+                  <ul className="mt-6 grid gap-3 text-sm leading-6">
+                    {offer.features.map((feature) => (
+                      <li key={feature} className="flex gap-2.5">
+                        <CheckCircle2
+                          aria-hidden="true"
+                          className="mt-0.5 size-4 shrink-0 text-primary"
+                        />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href={`/?need=${encodeURIComponent(offer.name)}#contact`}
+                    className={`mt-8 inline-flex min-h-11 items-center justify-center gap-2 px-4 font-semibold transition ${
+                      offer.recommended
+                        ? 'bg-primary text-primary-foreground hover:opacity-90'
+                        : 'border border-border hover:border-primary/60 hover:text-primary'
+                    }`}
+                  >
+                    Choisir cette formule
+                    <ArrowUpRight aria-hidden="true" className="size-4" />
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-8 border border-border bg-background p-6 text-sm leading-7 text-muted-foreground">
+              <strong className="text-foreground">À savoir :</strong> l’hébergement Novekia n’est
+              pas obligatoire pour acheter un site. Un domaine premium, les boîtes e-mail, une
+              infrastructure à consommation élevée, des licences tierces ou des interventions
+              hors périmètre sont chiffrés séparément avant facturation. Les abonnements ne
+              garantissent ni classement Google ni citation par un moteur d’IA.
+            </div>
+          </div>
+        </section>
+
+        <section className="px-5 py-16 sm:px-6 sm:py-24 md:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               <p className="font-mono text-xs uppercase tracking-[0.14em] text-primary">
                 Comparatif référencement
               </p>
               <h2 className="mt-4 text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
-                Ce qui change réellement entre les niveaux.
+                Ce qui change réellement entre les niveaux de création.
               </h2>
             </div>
             <div className="mt-10 overflow-x-auto border border-border bg-background">
@@ -354,7 +534,7 @@ export default function SitesWebPage() {
           </div>
         </section>
 
-        <section className="px-5 py-16 sm:px-6 sm:py-24 md:px-8">
+        <section className="border-y border-border bg-secondary/25 px-5 py-16 sm:px-6 sm:py-24 md:px-8">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-3">
             <article className="border border-border bg-background p-7">
               <SearchCheck aria-hidden="true" className="size-7 text-primary" strokeWidth={1.5} />
@@ -399,7 +579,7 @@ export default function SitesWebPage() {
               </p>
             </div>
             <PrimaryButton
-              href={`/?need=${encodeURIComponent('SEO et GEO')}#contact`}
+              href={`/?need=${encodeURIComponent('Création de site web')}#contact`}
               withArrow
               className="mt-7 shrink-0 lg:mt-0"
             >
