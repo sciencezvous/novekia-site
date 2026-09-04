@@ -9,10 +9,10 @@ import { siteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Audit SEO, GEO, AEO & Brand SERP approfondi | Novekia',
+    absolute: 'Audit SEO, GEO, AEO & Brand SERP approfondi | Tarifs Novekia',
   },
   description:
-    'Audit approfondi réalisé par Novekia avec Novekia Visibility : SEO, GEO, AEO, Entity SEO, Brand SERP, preuves, priorisation et plan de remédiation.',
+    'Audit approfondi Novekia Visibility : SEO, GEO, AEO, Entity SEO, Brand SERP, preuves, priorisation et remédiation. Tarifs de lancement affichés dès 490 € HT.',
   alternates: { canonical: '/audit-approfondi' },
   robots: { index: true, follow: true },
   openGraph: {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     url: `${siteConfig.url}/audit-approfondi`,
     title: 'Audit SEO, GEO, AEO & Brand SERP approfondi | Novekia',
     description:
-      'Une analyse approfondie fondée sur des preuves, avec priorisation, plan de remédiation et vérification après correction.',
+      'Une analyse approfondie fondée sur des preuves, avec priorisation, plan de remédiation, tarifs affichés et vérification après correction.',
   },
 }
 
@@ -60,6 +60,57 @@ const process = [
   ['05', 'Correction & retest', 'Préparer ou appliquer les corrections selon le niveau de risque, puis vérifier le résultat après modification.'],
 ] as const
 
+const visibilityOffers = [
+  {
+    name: 'Pack Optimisation',
+    price: 490,
+    priceLabel: '490 € HT',
+    startingAt: false,
+    recommended: false,
+    summary:
+      'Pour un site dont le pré-audit révèle quelques corrections prioritaires clairement démontrées.',
+    included: [
+      'Validation humaine des constats prioritaires',
+      'Corrections techniques essentielles',
+      'SEO on-page prioritaire',
+      'Données structurées essentielles',
+      'Retest des points corrigés',
+    ],
+  },
+  {
+    name: 'Pack Visibility',
+    price: 990,
+    priceLabel: '990 € HT',
+    startingAt: false,
+    recommended: true,
+    summary:
+      'Pour traiter ensemble SEO, GEO, AEO et compréhension de l’entité avec une analyse plus profonde.',
+    included: [
+      'Audit approfondi Evidence-First',
+      'SEO technique et on-page',
+      'Entity SEO et données structurées',
+      'Optimisation GEO / AEO',
+      'Plan de remédiation et retest',
+    ],
+  },
+  {
+    name: 'Visibility Authority',
+    price: 1490,
+    priceLabel: '1 490 € HT',
+    startingAt: true,
+    recommended: false,
+    summary:
+      'Pour étendre l’analyse à l’autorité externe, aux citations, aux backlinks et aux écarts concurrentiels.',
+    included: [
+      'Tout le périmètre du Pack Visibility',
+      'Backlinks et domaines référents',
+      'Mentions de marque liées et non liées',
+      'Citation gaps et comparaison concurrentielle',
+      'Plan d’autorité et opportunités Digital PR',
+    ],
+  },
+] as const
+
 export default function DeepAuditPage() {
   const pageUrl = `${siteConfig.url}/audit-approfondi`
 
@@ -77,6 +128,16 @@ export default function DeepAuditPage() {
           description: metadata.description,
           serviceType: 'Audit SEO, GEO, AEO, Entity SEO et Brand SERP',
           areaServed: { '@type': 'Country', name: 'France' },
+          offers: visibilityOffers.map((offer) => ({
+            '@type': 'Offer',
+            name: offer.name,
+            price: offer.price,
+            priceCurrency: 'EUR',
+            url: `${pageUrl}#tarifs`,
+            description: offer.startingAt
+              ? `${offer.summary} Tarif à partir de ${offer.price} € HT selon périmètre.`
+              : offer.summary,
+          })),
         }}
       />
 
@@ -109,14 +170,16 @@ export default function DeepAuditPage() {
 
               <div>
                 <p className="max-w-xl text-lg leading-8 text-muted-foreground">
-                  Une prestation d’audit fondée sur Novekia Visibility, moteur propriétaire conçu, développé et édité exclusivement par Novekia. Chaque constat est relié à une preuve, un niveau de confiance et une limite méthodologique explicite.
+                  Une prestation fondée sur Novekia Visibility. Chaque constat est relié à
+                  une preuve, un niveau de confiance et une limite méthodologique explicite.
+                  Les tarifs standard sont affichés avant engagement.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Link
-                    href="/#contact"
+                    href="#tarifs"
                     className="inline-flex min-h-12 items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90"
                   >
-                    Demander un audit approfondi
+                    Voir les tarifs
                     <ArrowUpRight aria-hidden="true" className="size-4" />
                   </Link>
                   <Link
@@ -184,7 +247,98 @@ export default function DeepAuditPage() {
           </div>
         </section>
 
-        <section className="bg-background px-5 py-16 sm:px-6 sm:py-24 md:px-8" aria-labelledby="process-title">
+        <section
+          id="tarifs"
+          className="bg-background px-5 py-16 sm:px-6 sm:py-24 md:px-8"
+          aria-labelledby="pricing-title"
+        >
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end lg:gap-16">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.14em] text-primary">
+                  Tarifs de lancement
+                </p>
+                <h2
+                  id="pricing-title"
+                  className="mt-4 text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-5xl"
+                >
+                  Le prix est visible. La recommandation doit rester justifiée.
+                </h2>
+              </div>
+              <p className="max-w-2xl text-base leading-7 text-muted-foreground lg:justify-self-end">
+                Le pré-audit gratuit sert à déterminer s’il existe réellement quelque chose à
+                corriger. Novekia ne dégrade pas un score pour pousser vers une formule plus chère.
+                Lorsque les preuves sont insuffisantes, la recommandation reste à confirmer humainement.
+              </p>
+            </div>
+
+            <div className="mt-12 grid gap-4 lg:grid-cols-3">
+              {visibilityOffers.map((offer) => (
+                <article
+                  key={offer.name}
+                  className={`relative flex h-full flex-col border p-7 sm:p-8 ${
+                    offer.recommended
+                      ? 'border-primary bg-primary/5 shadow-[0_0_0_1px_hsl(var(--primary)/0.12)]'
+                      : 'border-border bg-secondary/15'
+                  }`}
+                >
+                  {offer.recommended && (
+                    <span className="mb-5 w-fit bg-primary px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-primary-foreground">
+                      Recommandé
+                    </span>
+                  )}
+                  <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                    {offer.startingAt ? 'À partir de' : 'Tarif standard'}
+                  </p>
+                  <h3 className="mt-3 text-2xl font-semibold">{offer.name}</h3>
+                  <div className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-primary sm:text-5xl">
+                    {offer.priceLabel}
+                  </div>
+                  <p className="mt-5 text-sm leading-7 text-muted-foreground">
+                    {offer.summary}
+                  </p>
+                  <ul className="mt-7 grid gap-3 text-sm leading-6">
+                    {offer.included.map((item) => (
+                      <li key={item} className="flex gap-2.5">
+                        <CheckCircle2
+                          aria-hidden="true"
+                          className="mt-0.5 size-4 shrink-0 text-primary"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/#contact"
+                    className={`mt-8 inline-flex min-h-12 items-center justify-center gap-2 px-5 font-semibold transition ${
+                      offer.recommended
+                        ? 'bg-primary text-primary-foreground hover:opacity-90'
+                        : 'border border-border hover:border-primary/60 hover:text-primary'
+                    }`}
+                  >
+                    Choisir ce périmètre
+                    <ArrowUpRight aria-hidden="true" className="size-4" />
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-8 grid gap-4 border border-border bg-secondary/20 p-6 text-sm leading-6 text-muted-foreground sm:grid-cols-2">
+              <p>
+                <strong className="text-foreground">Inclus dans le cadre standard :</strong>{' '}
+                un site principal, un périmètre confirmé avant mission et les corrections
+                compatibles avec les accès fournis.
+              </p>
+              <p>
+                <strong className="text-foreground">Hors cadre par défaut :</strong>{' '}
+                refonte complète, production éditoriale volumineuse, achat de liens ou médias,
+                développements spécifiques et abonnements tiers. Tout écart est annoncé avant engagement.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-secondary/35 px-5 py-16 sm:px-6 sm:py-24 md:px-8" aria-labelledby="process-title">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
               <p className="font-mono text-xs uppercase tracking-[0.14em] text-primary">Déroulé</p>
@@ -220,7 +374,7 @@ export default function DeepAuditPage() {
               href="/#contact"
               className="mt-7 inline-flex min-h-12 shrink-0 items-center justify-center bg-primary px-6 font-semibold text-primary-foreground transition hover:opacity-90 lg:mt-0"
             >
-              Cadrer mon audit
+              Cadrer mon intervention
             </Link>
           </div>
         </section>
