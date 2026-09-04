@@ -2,9 +2,9 @@ export const siteConfig = {
   name: 'Novekia',
   tagline: 'Synergies Intelligentes',
   description:
-    'Entreprise technologique française : Lead Engine pour la prospection B2B, NovekiAct pour la gouvernance IA, logiciels, IA locale et infrastructures.',
+    'Entreprise technologique française : Lead Engine pour la prospection B2B, Novekia Visibility pour le SEO/GEO/AEO, NovekiAct pour la gouvernance IA, logiciels, IA locale et infrastructures.',
   entityDescription:
-    'Novekia est une entreprise technologique française basée à Villeneuve, dans l’Ain. Elle développe Lead Engine, un produit de prospection B2B fondé sur les signaux, et NovekiAct, un produit de gouvernance des usages IA pour les PME. Novekia fournit aussi des services d’ingénierie logicielle, d’IA locale et d’infrastructure numérique.',
+    'Novekia est une entreprise technologique française basée à Villeneuve, dans l’Ain. Elle développe Lead Engine, un produit de prospection B2B fondé sur les signaux, Novekia Visibility, un moteur d’audit et de remédiation SEO/GEO/AEO, et NovekiAct, un produit de gouvernance des usages IA pour les PME. Novekia fournit aussi des services d’ingénierie logicielle, de création de sites web, d’IA locale et d’infrastructure numérique.',
   url: 'https://novekia.fr',
   contact: {
     email: 'contact@novekia.fr',
@@ -43,12 +43,22 @@ export const mainNavigation: NavItem[] = [
       {
         label: 'Vue d’ensemble',
         href: '/produits',
-        description: 'Les produits développés par Novekia.',
+        description: 'Les produits et offres productisées développés par Novekia.',
       },
       {
         label: 'Lead Engine',
         href: '/lead-engine-studio',
         description: 'Prospection B2B fondée sur les signaux.',
+      },
+      {
+        label: 'Novekia Visibility',
+        href: '/audit',
+        description: 'Audit et remédiation SEO, GEO, AEO et autorité numérique.',
+      },
+      {
+        label: 'Sites Web + Visibility',
+        href: '/sites-web',
+        description: 'Création de sites web avec tarifs SEO/GEO/AEO affichés.',
       },
       {
         label: 'NovekiAct',
@@ -153,6 +163,8 @@ export const footerNavigation: { title: string; links: { label: string; href: st
       { label: 'Vue d’ensemble', href: '/produits' },
       { label: 'Lead Engine', href: '/lead-engine-studio' },
       { label: 'Méthode Lead Engine', href: '/lead-engine-studio#methode' },
+      { label: 'Novekia Visibility', href: '/audit' },
+      { label: 'Sites Web + Visibility', href: '/sites-web' },
       { label: 'NovekiAct', href: '/novekiact' },
     ],
   },
