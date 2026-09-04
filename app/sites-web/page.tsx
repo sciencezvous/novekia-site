@@ -343,7 +343,7 @@ export default function SitesWebPage() {
                           key={`${String(row[0])}-${index}`}
                           className={`p-4 ${index === 0 ? 'font-medium text-foreground' : 'text-muted-foreground'}`}
                         >
-                          {cell === true ? 'Oui' : cell === false ? '—' : cell}
+                          {typeof cell === 'boolean' ? (cell ? 'Oui' : '—') : cell}
                         </td>
                       ))}
                     </tr>
