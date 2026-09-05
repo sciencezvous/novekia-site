@@ -116,8 +116,16 @@ export async function POST(request: NextRequest) {
     }
 
     const apiKey = process.env.RESEND_API_KEY?.trim()
-    const from = process.env.RESEND_FROM?.trim()
-    const leadTo = process.env.AUDIT_LEAD_TO?.trim()
+    const from = (
+      process.env.RESEND_FROM ||
+      process.env.AUDIT_REPORT_FROM ||
+      process.env.CONTACT_FROM
+    )?.trim()
+    const leadTo = (
+      process.env.AUDIT_LEAD_TO ||
+      process.env.CONTACT_TO ||
+      siteConfig.contact.email
+    ).trim()
     if (!apiKey || !from || !leadTo) {
       throw new AuditFacadeError(
         503,
