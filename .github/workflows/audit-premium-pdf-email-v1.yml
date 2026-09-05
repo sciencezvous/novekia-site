@@ -43,7 +43,7 @@ jobs:
       - name: Validate paid/free audit boundary
         run: node scripts/audit-pdf-delivery-contract.mjs
 
-      - name: Lint funnel files
+      - name: Lint paid funnel files
         run: >-
           pnpm exec eslint
           lib/audit-server.ts
@@ -51,7 +51,6 @@ jobs:
           app/api/audit/report/route.ts
           'app/api/audit/report/[auditId]/route.ts'
           app/api/audit/order/route.ts
-          app/audit/audit-experience.tsx
           app/audit/audit-offer-recommendation.tsx
           app/audit/commande/audit-order-form.tsx
           app/audit/commande/page.tsx
