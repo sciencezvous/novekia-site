@@ -1,16 +1,20 @@
-# Audit Premium PDF Email V1
+# Audit Visibility — frontière gratuit / premium V1
 
-## Delivery contract
+## Contrat de livraison
 
-The public pre-audit email is successful only when the canonical Novekia PDF has been fetched server-to-server from the audit engine, validated as a bounded PDF, and accepted by Resend as an attachment.
+Le pré-audit public Novekia reste volontairement borné. Son email de synthèse ne récupère, n’attache et n’expose jamais le PDF premium de l’audit complet.
 
-- The browser never receives the audit ingress secret.
-- The PDF request uses the existing `X-Novekia-Audit-Key` server credential.
-- `Content-Type` must be `application/pdf` and the body must start with `%PDF-`.
-- PDF payloads above 8 MiB are rejected.
-- The engine filename is sanitized; a deterministic Novekia filename is used as fallback.
-- PDF failure is fail-closed: the visitor is invited to retry rather than receiving a message that falsely claims successful report delivery.
-- The existing public audit score and evidence payload are not modified by email delivery.
-- Internal lead notification does not receive the client PDF attachment.
+- Le navigateur ne reçoit jamais les secrets d’ingress ou de rapport.
+- L’email gratuit contient uniquement une synthèse : score public, couverture, sous-scores et aperçu borné des constats.
+- Les recommandations détaillées, l’analyse approfondie et le rapport premium sont réservés à l’offre payante.
+- La route publique historique de téléchargement PDF est fermée avec `PAID_AUDIT_REQUIRED`.
+- Une demande commerciale démarre avec le statut `pending_payment` et ne déclenche ni audit complet ni export premium.
+- L’offre et le tarif sont résolus côté serveur à partir du catalogue Novekia ; ils ne sont jamais acceptés comme prix fourni par le navigateur.
+- L’exécution de l’audit complet intervient uniquement après validation du paiement.
+- Le moteur protège en plus son endpoint PDF par un secret dédié, distinct du secret du pré-audit public.
 
-This boundary implements the Novekia professional evidence principle: presentation can improve, but measured facts, uncertainty and scoring remain unchanged.
+## Paiement V1
+
+Le funnel reste provider-neutral pour le pilote opéré. Des liens de checkout HTTPS peuvent être fournis par variables d’environnement pour chaque offre. Sans lien configuré, la demande est enregistrée et Novekia transmet manuellement les modalités de paiement.
+
+Cette architecture évite de rendre Stripe, ou tout autre PSP, structurel pour Visibility tout en conservant une frontière technique stricte entre acquisition gratuite et livraison premium.
