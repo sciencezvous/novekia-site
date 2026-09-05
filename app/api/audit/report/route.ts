@@ -42,45 +42,14 @@ function scoreCategoryLabel(value: string) {
   return SCORE_CATEGORY_LABELS[value] ?? value.replaceAll('_', ' ')
 }
 
-function priorityFindingCount(result: PublicAuditResult) {
-  const nonConclusive = new Set([
-    'needs_review',
-    'unverified',
-    'not_verified',
-    'not_measured',
-    'inconclusive',
-  ])
-
-  return result.findings.filter((finding) => {
-    const verification = finding.verification_status.toLowerCase()
-    const severity = finding.severity.toLowerCase()
-    return (
-      !nonConclusive.has(verification) &&
-      (severity === 'critical' || severity === 'high')
-    )
-  }).length
-}
-
-function recommendedOffer(result: PublicAuditResult): 'optimisation' | 'visibility' | null {
+function recommendedOffer(result: PublicAuditResult): 'full' | null {
   if (result.result_state === 'partial' || result.total_findings === 0) return null
-
-  const priorityFindings = priorityFindingCount(result)
-  if (
-    priorityFindings >= 2 ||
-    result.total_findings >= 4 ||
-    result.public_audit_score < 65
-  ) {
-    return 'visibility'
-  }
-  return 'optimisation'
+  return 'full'
 }
 
 function paidAuditUrl(result: PublicAuditResult) {
-  const offer = recommendedOffer(result)
-  if (!offer) return `${siteConfig.url}/audit-approfondi#tarifs`
-
   const params = new URLSearchParams({
-    offer,
+    offer: 'full',
     auditId: result.audit_id,
     url: result.target_url,
   })
@@ -150,10 +119,10 @@ function previewHtml(result: PublicAuditResult) {
       ${findings || '<p style="line-height:1.6;color:#4b5563">Aucun écart prioritaire n’a été retenu sur les contrôles couverts.</p>'}
 
       <div style="margin-top:30px;padding:22px;background:#111827;color:white;border-radius:10px">
-        <p style="margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#93c5fd">Audit Visibility complet</p>
-        <h2 style="margin:8px 0 0;font-size:21px">Approfondir avec preuves, priorisation et rapport premium</h2>
-        <p style="margin:10px 0 0;line-height:1.65;color:#dbeafe">L’offre payante ajoute l’analyse approfondie, la validation humaine selon le périmètre, la remédiation priorisée, les contrôles externes prévus par l’offre et le rapport premium. Elle ne démarre qu’après validation du paiement.</p>
-        <p style="margin:18px 0 0"><a href="${escapeHtml(ctaUrl)}" style="display:inline-block;background:#2563eb;color:white;text-decoration:none;padding:12px 16px;border-radius:6px;font-weight:700">Voir la prochaine étape</a></p>
+        <p style="margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#93c5fd">Audit Visibility Full · 99 € HT</p>
+        <h2 style="margin:8px 0 0;font-size:21px">Audit complet sur données publiques + plan de remédiation</h2>
+        <p style="margin:10px 0 0;line-height:1.65;color:#dbeafe">L’Audit Full approfondit le SEO, l’Entity SEO et le GEO/AEO, consolide les preuves, produit le rapport premium et un plan de remédiation détaillé. Les corrections par Novekia ne sont pas incluses et sont proposées séparément après l’audit si nécessaire.</p>
+        <p style="margin:18px 0 0"><a href="${escapeHtml(ctaUrl)}" style="display:inline-block;background:#2563eb;color:white;text-decoration:none;padding:12px 16px;border-radius:6px;font-weight:700">Commander l’Audit Full — 99 € HT</a></p>
       </div>
 
       <p style="margin:24px 0 0;font-size:11px;line-height:1.55;color:#78716c">Pré-audit public volontairement borné. Il ne constitue ni un audit exhaustif, ni une certification, ni une garantie de positionnement. Audit ID : ${escapeHtml(result.audit_id)} · <a href="${siteConfig.url}/politique-de-confidentialite" style="color:#57534e">Politique de confidentialité</a></p>
@@ -181,8 +150,8 @@ function previewText(result: PublicAuditResult) {
       : ['- Aucun écart prioritaire retenu sur les contrôles couverts.']),
     '',
     'Le pré-audit gratuit est volontairement borné. Il ne contient pas le rapport premium complet, les recommandations détaillées ni l’analyse exhaustive.',
-    'L’audit complet ne démarre qu’après validation du paiement.',
-    `Prochaine étape : ${paidAuditUrl(result)}`,
+    'Audit Visibility Full : 99 € HT — audit complet sur données publiques, rapport premium et plan de remédiation. Les corrections par Novekia sont séparées.',
+    `Commander : ${paidAuditUrl(result)}`,
   ]
   return lines.join('\n')
 }
@@ -267,7 +236,7 @@ export async function POST(request: NextRequest) {
           `Couverture publique: ${report.coverage}/100`,
           `Méthode: ${report.score_version}`,
           `Constats publics: ${report.total_findings}`,
-          `Offre recommandée: ${recommendedOffer(report) || 'revue manuelle / aucune'}`,
+          `Audit Full recommandé: ${recommendedOffer(report) ? 'oui' : 'non automatique'}`,
           ...attributionLines,
         ]
           .filter(Boolean)
