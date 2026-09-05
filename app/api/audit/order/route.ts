@@ -41,9 +41,7 @@ function escapeHtml(value: string) {
 
 function checkoutUrlFor(offerId: PaidAuditOfferId) {
   const keyByOffer: Record<PaidAuditOfferId, string> = {
-    optimisation: 'NOVEKIA_AUDIT_CHECKOUT_OPTIMISATION_URL',
-    visibility: 'NOVEKIA_AUDIT_CHECKOUT_VISIBILITY_URL',
-    authority: 'NOVEKIA_AUDIT_CHECKOUT_AUTHORITY_URL',
+    full: 'NOVEKIA_AUDIT_CHECKOUT_FULL_URL',
   }
   const raw = process.env[keyByOffer[offerId]]?.trim()
   if (!raw) return null
@@ -144,7 +142,7 @@ export async function POST(request: NextRequest) {
       replyTo: email,
       subject: `[Visibility] Nouvelle commande ${offer.label} — ${company}`,
       text: [
-        'NOUVELLE DEMANDE D’AUDIT VISIBILITY',
+        'NOUVELLE DEMANDE D’AUDIT VISIBILITY FULL',
         `Commande : ${orderId}`,
         `Offre : ${offer.label} — ${offer.priceLabel}`,
         `Client : ${name}`,
@@ -156,10 +154,12 @@ export async function POST(request: NextRequest) {
         `Paiement : pending_payment`,
         `Checkout configuré : ${checkoutUrl ? 'oui' : 'non'}`,
         '',
+        'Périmètre : audit complet sur données publiques + rapport premium + plan de remédiation.',
+        'Aucune correction technique Novekia incluse dans les 99 € HT.',
         'Ne pas démarrer l’audit complet avant validation du paiement.',
       ].join('\n'),
       html: `
-        <h1>Nouvelle demande d’audit Visibility</h1>
+        <h1>Nouvelle demande d’Audit Visibility Full</h1>
         <p><strong>Commande :</strong> ${escapeHtml(orderId)}</p>
         <p><strong>Offre :</strong> ${escapeHtml(offer.label)} — ${escapeHtml(offer.priceLabel)}</p>
         <p><strong>Client :</strong> ${escapeHtml(name)} — ${escapeHtml(company)}</p>
@@ -168,6 +168,7 @@ export async function POST(request: NextRequest) {
         <p><strong>Site :</strong> ${escapeHtml(websiteUrl)}</p>
         <p><strong>Pré-audit :</strong> ${escapeHtml(auditId || 'non renseigné')}</p>
         <p><strong>Statut :</strong> pending_payment</p>
+        <p><strong>Périmètre :</strong> audit complet sur données publiques, rapport premium et plan de remédiation. Corrections Novekia non incluses.</p>
         <p><strong>Important :</strong> ne pas démarrer l’audit complet avant validation du paiement.</p>
       `,
     })
@@ -185,12 +186,15 @@ export async function POST(request: NextRequest) {
       from,
       to: [email],
       replyTo: leadTo,
-      subject: `Votre demande d’audit Novekia — ${offer.label}`,
+      subject: `Votre demande Novekia — ${offer.label}`,
       text: [
         `Bonjour ${name},`,
         '',
         `Votre demande ${offer.label} (${offer.priceLabel}) est enregistrée sous la référence ${orderId}.`,
         `Site : ${websiteUrl}`,
+        '',
+        'Inclus : audit complet sur données publiques, rapport premium, preuves, priorisation et plan de remédiation.',
+        'Non inclus : mise en œuvre des corrections par Novekia. Celle-ci pourra être proposée séparément après l’audit.',
         '',
         'Statut : en attente de validation du paiement.',
         'L’audit complet ne démarre qu’après validation du paiement.',
@@ -201,16 +205,18 @@ export async function POST(request: NextRequest) {
       html: `
         <div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#111827">
           <p style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#2563eb">NOVEKIA · Visibility</p>
-          <h1>Votre demande est enregistrée</h1>
+          <h1>Votre Audit Visibility Full est enregistré</h1>
           <p>Bonjour ${escapeHtml(name)},</p>
           <p>Nous avons enregistré votre demande <strong>${escapeHtml(offer.label)}</strong> au tarif public de <strong>${escapeHtml(offer.priceLabel)}</strong>.</p>
           <p><strong>Référence :</strong> ${escapeHtml(orderId)}<br><strong>Site :</strong> ${escapeHtml(websiteUrl)}</p>
+          <p><strong>Inclus :</strong> audit complet sur données publiques, rapport premium, preuves, priorisation et plan de remédiation.</p>
+          <p><strong>Non inclus :</strong> exécution des corrections par Novekia, proposée séparément si nécessaire après l’audit.</p>
           <div style="margin:24px 0;padding:18px;background:#eff6ff;border-left:4px solid #2563eb">
             <strong>Statut : en attente de validation du paiement.</strong>
             <p style="margin:8px 0 0">L’audit complet ne démarre qu’après validation du paiement.</p>
           </div>
           ${checkoutUrl ? `<p><a href="${escapeHtml(checkoutUrl)}" style="display:inline-block;background:#2563eb;color:white;text-decoration:none;padding:12px 16px;font-weight:700">Passer au paiement</a></p>` : '<p>Novekia vous transmettra les modalités de paiement pour finaliser la commande.</p>'}
-          <p style="margin-top:28px;font-size:12px;color:#6b7280">Cette confirmation n’est pas une preuve de paiement. L’exécution de l’audit et la remise du rapport premium sont déclenchées uniquement après validation.</p>
+          <p style="margin-top:28px;font-size:12px;color:#6b7280">Cette confirmation n’est pas une preuve de paiement. La remise du rapport premium intervient après exécution de l’audit validé.</p>
         </div>
       `,
     })

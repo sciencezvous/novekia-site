@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight, BadgeCheck, ShieldCheck } from 'lucide-react'
 import type { PublicAuditResult } from '@/lib/audit-contract'
-import type { PaidAuditOfferId } from '@/lib/audit-paid-offers'
 
 type AuditOfferRecommendationProps = {
   result: PublicAuditResult
@@ -33,12 +32,10 @@ function recommendationFor(result: PublicAuditResult) {
   if (result.result_state === 'partial') {
     return {
       kind: 'review' as const,
-      eyebrow: 'RECOMMANDATION EN ATTENTE',
-      title: 'Aucun pack payant recommandé automatiquement.',
+      eyebrow: 'AUDIT COMPLET DISPONIBLE',
+      title: 'Le pré-audit reste partiel : approfondir peut lever l’incertitude.',
       body:
-        'Le résultat est partiel : les preuves ou la couverture doivent être confirmées avant de transformer ce diagnostic en proposition commerciale.',
-      price: null,
-      offerId: null,
+        'Le pré-audit ne suffit pas à conclure sur tous les points. L’Audit Visibility Full analyse plus largement les données publiques, documente les limites et produit un plan de remédiation sans inclure les corrections.',
       priorityFindings,
     }
   }
@@ -46,41 +43,20 @@ function recommendationFor(result: PublicAuditResult) {
   if (result.total_findings === 0) {
     return {
       kind: 'none' as const,
-      eyebrow: 'AUCUNE INTERVENTION PRIORITAIRE',
-      title: 'Le pré-audit ne démontre pas de besoin payant immédiat.',
+      eyebrow: 'AUCUNE REMÉDIATION PRIORITAIRE',
+      title: 'Le pré-audit ne démontre pas de correction urgente.',
       body:
-        'Sur le périmètre réellement contrôlé, Novekia n’a pas de correction prioritaire à vous vendre. Un audit plus large reste possible uniquement si votre enjeu le justifie.',
-      price: null,
-      offerId: null,
-      priorityFindings,
-    }
-  }
-
-  if (
-    priorityFindings >= 2 ||
-    result.total_findings >= 4 ||
-    result.public_audit_score < 65
-  ) {
-    return {
-      kind: 'offer' as const,
-      eyebrow: 'PLAN RECOMMANDÉ',
-      title: 'Pack Visibility',
-      body:
-        'Plusieurs constats ou priorités justifient un périmètre plus complet : SEO technique, on-page, entité, GEO/AEO, plan de remédiation et retest.',
-      price: '990 € HT',
-      offerId: 'visibility' as PaidAuditOfferId,
+        'Sur le périmètre réellement contrôlé, aucun défaut prioritaire n’est démontré. L’Audit Visibility Full reste disponible si vous souhaitez une analyse plus complète et un rapport détaillé sur les données publiques.',
       priorityFindings,
     }
   }
 
   return {
     kind: 'offer' as const,
-    eyebrow: 'PLAN RECOMMANDÉ',
-    title: 'Pack Optimisation',
+    eyebrow: 'AUDIT COMPLET RECOMMANDÉ',
+    title: 'Audit Visibility Full',
     body:
-      'Les constats démontrés semblent ciblés : une intervention bornée sur les corrections prioritaires est plus cohérente qu’un périmètre plus large.',
-    price: '490 € HT',
-    offerId: 'optimisation' as PaidAuditOfferId,
+      'Approfondissez les constats avec l’audit complet sur données publiques : SEO, Entity SEO, GEO/AEO, scoring, preuves, priorités, rapport premium et plan de remédiation. Les corrections par Novekia restent une prestation séparée.',
     priorityFindings,
   }
 }
@@ -90,9 +66,7 @@ export function AuditOfferRecommendation({
   onIntent,
 }: AuditOfferRecommendationProps) {
   const recommendation = recommendationFor(result)
-  const orderHref = recommendation.offerId
-    ? `/audit/commande?offer=${recommendation.offerId}&auditId=${encodeURIComponent(result.audit_id)}&url=${encodeURIComponent(result.target_url)}`
-    : '/audit-approfondi#tarifs'
+  const orderHref = `/audit/commande?offer=full&auditId=${encodeURIComponent(result.audit_id)}&url=${encodeURIComponent(result.target_url)}`
 
   return (
     <section
@@ -133,35 +107,26 @@ export function AuditOfferRecommendation({
         </div>
 
         <div className="min-w-60 lg:text-right">
-          {recommendation.price && (
-            <>
-              <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
-                Tarif public
-              </p>
-              <div className="mt-2 text-4xl font-semibold tracking-[-0.04em] text-primary">
-                {recommendation.price}
-              </div>
-            </>
-          )}
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            Audit complet public
+          </p>
+          <div className="mt-2 text-4xl font-semibold tracking-[-0.04em] text-primary">
+            99 € HT
+          </div>
 
-          {recommendation.kind !== 'none' && (
-            <Link
-              href={orderHref}
-              onClick={onIntent}
-              className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90 lg:w-auto"
-            >
-              {recommendation.kind === 'offer'
-                ? 'Commander cet audit'
-                : 'Confirmer les priorités'}
-              <ArrowRight aria-hidden="true" className="size-4" />
-            </Link>
-          )}
+          <Link
+            href={orderHref}
+            onClick={onIntent}
+            className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90 lg:w-auto"
+          >
+            Commander l’audit Full
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </Link>
         </div>
       </div>
 
       <p className="mt-6 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
-        La recommandation commerciale est calculée après le résultat. Elle ne participe ni au
-        score, ni au statut PARTIEL/CONCLUSIF, ni au niveau de confiance des constats.
+        L’audit à 99 € couvre le diagnostic complet sur les données publiques disponibles et le plan de remédiation. La mise en œuvre des corrections par Novekia est chiffrée séparément après l’audit.
       </p>
     </section>
   )

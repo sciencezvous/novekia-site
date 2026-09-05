@@ -1,33 +1,40 @@
 export const PAID_AUDIT_OFFERS = {
+  full: {
+    id: 'full',
+    label: 'Audit Visibility Full',
+    priceCents: 9_900,
+    priceLabel: '99 € HT',
+    startingAt: false,
+    audience: 'Entreprise qui veut un diagnostic complet à partir des données publiques avant toute remédiation',
+    description:
+      'Audit complet sur données publiques : SEO technique et on-page, Entity SEO, GEO/AEO, preuves, scoring, priorisation, rapport premium et plan de remédiation. Aucune correction technique n’est incluse.',
+  },
+} as const
+
+export const REMEDIATION_OFFERS = {
   optimisation: {
     id: 'optimisation',
-    label: 'Pack Optimisation',
-    priceCents: 49_000,
+    label: 'Remédiation ciblée',
     priceLabel: '490 € HT',
     startingAt: false,
-    audience: 'Site dont le pré-audit révèle quelques corrections prioritaires clairement démontrées',
     description:
-      'Validation humaine des constats prioritaires, corrections techniques essentielles, SEO on-page, données structurées et retest.',
+      'Correction des priorités clairement démontrées par l’audit, avec validation humaine et retest des points corrigés.',
   },
   visibility: {
     id: 'visibility',
-    label: 'Pack Visibility',
-    priceCents: 99_000,
+    label: 'Remédiation Visibility',
     priceLabel: '990 € HT',
     startingAt: false,
-    audience: 'Entreprise qui doit traiter ensemble SEO, GEO, AEO et compréhension de l’entité',
     description:
-      'Audit approfondi Evidence-First, SEO technique et on-page, Entity SEO, GEO/AEO, plan de remédiation et retest.',
+      'Exécution d’un plan de remédiation plus large couvrant SEO, Entity SEO, GEO/AEO et retest.',
   },
   authority: {
     id: 'authority',
     label: 'Visibility Authority',
-    priceCents: 149_000,
     priceLabel: 'À partir de 1 490 € HT',
     startingAt: true,
-    audience: 'Entreprise qui doit étendre l’analyse à l’autorité externe et aux écarts concurrentiels',
     description:
-      'Périmètre Visibility étendu aux backlinks, domaines référents, mentions, citation gaps, concurrence et opportunités Digital PR.',
+      'Extension à l’autorité externe : backlinks, domaines référents, mentions, citation gaps, concurrence et opportunités Digital PR.',
   },
 } as const
 
