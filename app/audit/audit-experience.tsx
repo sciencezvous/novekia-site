@@ -213,7 +213,7 @@ export function AuditExperience() {
       })
       const payload = (await response.json()) as { success?: boolean; error?: string }
       if (!response.ok || !payload.success) {
-        throw new Error(payload.error || 'Le rapport n’a pas pu être envoyé.')
+        throw new Error(payload.error || 'La synthèse n’a pas pu être envoyée.')
       }
 
       setReportSent(true)
@@ -227,7 +227,7 @@ export function AuditExperience() {
       setReportError(
         error instanceof Error
           ? error.message
-          : 'Le rapport n’a pas pu être envoyé.'
+          : 'La synthèse n’a pas pu être envoyée.'
       )
     } finally {
       setReportLoading(false)
@@ -538,17 +538,17 @@ export function AuditExperience() {
 
           <section className="audit-conversion-panel">
             <div>
-              <p>VOTRE RAPPORT GRATUIT</p>
-              <h2>Recevez les priorités à corriger, expliquées simplement.</h2>
+              <p>VOTRE SYNTHÈSE GRATUITE</p>
+              <h2>Recevez un aperçu clair de votre pré-audit par email.</h2>
               <span>
-                Le PDF détaille le problème, son impact, le niveau de certitude,
-                les pages concernées et la correction recommandée.
+                La synthèse reprend le score, la couverture et un aperçu borné des constats.
+                Les recommandations détaillées et le rapport premium restent réservés à l’audit complet.
               </span>
             </div>
             <div className="audit-conversion-actions">
               <button type="button" onClick={() => setReportModalOpen(true)}>
                 <Mail aria-hidden="true" />
-                {reportSent ? 'Rapport disponible' : 'Recevoir le rapport gratuit'}
+                {reportSent ? 'Synthèse envoyée' : 'Recevoir la synthèse gratuite'}
                 <ArrowRight aria-hidden="true" />
               </button>
               <button type="button" className="secondary" onClick={resetAudit}>
@@ -586,10 +586,10 @@ export function AuditExperience() {
               <div>
                 <div className="audit-dialog-kicker">
                   <FileText aria-hidden="true" />
-                  RAPPORT DE PRÉ-AUDIT
+                  SYNTHÈSE DE PRÉ-AUDIT
                 </div>
                 <h2 id="audit-report-dialog-title">
-                  {reportSent ? 'Votre pré-audit a été envoyé.' : 'Recevez le détail de votre analyse.'}
+                  {reportSent ? 'Votre synthèse a été envoyée.' : 'Recevez un aperçu de votre analyse.'}
                 </h2>
               </div>
               <button
@@ -607,15 +607,16 @@ export function AuditExperience() {
               <div className="audit-report-success" role="status" aria-live="polite">
                 <CheckCircle2 aria-hidden="true" />
                 <p>
-                  Le pré-audit a été envoyé par email à <strong>{email}</strong>. Le PDF est joint au
-                  message reçu. Vous pouvez ensuite demander à Novekia de vérifier et prioriser les corrections.
+                  La synthèse du pré-audit a été envoyée par email à <strong>{email}</strong>. Elle
+                  contient un aperçu volontairement borné. Le rapport premium et les recommandations
+                  détaillées sont remis uniquement dans le cadre d’un audit complet après validation du paiement.
                 </p>
                 <div>
                   <button type="button" onClick={() => setReportModalOpen(false)}>
                     Fermer
                   </button>
-                  <a href="/audit-approfondi" onClick={() => trackDeepAuditIntent()}>
-                    Faire vérifier les corrections prioritaires
+                  <a href="/audit-approfondi#tarifs" onClick={() => trackDeepAuditIntent()}>
+                    Voir l’audit complet
                     <ArrowRight aria-hidden="true" />
                   </a>
                 </div>
@@ -625,7 +626,7 @@ export function AuditExperience() {
                 <p>
                   Résultat mesuré&nbsp;: <strong>{result.public_audit_score}/100</strong> · état{' '}
                   <strong>{resultStateLabel}</strong> · couverture {result.coverage}%. Indiquez votre email
-                  professionnel pour recevoir le rapport détaillé et conserver les preuves de cette analyse.
+                  professionnel pour recevoir une synthèse bornée de cette analyse et conserver ses principaux constats.
                 </p>
 
                 <label htmlFor="audit-email">Email professionnel</label>
@@ -664,7 +665,7 @@ export function AuditExperience() {
                     required
                   />
                   <span>
-                    J’accepte de recevoir ce rapport par email et que Novekia puisse me
+                    J’accepte de recevoir cette synthèse par email et que Novekia puisse me
                     recontacter au sujet de cette analyse. Données traitées selon la politique
                     de confidentialité.
                   </span>
@@ -682,11 +683,11 @@ export function AuditExperience() {
                   ) : (
                     <ArrowRight aria-hidden="true" />
                   )}
-                  Recevoir mon rapport gratuit
+                  Recevoir ma synthèse gratuite
                 </button>
 
                 <p className="audit-report-footnote">
-                  Aucun compte à créer. Rapport lié au domaine audité et à la méthode
+                  Aucun compte à créer. Synthèse liée au domaine audité et à la méthode
                   {` ${result.score_version}`}.
                 </p>
               </form>
