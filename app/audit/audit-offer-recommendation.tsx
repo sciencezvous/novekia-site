@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, BadgeCheck, ShieldCheck } from 'lucide-react'
 import type { PublicAuditResult } from '@/lib/audit-contract'
+import type { PaidAuditOfferId } from '@/lib/audit-paid-offers'
 
 type AuditOfferRecommendationProps = {
   result: PublicAuditResult
@@ -37,6 +38,7 @@ function recommendationFor(result: PublicAuditResult) {
       body:
         'Le résultat est partiel : les preuves ou la couverture doivent être confirmées avant de transformer ce diagnostic en proposition commerciale.',
       price: null,
+      offerId: null,
       priorityFindings,
     }
   }
@@ -49,6 +51,7 @@ function recommendationFor(result: PublicAuditResult) {
       body:
         'Sur le périmètre réellement contrôlé, Novekia n’a pas de correction prioritaire à vous vendre. Un audit plus large reste possible uniquement si votre enjeu le justifie.',
       price: null,
+      offerId: null,
       priorityFindings,
     }
   }
@@ -65,6 +68,7 @@ function recommendationFor(result: PublicAuditResult) {
       body:
         'Plusieurs constats ou priorités justifient un périmètre plus complet : SEO technique, on-page, entité, GEO/AEO, plan de remédiation et retest.',
       price: '990 € HT',
+      offerId: 'visibility' as PaidAuditOfferId,
       priorityFindings,
     }
   }
@@ -76,6 +80,7 @@ function recommendationFor(result: PublicAuditResult) {
     body:
       'Les constats démontrés semblent ciblés : une intervention bornée sur les corrections prioritaires est plus cohérente qu’un périmètre plus large.',
     price: '490 € HT',
+    offerId: 'optimisation' as PaidAuditOfferId,
     priorityFindings,
   }
 }
@@ -85,6 +90,9 @@ export function AuditOfferRecommendation({
   onIntent,
 }: AuditOfferRecommendationProps) {
   const recommendation = recommendationFor(result)
+  const orderHref = recommendation.offerId
+    ? `/audit/commande?offer=${recommendation.offerId}&auditId=${encodeURIComponent(result.audit_id)}&url=${encodeURIComponent(result.target_url)}`
+    : '/audit-approfondi#tarifs'
 
   return (
     <section
@@ -138,12 +146,12 @@ export function AuditOfferRecommendation({
 
           {recommendation.kind !== 'none' && (
             <Link
-              href="/audit-approfondi#tarifs"
+              href={orderHref}
               onClick={onIntent}
               className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 bg-primary px-5 font-semibold text-primary-foreground transition hover:opacity-90 lg:w-auto"
             >
               {recommendation.kind === 'offer'
-                ? 'Voir le périmètre et les tarifs'
+                ? 'Commander cet audit'
                 : 'Confirmer les priorités'}
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
