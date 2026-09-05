@@ -1,30 +1,33 @@
 export const PAID_AUDIT_OFFERS = {
   optimisation: {
     id: 'optimisation',
-    label: 'Fondations & Conversion',
+    label: 'Pack Optimisation',
     priceCents: 49_000,
     priceLabel: '490 € HT',
-    audience: 'Indépendants / petites structures / site vitrine',
+    startingAt: false,
+    audience: 'Site dont le pré-audit révèle quelques corrections prioritaires clairement démontrées',
     description:
-      'Audit priorisé des fondations techniques, SEO et conversion avant accélération de l’acquisition.',
+      'Validation humaine des constats prioritaires, corrections techniques essentielles, SEO on-page, données structurées et retest.',
   },
   visibility: {
     id: 'visibility',
-    label: 'Visibilité Locale & GEO/AEO',
+    label: 'Pack Visibility',
     priceCents: 99_000,
     priceLabel: '990 € HT',
-    audience: 'Entreprises locales / multi-services / acquisition locale',
+    startingAt: false,
+    audience: 'Entreprise qui doit traiter ensemble SEO, GEO, AEO et compréhension de l’entité',
     description:
-      'Audit approfondi de la découvrabilité locale et de la capacité du site à être compris et repris dans les moteurs et réponses IA.',
+      'Audit approfondi Evidence-First, SEO technique et on-page, Entity SEO, GEO/AEO, plan de remédiation et retest.',
   },
   authority: {
     id: 'authority',
-    label: 'Autorité & Plan Stratégique',
+    label: 'Visibility Authority',
     priceCents: 149_000,
-    priceLabel: '1 490 € HT',
-    audience: 'PME en croissance / refonte / accompagnement direction',
+    priceLabel: 'À partir de 1 490 € HT',
+    startingAt: true,
+    audience: 'Entreprise qui doit étendre l’analyse à l’autorité externe et aux écarts concurrentiels',
     description:
-      'Audit stratégique de l’autorité, des signaux externes et des priorités de croissance.',
+      'Périmètre Visibility étendu aux backlinks, domaines référents, mentions, citation gaps, concurrence et opportunités Digital PR.',
   },
 } as const
 
