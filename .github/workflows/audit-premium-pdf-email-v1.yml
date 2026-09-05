@@ -1,4 +1,4 @@
-name: Audit Premium PDF Email V1
+name: Audit Paid Funnel Boundary V1
 
 on:
   pull_request:
@@ -6,8 +6,13 @@ on:
       - main
     paths:
       - "lib/audit-server.ts"
+      - "lib/audit-paid-offers.ts"
       - "app/api/audit/report/route.ts"
       - "app/api/audit/report/[auditId]/route.ts"
+      - "app/api/audit/order/route.ts"
+      - "app/audit/audit-experience.tsx"
+      - "app/audit/audit-offer-recommendation.tsx"
+      - "app/audit/commande/**"
       - "scripts/audit-pdf-delivery-contract.mjs"
       - "docs/audit-premium-pdf-email-v1.md"
       - ".github/workflows/audit-premium-pdf-email-v1.yml"
@@ -35,11 +40,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Validate PDF delivery contract
+      - name: Validate paid/free audit boundary
         run: node scripts/audit-pdf-delivery-contract.mjs
 
-      - name: Lint changed server files
-        run: pnpm exec eslint lib/audit-server.ts app/api/audit/report/route.ts 'app/api/audit/report/[auditId]/route.ts'
+      - name: Lint funnel files
+        run: >-
+          pnpm exec eslint
+          lib/audit-server.ts
+          lib/audit-paid-offers.ts
+          app/api/audit/report/route.ts
+          'app/api/audit/report/[auditId]/route.ts'
+          app/api/audit/order/route.ts
+          app/audit/audit-experience.tsx
+          app/audit/audit-offer-recommendation.tsx
+          app/audit/commande/audit-order-form.tsx
+          app/audit/commande/page.tsx
 
       - name: Build
         run: pnpm build
